@@ -8,3 +8,7 @@ def calc_multiply(a: int, b: int):
 
 def calc_rec_area(a: int, b: int):
     return a * b
+
+
+def calc_square(num: int):
+    return num * num
