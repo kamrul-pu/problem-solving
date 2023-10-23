@@ -43,13 +43,13 @@ class BinarySearchTree:
         if self.left is None:
             return self.data
 
-        return self.left.find_min_element()
+        return self.left.find_min()
 
     def find_max(self):
         if self.right is None:
             return self.data
 
-        return self.right.find_max_element()
+        return self.right.find_max()
 
     def calculate_sum(self):
         sum = 0
@@ -82,9 +82,8 @@ class BinarySearchTree:
         return elements
 
     def pre_order_traversal(self):
-        elements = []
         # Visit the root first
-        elements.append(self.data)
+        elements = [self.data]
 
         # visit the left subtree
         if self.left:
@@ -128,8 +127,8 @@ if __name__ == "__main__":
     print(numbers_tree.in_order_traversal())
     print(numbers_tree.search(20))
     print(numbers_tree.search(36))
-    print(numbers_tree.find_min_element())
-    print(numbers_tree.find_max_element())
+    print(numbers_tree.find_min())
+    print(numbers_tree.find_max())
     print(numbers_tree.calculate_sum())
     print(numbers_tree.pre_order_traversal())
     print(numbers_tree.post_order_taversal())
