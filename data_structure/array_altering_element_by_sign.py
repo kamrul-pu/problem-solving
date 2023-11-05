@@ -1,4 +1,4 @@
-"""Majority elements means a number appered more then n/2 times."""
+"""Rearrange array element by signed when positives == negetives."""
 
 
 class Solution:
