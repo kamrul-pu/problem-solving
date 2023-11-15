@@ -1,3 +1,6 @@
+import math
+
+
 def is_prime_brute_force(n: int) -> bool:
     if n < 2:
         return False
@@ -7,6 +10,16 @@ def is_prime_brute_force(n: int) -> bool:
             return False
 
     return True
+
+
+def is_prime_better(n: int) -> bool:
+    if n < 2:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+
+    return False
 
 
 print(is_prime_brute_force(2))
