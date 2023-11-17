@@ -24,6 +24,12 @@ class Solution:
         while low <= high:
             # identify the sorted portion
             mid: int = (low + high) // 2
+            # add more optimization, if low less than high then it is already sorted
+            # we can break the loop
+            if self.arr[low] <= self.arr[high]:
+                mn = min(mn, self.arr[low])
+                break
+
             if self.arr[low] <= self.arr[mid]:
                 # left portion is sorted may contains answer, update mn
                 mn = min(mn, self.arr[low])
