@@ -4,7 +4,7 @@
 class Solution:
     def find_sqrt(self, number: int) -> int:
         sqrt = 1
-        for i in range(number + 1):
+        for i in range(1, number + 1):
             if i * i <= number:
                 sqrt = i
             else:
