@@ -1,4 +1,4 @@
-""" Find peak Element in the sorted array."""
+""" SQRT calculation with binary search."""
 
 
 class Solution:

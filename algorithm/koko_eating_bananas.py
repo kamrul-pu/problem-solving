@@ -1,7 +1,5 @@
 """
-Find nth root.
-N = 3 M = 27 3sqrt(27) = 3  ans: 3X3X3 =27
-N = 4 M = 69 4sqrt(69) = -1 
+Minimum hour to eat all bananas
 """
 
 
