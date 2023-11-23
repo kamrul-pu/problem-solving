@@ -1,5 +1,5 @@
 """
-K th element in the two sorted.
+Maximum rows having one.
 """
 
 import time
