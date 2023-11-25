@@ -93,6 +93,14 @@ def build_tree():
     return root
 
 
+def build_nums_tree():
+    root = Node(1)
+    for i in range(2, 11):
+        root.insert(i)
+
+    return root
+
+
 if __name__ == "__main__":
     root = build_tree()
     root.pre_order_traversal()
@@ -103,3 +111,10 @@ if __name__ == "__main__":
     post_elements = root.post_order_traversal()
     print()
     print("post ele list", post_elements)
+    nums = build_nums_tree()
+    nums.pre_order_traversal()
+    print()
+    nums.in_order_traversal()
+    print()
+    nums.post_order_traversal()
+    print()
