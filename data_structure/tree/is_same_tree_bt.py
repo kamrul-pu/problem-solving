@@ -7,7 +7,7 @@ class Node:
         self.left = None
         self.right = None
 
-    def same_tree(self, node1, node2):
+    def same_tree(self, node1, node2) -> bool:
         if node1 is None or node2 is None:
             return node1 == node2
         return (
