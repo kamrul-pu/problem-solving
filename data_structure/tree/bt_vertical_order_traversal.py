@@ -45,9 +45,7 @@ class TreeNode:
             if ans[k[0] + 2] == 0:
                 ans[k[0] + 2] = v
             else:
-                new_ls: list[int] = ans[k[0] + 2]
-                new_ls += v
-                ans[k[0] + 2] = new_ls
+                ans[k[0] + 2] += v
         print(ans)
 
 
