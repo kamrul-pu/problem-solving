@@ -18,15 +18,15 @@ def is_prime_optimal(n: int) -> bool:
         return False
     if n == 2 or n == 3:
         return True
-    for i in range(5, int(n * 0.5) + 1, 6):
+    for i in range(5, int(n**0.5) + 1, 6):
         ct += 1
         if n % i == 0 or n % (i + 2) == 0:
             return False
-
+    print("count", ct)
     return True
 
 
-print(is_prime_optimal(199))
+print(is_prime_optimal(987989))
 # print(is_prime_brute_force(2))
 # print(is_prime_brute_force(5))
 

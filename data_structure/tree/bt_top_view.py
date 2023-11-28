@@ -10,6 +10,7 @@ class TreeNode:
         self.right = None
 
     def top_view(self) -> list[int]:
+        ans: list[int] = []
         if self is None:
             return ans
 
