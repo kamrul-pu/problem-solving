@@ -51,6 +51,7 @@ def time_to_burn(root: TreeNode, target: TreeNode) -> int:
             ):
                 visited[parent_track[curr_node.data].data] = True
                 burned = True
+                q.append(parent_track[curr_node.data])
 
             if burned:
                 time += 1
