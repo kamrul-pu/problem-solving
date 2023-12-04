@@ -60,45 +60,6 @@ def time_to_burn(root: TreeNode, target: TreeNode) -> int:
     return time
 
 
-# def distance_k(root: TreeNode, target: TreeNode, k: int) -> list[int]:
-#     parent_track: defaultdict = defaultdict()
-#     mark_parents(root, parent_track, target)
-
-#     visited: defaultdict = defaultdict(bool)
-#     q = deque()
-#     q.append(target)
-#     visited[target.data] = True
-#     curr_level: int = 0
-#     while q:
-#         size: int = len(q)
-#         if curr_level == k:
-#             break
-#         curr_level += 1
-
-#         for i in range(size):
-#             current: TreeNode = q.popleft()
-#             if current.left and not visited[current.left.data]:
-#                 q.append(current.left)
-#                 visited[current.left.data] = True
-#             if current.right and not visited[current.right.data]:
-#                 q.append(current.right)
-#                 visited[current.right.data] = True
-
-#             if (
-#                 current.data in parent_track
-#                 and not visited[parent_track[current.data].data]
-#             ):  # Fix here
-#                 q.append(parent_track[current.data])
-#                 visited[parent_track[current.data].data] = True  # Fix here
-
-#     result: list[int] = []
-#     while q:
-#         curr: TreeNode = q.popleft()
-#         result.append(curr.data)
-
-#     return result
-
-
 def build_tree():
     root = TreeNode(1)
     root.left = TreeNode(2)
