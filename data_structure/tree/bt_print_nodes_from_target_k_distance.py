@@ -47,9 +47,12 @@ def distance_k(root: TreeNode, target: TreeNode, k: int) -> list[int]:
                 q.append(current.right)
                 visited[current.right.data] = True
 
-            if parent_track[current.data] and not visited[parent_track[current.data]]:
+            if (
+                current.data in parent_track
+                and not visited[parent_track[current.data].data]
+            ):  # Fix here
                 q.append(parent_track[current.data])
-                visited[parent_track[current.data]] = True
+                visited[parent_track[current.data].data] = True  # Fix here
 
     result: list[int] = []
     while q:
