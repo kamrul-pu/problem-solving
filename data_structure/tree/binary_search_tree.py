@@ -50,6 +50,18 @@ class Node:
                 return False
 
 
+def find_node(root: Node, data: int) -> bool:
+    while root is not None and root.data != data:
+        if root.data > data:
+            root = root.left
+        else:
+            root = root.right
+
+    if root and root.data == data:
+        return True
+    return False
+
+
 def in_order(root: Node) -> None:
     if root is None:
         return
@@ -66,4 +78,5 @@ if __name__ == "__main__":
 
     root.in_order()
     in_order(root=root)
-    print(root.find_node(7))
+    print(root.find_node(71))
+    print(find_node(root=root, data=71))
