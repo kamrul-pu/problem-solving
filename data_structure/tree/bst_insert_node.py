@@ -1,4 +1,4 @@
-"""Binary Search Tree Find Ceil value. i.e value>=key."""
+"""Binary Search Tree Insert Node."""
 
 
 class Node:
