@@ -39,6 +39,22 @@ class DoublyLinkedList:
             cur.next.prev = node
             cur.next = node
 
+    def find_data(self, data: int) -> bool:
+        if self.head is None:
+            return False
+        if self.head.data == data:
+            return True
+        elif self.tail.data == data:
+            return True
+        else:
+            cur: Node = self.head
+            while cur:
+                if cur.data == data:
+                    return True
+                cur = cur.next
+
+        return False
+
     def delete_node(self, data: int) -> None:
         if self.head is None:
             return "No Item in the list."
@@ -104,6 +120,11 @@ if __name__ == "__main__":
 
     dll1.print_list()
     dll1.print_list(reverse=True)
+
+    print(dll1.find_data(2))
+    print(dll1.find_data(3))
+    print(dll1.find_data(27))
+    print(dll1.find_data(32))
     print(dll1.delete_node(1))
     print(dll1.delete_node(30))
     dll1.print_list()
