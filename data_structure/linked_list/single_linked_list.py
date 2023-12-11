@@ -63,6 +63,22 @@ class SingleLinkedList:
         prev.next = cur.next
         return "Node deleted!"
 
+    def find_data(self, data: int) -> bool:
+        if self.head is None:
+            return False
+        if self.head.data == data:
+            return True
+        elif self.tail.data == data:
+            return True
+        else:
+            cur: Node = self.head
+            while cur:
+                if cur.data == data:
+                    return True
+                cur = cur.next
+
+        return False
+
     def print_list(self) -> None:
         cur: Node = self.head
         while cur:
@@ -98,3 +114,5 @@ if __name__ == "__main__":
     llist1.print_list()
     print(llist1.delete_node(12))
     llist1.print_list()
+    print(llist1.find_data(5))
+    print(llist1.find_data(35))
