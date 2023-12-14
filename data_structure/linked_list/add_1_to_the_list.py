@@ -21,26 +21,6 @@ class SingleLinkedList:
         self.tail.next = node
         self.tail = node
 
-    def check_palindrome(self) -> bool:
-        if self.head is None:
-            return True
-
-        lst: list[int] = []
-        temp: Node = self.head
-        while temp:
-            lst.append(temp.data)
-            temp = temp.next
-
-        left: int = 0
-        right: int = len(lst) - 1
-        while left < right:
-            if lst[left] != lst[right]:
-                return False
-            left += 1
-            right -= 1
-
-        return True
-
     def print_list(self) -> None:
         cur: Node = self.head
         while cur:
