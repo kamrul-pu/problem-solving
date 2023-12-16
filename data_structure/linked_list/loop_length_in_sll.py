@@ -88,4 +88,4 @@ if __name__ == "__main__":
     node9.next = node3
     # llist.print_list()
     print(detect_cycle(head=llist.head))
-    print(detect_cycle_optimal(head=llist.head))
+    print(detect_cycle(head=llist.head))
