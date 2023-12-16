@@ -1,17 +1,5 @@
-"""Detect Loop in singly linked list."""
+"""Find Loop length in singly linked list."""
 from collections import defaultdict
-import time
-
-
-def time_it(func):
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        result = func(*args, **kwargs)
-        end = time.time()
-        print(func.__name__ + " took " + str((end - start) * 1000) + " miliseconds")
-        return result
-
-    return wrapper
 
 
 class Node:
@@ -33,35 +21,45 @@ class SingleLinkedList:
         print("Null")
 
 
-@time_it
-def detect_cycle(head: Node) -> bool:
+def loop_length(head: Node) -> int:
     # Brute force solution
     if head is None:
-        return False
+        return 0
     temp: Node = head
-    hsh = defaultdict(bool)
+    hsh = defaultdict(int)
+    t: int = 1
     while temp:
         if hsh[temp]:
-            return True
-        hsh[temp] = True
+            lenght: int = t - hsh[temp]
+            return lenght
+        hsh[temp] = t
+        t += 1
         temp = temp.next
 
-    return False
+    return 0
 
 
-@time_it
-def detect_cycle_optimal(head: Node) -> bool:
-    if head is None:
-        return False
-    fast: Node = head
+def find_length(slow: Node, fast: Node) -> int:
+    cnt: int = 1
+    fast = fast.next
+    while slow != fast:
+        cnt += 1
+        fast = fast.next
+
+    return cnt
+
+
+def loop_length_optimal(head: Node) -> Node:
     slow: Node = head
+    fast: Node = head
     while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
-        if slow == fast:
-            return True
 
-    return False
+        if slow == fast:
+            return find_length(slow=slow, fast=fast)
+
+    return 0
 
 
 if __name__ == "__main__":
@@ -87,5 +85,5 @@ if __name__ == "__main__":
     llist.head = node1
     node9.next = node3
     # llist.print_list()
-    print(detect_cycle(head=llist.head))
-    print(detect_cycle(head=llist.head))
+    print(loop_length(head=llist.head))
+    print(loop_length_optimal(head=llist.head))
