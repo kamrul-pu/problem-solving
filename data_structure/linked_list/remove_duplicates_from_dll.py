@@ -57,12 +57,14 @@ def remove_duplicates(head: Node, tail: Node) -> (Node, Node):
     temp: Node = head
     while temp and temp.next:
         next_node: Node = temp.next
+        # traverse while they are same
         while next_node and next_node.data == temp.data:
             next_node = next_node.next
 
         temp.next = next_node
         if next_node:
             next_node.prev = temp
+        # Update the tail pointer if it is last node
         if temp.next is None:
             tail = temp
         temp = temp.next
