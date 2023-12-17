@@ -1,4 +1,4 @@
-"""Find the pairs for given sum in doubly linked list."""
+"""Removes duplicates from  doubly linked list."""
 
 
 class Node:
