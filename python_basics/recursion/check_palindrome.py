@@ -1,7 +1,7 @@
 """Check if the string is palindrome or not."""
 
-txt: str = "MADAMM"
-txt: str = "ABAABD"
+txt: str = "MADAM"
+txt: str = "ABAACBA"
 
 
 def is_palindrome(txt: str) -> bool:
