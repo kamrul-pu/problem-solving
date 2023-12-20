@@ -37,8 +37,9 @@ def merge_sort(arr: list[int], low: int, high: int) -> None:
     merge(arr=arr, low=low, mid=mid, high=high)
 
 
-arr: list[int] = [3, 2, 4, 1, 3]
+if __name__ == "__main__":
+    arr: list[int] = [3, 2, 4, 1, 3]
 
-merge_sort(arr=arr, low=0, high=len(arr) - 1)
+    merge_sort(arr=arr, low=0, high=len(arr) - 1)
 
-print("after sorted array is: ", arr)
+    print("after sorted array is: ", arr)
