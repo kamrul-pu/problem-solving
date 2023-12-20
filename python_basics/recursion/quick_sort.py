@@ -26,7 +26,7 @@ def quick_sort(arr: list[int], low: int, high: int) -> None:
     if low < high:
         # find the partition index
         pi = partition_index(arr, low, high)
-        quick_sort(arr=arr, low=low, high=pi)
+        quick_sort(arr=arr, low=low, high=pi - 1)
         quick_sort(arr=arr, low=pi + 1, high=high)
 
 
@@ -36,7 +36,14 @@ if __name__ == "__main__":
     # sort the array
     quick_sort(arr=arr, low=0, high=len(arr) - 1)
     print("after sort: ", arr)
-    test_cases = [[10, 3, 15, 7, 8, 23, 98, 29], [], [3], [9, 8, 7, 2], [1, 2, 3, 4, 5]]
+    test_cases = [
+        [10, 3, 15, 7, 8, 23, 98, 29],
+        [],
+        [3],
+        [9, 8, 7, 2],
+        [1, 2, 3, 4, 5],
+        [4, 6, 2, 5, 7, 9, 1, 3],
+    ]
     for ar in test_cases:
         quick_sort(arr=ar, low=0, high=len(ar) - 1)
         print(ar)
