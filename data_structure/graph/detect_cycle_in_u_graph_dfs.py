@@ -8,7 +8,7 @@ def detect(node: int, parent: int, graph: list[list[int]], visited: list[int]) -
 
     for item in graph[node]:
         if not visited[item]:
-            detect(node=item, parent=node, graph=graph, visited=visited)
+            return detect(node=item, parent=node, graph=graph, visited=visited)
         elif item != parent:
             return True
 
