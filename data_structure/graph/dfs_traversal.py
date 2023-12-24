@@ -18,7 +18,7 @@ print(adj_list)
 
 
 def dfs(
-    node: int, adj_list: list[list[int]], visited: [list[int]], ans: list[int]
+    node: int, adj_list: list[list[int]], visited: list[int], ans: list[int]
 ) -> None:
     visited[node] = 1
     ans.append(node)
