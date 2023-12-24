@@ -33,7 +33,15 @@ def is_cycle(v: int, graph: list[list[int]]) -> bool:
     visited: list[bool] = [False] * (v + 1)
 
     # Start the cycle detection from the first node (can be any node)
-    return detect(src=1, graph=graph, visited=visited)
+    # return detect(src=1, graph=graph, visited=visited)
+    # for connected components
+    for i in range(1, v + 1):
+        if not visited[i]:
+            if detect(src=i, graph=graph, visited=visited):
+                return True
+
+    # checked all connected components no cycle founds.
+    return False
 
 
 if __name__ == "__main__":
