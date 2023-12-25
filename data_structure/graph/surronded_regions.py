@@ -48,7 +48,7 @@ def replace_0s(g: list[list[str]], n: int, m: int) -> None:
     # Replace unvisited 'O' cells with 'X'
     for i in range(n):
         for j in range(m):
-            if not visited[i][j]:
+            if not visited[i][j] and g[i][j] == "O":
                 g[i][j] = "X"
 
 
