@@ -29,8 +29,7 @@ if __name__ == "__main__":
     word_list: list[str] = ["hot", "dot", "dog", "lot", "log", "cog"]
     start_word: str = "hit"
     end_word: str = "cog"
-    print(
-        word_ladder_length(
-            start_word=start_word, target_word=end_word, word_list=word_list
-        )
+    ladder_cnt: int = word_ladder_length(
+        start_word=start_word, target_word=end_word, word_list=word_list
     )
+    print(ladder_cnt)
