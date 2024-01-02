@@ -38,7 +38,7 @@ def shortest_path_distance(adj_list: list[list[int]], src: int) -> list[int]:
     ans.append(dest_node)
 
     # Traverse the parent array to get the path
-    while dest_node != src:
+    while dest_node != src and dest_node > 0:
         dest_node = parent[dest_node]
         ans.append(dest_node)
 
