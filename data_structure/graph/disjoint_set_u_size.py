@@ -19,6 +19,9 @@ class DSU:
         u_parent: int = self.find_parent(node=u)
         v_parent: int = self.find_parent(node=v)
 
+        if u_parent == v_parent:
+            return
+
         if self.size[u_parent] < self.size[v_parent]:
             self.parent[u_parent] = v_parent
             self.size[v_parent] += self.size[u_parent]
