@@ -26,7 +26,7 @@ class DSU:
             self.parent[u_parent] = v_parent
             self.size[v_parent] += self.size[u_parent]
         elif self.size[u_parent] > self.size[v_parent]:
-            self.parent[v] = u_parent
+            self.parent[v_parent] = u_parent
             self.size[u_parent] += self.size[v_parent]
         else:
             self.parent[u_parent] = v_parent
