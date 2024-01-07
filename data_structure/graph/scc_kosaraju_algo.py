@@ -27,12 +27,17 @@ def kosaraju(v: int, adj: list[list[int]]) -> int:
             adj_t[item].append(i)
 
     # run dfs on nodes based on finishing time
+    ans: list[list[int]] = []
     scc: int = 0
     while st:
         node: int = st.pop()
+        scc_list: list[int] = []
         if not visited[node]:
             scc += 1
-            dfs(node=node, visited=visited, adj=adj_t, st=[])
+            dfs(node=node, visited=visited, adj=adj_t, st=scc_list)
+            ans.append(scc_list)
+
+    print(ans)
 
     return scc
 
