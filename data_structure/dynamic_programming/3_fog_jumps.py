@@ -36,6 +36,31 @@ def min_energy(ind: int, arr: list[int], memo: dict = {}) -> int:
     return memo[ind]
 
 
+def find_mn_cost(n: int, arr: list[int]) -> int:
+    dp: list[int] = [-1] * (n + 1)
+    dp[0] = 0
+    for i in range(1, n):
+        fs: int = dp[i - 1] + abs(arr[i] - arr[i - 1])
+        ss: int = dp[i - 2] + abs(arr[i] - arr[i - 2]) if i > 1 else INT_MAX
+        dp[i] = min(fs, ss)
+
+    return dp[n - 1]
+
+
+def find_mn_optimal(n: int, arr: list[int]) -> int:
+    prev_2i: int = 0
+    prev_i: int = 0
+    cur_i: int = 0
+    for i in range(1, n):
+        fs: int = prev_i + abs(arr[i] - arr[i - 1])
+        ss: int = prev_2i + abs(arr[i] - arr[i - 2]) if i > 1 else INT_MAX
+        cur_i = min(fs, ss)
+        prev_2i = prev_i
+        prev_i = cur_i
+
+    return prev_i
+
+
 if __name__ == "__main__":
     n: int = 4
     arr: list[int] = [10, 20, 30, 10]
@@ -43,3 +68,5 @@ if __name__ == "__main__":
     # Calculate and print the minimum energy required for the entire fog jump sequence
     min_cost: int = min_energy(ind=n - 1, arr=arr)
     print("Minimum energy required:", min_cost)
+    print("find min cost", find_mn_cost(n=n, arr=arr))
+    print("find cost space optimation", find_mn_optimal(n=n, arr=arr))
