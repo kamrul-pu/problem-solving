@@ -41,6 +41,42 @@ def cherry_pickup(
     return dp[i][j1][j2]
 
 
+def cherry_pickup_tabulation(n: int, m: int, a: list[list[int]]) -> int:
+    dp: list[list[list[int]]] = [
+        [[0 for c1 in range(m)] for c2 in range(m)] for r in range(n)
+    ]
+
+    for j1 in range(m):
+        for j2 in range(m):
+            if j1 == j2:
+                dp[n - 1][j1][j2] = a[n - 1][j1]
+            else:
+                dp[n - 1][j1][j2] = a[n - 1][j1] + a[n - 1][j2]
+
+    for i in range(n - 2, -1, -1):
+        for j1 in range(0, m, 1):
+            for j2 in range(0, m, 1):
+                maxi: int = INT_MIN
+                for dj1 in range(-1, 2, 1):
+                    for dj2 in range(-1, 2, 1):
+                        if j1 == j2:
+                            value: int = a[i][j1]
+                        else:
+                            value: int = a[i][j1] + a[i][j2]
+                        if (
+                            j1 + dj1 >= 0
+                            and j1 + dj1 < m
+                            and j2 + dj2 >= 0
+                            and j2 + dj2 < m
+                        ):
+                            value += dp[i + 1][j1 + dj1][j2 + dj2]
+                        else:
+                            value += INT_MIN
+                        maxi = max(maxi, value)
+                dp[i][j1][j2] = maxi
+    return dp[0][0][m - 1]
+
+
 if __name__ == "__main__":
     a: list[list[int]] = [
         [2, 3, 1, 2],
@@ -58,3 +94,4 @@ if __name__ == "__main__":
     print(mx)
     print(cnt)
     print(dp)
+    print(cherry_pickup_tabulation(n=n, m=m, a=a))
