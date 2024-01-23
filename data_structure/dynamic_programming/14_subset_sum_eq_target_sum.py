@@ -70,7 +70,8 @@ def subset_sum_tabulation(arr: list[int], n: int, k: int) -> bool:
 def subset_sum_optimal(arr: list[int], n: int, k: int) -> bool:
     prev: list[bool] = [False for _ in range(k + 1)]
 
-    prev[0] = True
+    if arr[0] <= k:
+        prev[arr[0]] = True
     prev[arr[0]] = True
 
     for i in range(1, n):
