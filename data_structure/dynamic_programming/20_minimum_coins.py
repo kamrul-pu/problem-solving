@@ -48,13 +48,13 @@ def min_coins_optimal(coins:list[int], n:int, amount:int)->int:
             if coins[i]<=t:
                 take = 1 + cur[t-coins[i]]
             cur[t] = min(take, not_take)
-        prev = cur.copy()
+        prev = cur
 
     return prev[amount]
 
 if __name__ == "__main__":
     coins:list[int] = [1,2,3]
-    amount:int = 290
+    amount:int = 2900
     n:int = len(coins)
     mn_coin:int = min_coins(i=n-1, amount=amount, coins=coins, memo={})
     print(mn_coin)
