@@ -38,14 +38,9 @@ def min_coins_tabulation(coins:list[int], n:int, amount:int)->int:
     return dp[n-1][amount]
 
 def min_coins_optimal(coins:list[int], n:int, amount:int)->int:
-    prev:list[int] = [0 for col in range(amount+1)]
+    prev:list[int] = [col//coins[0] if col%coins[0] == 0 else float("inf") for col in range(amount+1)]
     cur:list[int] = [0 for col in range(amount+1)]
-    for t in range(amount+1):
-        if t%coins[0] == 0:
-            prev[t] = t//coins[0]
-        else:
-            prev[t] = float("inf")
-    
+
     for i in range(1,n):
         for t in range(amount+1):
             not_take:int = 0 + prev[t]
