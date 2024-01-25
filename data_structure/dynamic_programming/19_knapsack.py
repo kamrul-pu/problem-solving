@@ -1,3 +1,5 @@
+"""0/1 knapsack problem solution."""
+
 def knapsack(wt: list[int], val: list[int], i: int, W: int, memo={}) -> int:
     # Base case: If no items are left or the remaining capacity is 0, return 0
     if i == 0:
