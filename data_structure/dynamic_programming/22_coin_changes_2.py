@@ -1,5 +1,6 @@
 """Coin change problem. Number of ways to make target sum."""
 
+
 def ways(i: int, amount: int, coins: list[int], memo={}) -> int:
     """
     Recursive function to find the number of ways to make the target sum using given coins.
@@ -23,10 +24,10 @@ def ways(i: int, amount: int, coins: list[int], memo={}) -> int:
         return memo[key]
 
     # Calculate the number of ways by either taking or not taking the current coin.
-    not_take: int = ways(i=i-1, amount=amount, coins=coins, memo=memo)
+    not_take: int = ways(i=i - 1, amount=amount, coins=coins, memo=memo)
     take: int = 0
     if coins[i] <= amount:
-        take = ways(i=i, amount=amount-coins[i], coins=coins, memo=memo)
+        take = ways(i=i, amount=amount - coins[i], coins=coins, memo=memo)
 
     # Memoize the result and return.
     memo[key] = not_take + take
@@ -46,19 +47,22 @@ def ways_tabulation(coins: list[int], n: int, amount: int) -> int:
         int: Number of ways to make the target sum.
     """
     # Initialize a 2D array to store the results of subproblems.
-    dp: list[list[int]] = [[1 if col % coins[0] == 0 else 0 for col in range(amount+1)] for row in range(n)]
+    dp: list[list[int]] = [
+        [1 if col % coins[0] == 0 else 0 for col in range(amount + 1)]
+        for row in range(n)
+    ]
 
     # Iterate over each coin and target sum to fill in the table.
     for i in range(1, n):
-        for t in range(amount+1):
-            not_take: int = dp[i-1][t]
+        for t in range(amount + 1):
+            not_take: int = dp[i - 1][t]
             take: int = 0
             if coins[i] <= t:
-                take = dp[i][t-coins[i]]
+                take = dp[i][t - coins[i]]
             dp[i][t] = take + not_take
 
     # Return the result for the last coin and target sum.
-    return dp[n-1][amount]
+    return dp[n - 1][amount]
 
 
 def ways_optimal(coins: list[int], n: int, amount: int) -> int:
@@ -74,16 +78,16 @@ def ways_optimal(coins: list[int], n: int, amount: int) -> int:
         int: Number of ways to make the target sum.
     """
     # Initialize two arrays to store results of subproblems.
-    prev: list[int] = [1 if col % coins[0] == 0 else 0 for col in range(amount+1)]
-    cur: list[int] = [0] * (amount+1)
+    prev: list[int] = [1 if col % coins[0] == 0 else 0 for col in range(amount + 1)]
+    cur: list[int] = [0] * (amount + 1)
 
     # Iterate over each coin and target sum to fill in the arrays.
     for i in range(1, n):
-        for t in range(amount+1):
+        for t in range(amount + 1):
             not_take: int = prev[t]
             take: int = 0
             if coins[i] <= t:
-                take = cur[t-coins[i]]
+                take = cur[t - coins[i]]
             cur[t] = take + not_take
         # Update the previous array with the current one.
         prev = cur
@@ -97,8 +101,8 @@ if __name__ == "__main__":
     coins: list[int] = [1, 2, 3]
     amount: int = 4
     n: int = len(coins)
-    
+
     # Test each function and print the results.
-    print(ways(i=n-1, amount=amount, coins=coins))
+    print(ways(i=n - 1, amount=amount, coins=coins))
     print(ways_tabulation(coins=coins, n=n, amount=amount))
     print(ways_optimal(coins=coins, n=n, amount=amount))
