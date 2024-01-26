@@ -34,10 +34,7 @@ def knapsack_tabulation(wt: list[int], n: int, W: int, val: list[int]) -> int:
 
 
 def knapsack_optimal(wt: list[int], n: int, W: int, val: list[int]) -> int:
-    prev: list[int] = [0 for col in range(W + 1)]
-
-    for w in range(W + 1):
-        prev[w] = (w // wt[0]) * val[0]
+    prev: list[int] = [(col // wt[0]) * val[0] for col in range(W + 1)]
 
     for i in range(1, n):
         for w in range(W + 1):
