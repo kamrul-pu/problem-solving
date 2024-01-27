@@ -7,7 +7,7 @@ def f(i: int, j: int, s1: str, s2: str, dp: list[list[int]]) -> int:
     Longest Common Subsequence (LCS) using dynamic programming.
 
     Args:
-        i1 (int): Current index in the first string.
+        i (int): Current index in the first string.
         j (int): Current index in the second string.
         s1 (str): First input string.
         s2 (str): Second input string.
@@ -47,10 +47,10 @@ def lcs(s1: str, s2: str) -> int:
     Returns:
         int: Length of LCS for the input strings.
     """
-    n1: int = len(s1)
-    n2: int = len(s2)
-    dp: list[list[int]] = [[-1 for col in range(n2 + 1)] for row in range(n1 + 1)]
-    return f(n1, n2, s1, s2, dp)
+    n: int = len(s1)
+    m: int = len(s2)
+    dp: list[list[int]] = [[-1 for col in range(m + 1)] for row in range(n + 1)]
+    return f(n, m, s1, s2, dp)
 
 
 def lcs_tabulation(s1: str, s2: str) -> int:
