@@ -50,7 +50,7 @@ def lcs_optimal(s1: str, s2: str) -> int:
             if s1[i - 1] == s2[j - 1]:
                 cur[j] = 1 + prev[j - 1]
                 ans = max(ans, cur[j])
-        prev = cur
+        prev = cur.copy()
 
     return ans
 
