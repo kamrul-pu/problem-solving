@@ -1,14 +1,14 @@
 """Longest Common Subsequence Dynamic programming solution."""
 
 
-def f(i1: int, i2: int, s1: str, s2: str, dp: list[list[int]]) -> int:
+def f(i: int, j: int, s1: str, s2: str, dp: list[list[int]]) -> int:
     """
     Helper function for the recursive solution to find the length of the
     Longest Common Subsequence (LCS) using dynamic programming.
 
     Args:
         i1 (int): Current index in the first string.
-        i2 (int): Current index in the second string.
+        j (int): Current index in the second string.
         s1 (str): First input string.
         s2 (str): Second input string.
         dp (list[list[int]]): Memoization table to store already computed results.
@@ -17,22 +17,22 @@ def f(i1: int, i2: int, s1: str, s2: str, dp: list[list[int]]) -> int:
         int: Length of LCS for the current pair of substrings.
     """
     # Base case: If either of the strings is empty, LCS is 0.
-    if i1 == 0 or i2 == 0:
+    if i == 0 or j == 0:
         return 0
 
     # If the result is already computed, return it from the memoization table.
-    if dp[i1][i2] != -1:
-        return dp[i1][i2]
+    if dp[i][j] != -1:
+        return dp[i][j]
 
     # If the current characters match, increment the LCS length.
-    if s1[i1 - 1] == s2[i2 - 1]:
-        dp[i1][i2] = 1 + f(i1 - 1, i2 - 1, s1, s2, dp)
-        return dp[i1][i2]
+    if s1[i - 1] == s2[j - 1]:
+        dp[i][j] = 1 + f(i - 1, j - 1, s1, s2, dp)
+        return dp[i][j]
 
     # If the current characters don't match, choose the maximum LCS from
     # excluding one character from either of the strings.
-    dp[i1][i2] = max(f(i1 - 1, i2, s1, s2, dp), f(i1, i2 - 1, s1, s2, dp))
-    return dp[i1][i2]
+    dp[i][j] = max(f(i - 1, j, s1, s2, dp), f(i, j - 1, s1, s2, dp))
+    return dp[i][j]
 
 
 def lcs(s1: str, s2: str) -> int:
