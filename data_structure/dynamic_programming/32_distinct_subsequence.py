@@ -51,19 +51,15 @@ def distinct_subsequence_optimal(s: str, t: str) -> int:
     n: int = len(s)
     m: int = len(t)
     prev: list[int] = [0 for col in range(m + 1)]
-    cur: list[int] = [0 for col in range(m + 1)]
     prev[0] = 1
-    cur[0] = 1
 
     # Build the array using dynamic programming with optimal space complexity.
     for i in range(1, n + 1):
-        for j in range(1, m + 1):
+        for j in range(m, 0, -1):
             if s[i - 1] == t[j - 1]:
-                cur[j] = prev[j - 1] + prev[j]
+                prev[j] = prev[j - 1] + prev[j]
             else:
-                cur[j] = prev[j]
-
-        prev = cur.copy()
+                prev[j] = prev[j]
 
     return prev[m]
 
