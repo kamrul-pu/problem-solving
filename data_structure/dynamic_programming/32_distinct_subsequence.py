@@ -58,8 +58,6 @@ def distinct_subsequence_optimal(s: str, t: str) -> int:
         for j in range(m, 0, -1):
             if s[i - 1] == t[j - 1]:
                 prev[j] = prev[j - 1] + prev[j]
-            else:
-                prev[j] = prev[j]
 
     return prev[m]
 
