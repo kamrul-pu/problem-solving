@@ -56,7 +56,7 @@ class Solution:
         m: int = len(word2)
         # Initialize two arrays to represent the current and previous rows in the dp table
         prev: list[int] = [col for col in range(m + 1)]
-        cur: list[int] = [col for col in range(m + 1)]
+        cur: list[int] = [0 for col in range(m + 1)]
 
         # Fill in the dp table using an optimized space approach
         for i in range(1, n + 1):
