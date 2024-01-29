@@ -1,7 +1,7 @@
 """
 Buy Sell Profit Porblem solution.
-Complexity: Time O(1)
-            Space O(n)
+Complexity: Time O(n)
+            Space O(1)
 """
 
 
