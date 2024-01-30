@@ -8,7 +8,7 @@ class Solution:
         """
         Helper function for recursive approach with memoization.
         i: current index
-        buy: flag indicating if stock can be by (1) or not (0)
+        buy: flag indicating if stock can be buy (1) or not (0)
         prices: list of stock prices
         n: total number of days
         dp: memoization table
