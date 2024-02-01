@@ -47,12 +47,24 @@ class Solution:
 
         return ahed[0]
 
+    def __lis_single_arr(self, nums: List[int], n: int) -> int:
+        dp: List[int] = [1 for col in range(n)]
+        lis: int = 1
+        for i in range(n):
+            for prev in range(0, i):
+                if nums[prev] < nums[i]:
+                    dp[i] = max(1 + dp[prev], dp[i])
+            lis = max(lis, dp[i])
+
+        return lis
+
     def lengthOfLIS(self, nums: List[int]) -> int:
         n: int = len(nums)
         # dp: List[List[int]] = [[-1 for col in range(n)] for row in range(n)]
         # return self.__f(0, -1, nums, n, dp)
         # return self.__lis_tabulation(nums, n)
-        return self.__list_optimal(nums, n)
+        # return self.__list_optimal(nums, n)
+        return self.__lis_single_arr(nums, n)
 
 
 if __name__ == "__main__":
