@@ -1,16 +1,13 @@
 """Printing longest increasing subsequences."""
+
 from typing import List
 
 
 class Solution:
     def __get_lis(self, nums: List[int], n: int) -> List[int]:
         # Dynamic programming approach to find and print the Longest Increasing Subsequence
-        dp: List[int] = [
-            1 for col in range(n)
-        ]  # Stores the length of LIS ending at each index
-        hsh: List[int] = [
-            0 for col in range(n)
-        ]  # Stores the index of the previous element in LIS
+        dp: List[int] = [1] * n  # Stores the length of LIS ending at each index
+        hsh: List[int] = [0] * n  # Stores the index of the previous element in LIS
         last_index: int = 0  # Keeps track of the last index of the LIS
         lis: int = 1  # Length of the LIS
 
