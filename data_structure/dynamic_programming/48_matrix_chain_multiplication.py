@@ -29,12 +29,33 @@ class Solution:
         dp[i][j] = mini
         return dp[i][j]
 
+    def __matrix_multiplication_tabulation(self, arr: List[int], n: int) -> int:
+        dp: List[List[int]] = [[0 for col in range(n)] for row in range(n)]
+
+        for i in range(n - 1, 0, -1):
+            for j in range(i + 1, n):
+                mini: int = 1e9
+                # Iterate through possible partitioning points
+                for k in range(i, j):
+                    # Calculate the total steps needed for multiplication if the matrix chain is partitioned at index k
+                    steps: int = (
+                        arr[i - 1] * arr[k] * arr[j]  # Matrix multiplication cost
+                        + dp[i][k]  # Cost of multiplying matrices from i to k
+                        + dp[k + 1][j]
+                    )
+                    # Update the minimum steps needed
+                    mini = min(mini, steps)
+                # Store the minimum steps needed in the dp table for future reference
+                dp[i][j] = mini
+        return dp[1][n - 1]
+
     def matrix_multiplication(self, arr: List[int]) -> int:
         n: int = len(arr)
         # Initialize a dp table to store computed results to avoid recomputation
-        dp: List[List[int]] = [[-1 for col in range(n)] for row in range(n)]
-        # Call the recursive function to find the minimum steps for matrix multiplication
-        return self.__f(i=1, j=n - 1, arr=arr, dp=dp)
+        # dp: List[List[int]] = [[-1 for col in range(n)] for row in range(n)]
+        # # Call the recursive function to find the minimum steps for matrix multiplication
+        # return self.__f(i=1, j=n - 1, arr=arr, dp=dp)
+        return self.__matrix_multiplication_tabulation(arr=arr, n=n)
 
 
 if __name__ == "__main__":
