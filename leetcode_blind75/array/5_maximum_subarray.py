@@ -39,18 +39,39 @@ class Solution:
 
         return mx_sum
 
+    def __max_sum_optimal_indices(self, nums: List[int], n: int) -> int:
+        mx_sum: int = -1e9
+        cur_sum: int = 0
+        start_index: int = 0
+        end_index: int = 0
+        # Iterate through the array to find maximum subarray sum
+        for i in range(n):
+            if cur_sum == 0:
+                start_index = i
+            cur_sum += nums[i]
+            # Update the maximum subarray sum if the current sum is greater
+            if cur_sum > mx_sum:
+                mx_sum = cur_sum
+                end_index = i
+            # If the current sum becomes negative, reset it to 0
+            if cur_sum < 0:
+                cur_sum = 0
+        print(f"start index= {start_index}, end index= {end_index}")
+        return mx_sum
+
     # Main function to find maximum subarray sum
     def maxSubArray(self, nums: List[int]) -> int:
         n: int = len(nums)
         # Uncomment the appropriate function call based on the approach to use
         # return self.__max_sum(nums=nums, n=n)  # Brute-force approach
-        return self.__max_sum_optimal(nums=nums, n=n)  # Optimal approach
+        # return self.__max_sum_optimal(nums=nums, n=n)  # Optimal approach
+        return self.__max_sum_optimal_indices(nums=nums, n=n)
 
 
 # Main function to test the maxSubArray function
 if __name__ == "__main__":
     nums: List[int] = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
     # nums = [1]
-    # nums = [5, 4, -1, 7, 8]
+    nums = [5, 4, -1, 7, 8]
     solution: Solution = Solution()
     print(solution.maxSubArray(nums=nums))
