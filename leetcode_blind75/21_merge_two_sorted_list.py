@@ -7,6 +7,9 @@ class ListNode:
         self.val = val
         self.next = next
 
+    def __str__(self) -> str:
+        return f"{self.val}"
+
 
 class Solution:
     def mergeTwoLists(
@@ -28,3 +31,22 @@ class Solution:
             seek = seek.next
 
         return head
+
+
+list1: ListNode = ListNode(1)
+l1 = list1.next = ListNode(2)
+l2 = l1.next = ListNode(4)
+
+list2: ListNode = ListNode(1)
+l21 = list2.next = ListNode(3)
+l22 = l21.next = ListNode(4)
+
+solution: Solution = Solution()
+l3 = solution.mergeTwoLists(list1=list1, list2=list2)
+
+temp = l3
+
+while temp:
+    print(temp.val, end="->")
+    temp = temp.next
+print("NULL")
