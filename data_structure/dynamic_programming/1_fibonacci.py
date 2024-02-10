@@ -81,4 +81,4 @@ if __name__ == "__main__":
     print("Function calls (Approach 2):", cnt)
 
     print(fib2(20))
-    print(fib2(20))
+    print(fib3(20))
