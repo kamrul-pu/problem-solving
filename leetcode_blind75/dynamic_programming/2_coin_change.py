@@ -77,15 +77,12 @@ class Solution:
         ]
         cur: List[int] = [0 for col in range(amount + 1)]
         for i in range(1, n):
-            print("prev", prev)
             for t in range(amount + 1):
                 not_take: int = 0 + prev[t]
                 take: int = 1e9
                 if coins[i] <= t:
                     take = 1 + cur[t - coins[i]]
                 cur[t] = min(take, not_take)
-            print("prev", prev)
-            print("cur", cur)
             prev = cur
         return prev[amount] if prev[amount] != 1e9 else -1
 
