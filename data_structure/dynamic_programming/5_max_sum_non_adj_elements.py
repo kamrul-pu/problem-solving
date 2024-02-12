@@ -23,7 +23,7 @@ def max_sum_tabulation(n: int, arr: list[int]) -> int:
     dp: list[int] = [0] * n
     dp[0] = arr[0]
     for i in range(1, n):
-        take: int = arr[i] + dp[i - 2] if i > 1 else 0
+        take: int = arr[i] + (dp[i - 2] if i > 1 else 0)
         non_take: int = 0 + dp[i - 1]
         dp[i] = max(take, non_take)
 
