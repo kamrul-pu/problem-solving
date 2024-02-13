@@ -34,7 +34,7 @@ class Solution:
             ans += 1  # Increment the minimum number of jumps
         return ans  # Return the minimum number of jumps
 
-    def jump(self, nums: List[int]) -> bool:
+    def jump(self, nums: List[int]) -> int:
         """
         Main function to determine the minimum number of jumps required to reach the last index.
 
