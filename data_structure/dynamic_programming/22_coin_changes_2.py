@@ -1,14 +1,16 @@
 """Coin change problem. Number of ways to make target sum."""
 
+from typing import List
 
-def ways(i: int, amount: int, coins: list[int], memo={}) -> int:
+
+def ways(i: int, amount: int, coins: List[int], memo={}) -> int:
     """
     Recursive function to find the number of ways to make the target sum using given coins.
 
     Args:
         i (int): Index of the current coin.
         amount (int): Remaining target sum.
-        coins (list[int]): List of available coin denominations.
+        coins (List[int]): List of available coin denominations.
         memo (dict): Memoization dictionary to store already computed results.
 
     Returns:
@@ -34,12 +36,12 @@ def ways(i: int, amount: int, coins: list[int], memo={}) -> int:
     return memo[key]
 
 
-def ways_tabulation(coins: list[int], n: int, amount: int) -> int:
+def ways_tabulation(coins: List[int], n: int, amount: int) -> int:
     """
     Dynamic programming solution using tabulation to find the number of ways to make the target sum.
 
     Args:
-        coins (list[int]): List of available coin denominations.
+        coins (List[int]): List of available coin denominations.
         n (int): Number of different coin denominations.
         amount (int): Target sum.
 
@@ -47,7 +49,7 @@ def ways_tabulation(coins: list[int], n: int, amount: int) -> int:
         int: Number of ways to make the target sum.
     """
     # Initialize a 2D array to store the results of subproblems.
-    dp: list[list[int]] = [
+    dp: List[List[int]] = [
         [1 if col % coins[0] == 0 else 0 for col in range(amount + 1)]
         for row in range(n)
     ]
@@ -65,12 +67,12 @@ def ways_tabulation(coins: list[int], n: int, amount: int) -> int:
     return dp[n - 1][amount]
 
 
-def ways_optimal(coins: list[int], n: int, amount: int) -> int:
+def ways_optimal(coins: List[int], n: int, amount: int) -> int:
     """
     Optimized dynamic programming solution using only two arrays to find the number of ways to make the target sum.
 
     Args:
-        coins (list[int]): List of available coin denominations.
+        coins (List[int]): List of available coin denominations.
         n (int): Number of different coin denominations.
         amount (int): Target sum.
 
@@ -78,8 +80,8 @@ def ways_optimal(coins: list[int], n: int, amount: int) -> int:
         int: Number of ways to make the target sum.
     """
     # Initialize two arrays to store results of subproblems.
-    prev: list[int] = [1 if col % coins[0] == 0 else 0 for col in range(amount + 1)]
-    cur: list[int] = [0] * (amount + 1)
+    prev: List[int] = [1 if col % coins[0] == 0 else 0 for col in range(amount + 1)]
+    cur: List[int] = [0] * (amount + 1)
 
     # Iterate over each coin and target sum to fill in the arrays.
     for i in range(1, n):
@@ -98,7 +100,7 @@ def ways_optimal(coins: list[int], n: int, amount: int) -> int:
 
 if __name__ == "__main__":
     # Example usage:
-    coins: list[int] = [1, 2, 3]
+    coins: List[int] = [1, 2, 3]
     amount: int = 4
     n: int = len(coins)
 
