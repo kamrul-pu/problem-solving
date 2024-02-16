@@ -1,12 +1,13 @@
+from typing import List, Deque, Tuple
 from collections import deque
 
 
-def bfs(i: int, j: int, visited: list[list[bool]], matrix: list[list[int]]) -> None:
+def bfs(i: int, j: int, visited: List[List[bool]], matrix: List[List[int]]) -> None:
     # Mark the current cell as visited
     visited[i][j] = True
 
     # Initialize a queue for BFS
-    q = deque()
+    q: Deque = deque()
     q.append((i, j))
 
     n: int = len(matrix)
@@ -14,7 +15,7 @@ def bfs(i: int, j: int, visited: list[list[bool]], matrix: list[list[int]]) -> N
 
     # Perform BFS traversal
     while q:
-        front: tuple = q.popleft()
+        front: Tuple = q.popleft()
         row: int = front[0]
         col: int = front[1]
 
@@ -38,9 +39,9 @@ def bfs(i: int, j: int, visited: list[list[bool]], matrix: list[list[int]]) -> N
                     q.append((nrow, ncol))
 
 
-def number_of_island(matrix: list[list[int]], n: int, m: int) -> int:
+def number_of_island(matrix: List[List[int]], n: int, m: int) -> int:
     # Initialize a 2D array to keep track of visited cells
-    visited: list[list[bool]] = [[False for _ in range(m)] for row in range(n)]
+    visited: List[List[bool]] = [[False for _ in range(m)] for row in range(n)]
 
     # Counter for the number of islands
     cnt: int = 0
@@ -59,7 +60,7 @@ def number_of_island(matrix: list[list[int]], n: int, m: int) -> int:
 if __name__ == "__main__":
     n: int = 5  # number of rows
     m: int = 4  # number of columns
-    matrix: list[list[int]] = [
+    matrix: List[List[int]] = [
         [0, 1, 1, 0],
         [0, 1, 1, 0],
         [0, 0, 1, 0],
