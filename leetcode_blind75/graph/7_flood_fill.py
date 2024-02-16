@@ -7,7 +7,9 @@ of all of the aforementioned pixels with color.
 Return the modified image after performing the flood fill.
 """
 
-from typing import List
+from typing import Deque, List, Tuple
+
+from collections import deque
 
 
 class Solution:
@@ -43,6 +45,34 @@ class Solution:
                 # Recursive call to explore the neighbor
                 self.__dfs(nrow, ncol, image, init_color, new_color, ans)
 
+    def __bfs(
+        self, sr: int, sc: int, color: int, image: List[List[int]], ans: List[List[int]]
+    ) -> None:
+        n: int = len(image)
+        m: int = len(image[0])
+        init_color: int = image[sr][sc]
+        ans[sr][sc] = color
+
+        q: Deque = deque()
+        q.append((sr, sc))
+        # Define the directions to explore (up, right, down, left)
+        del_row: List[int] = [-1, 0, 1, 0]
+        del_col: List[int] = [0, 1, 0, -1]
+        while q:
+            front: Tuple = q.popleft()
+            row, col = front
+            ans[row][col] = color
+            for i in range(4):
+                nrow: int = row + del_row[i]
+                ncol: int = col + del_col[i]
+                if (
+                    n > nrow >= 0
+                    and m > ncol >= 0
+                    and image[nrow][ncol] == init_color
+                    and image[nrow][ncol] != color
+                ):
+                    q.append((nrow, ncol))
+
     def floodFill(
         self, image: List[List[int]], sr: int, sc: int, color: int
     ) -> List[List[int]]:
@@ -52,7 +82,9 @@ class Solution:
         # Create a copy of the image to store the result
         ans: list[list[int]] = image.copy()
         # Call the DFS function to perform flood fill
-        self.__dfs(sr, sc, image, init_color, color, ans)
+        # self.__dfs(sr, sc, image, init_color, color, ans)
+        # call the BFS function to perform flood fill
+        self.__bfs(sr, sc, color, image, ans)
 
         # Return the updated image after flood fill
         return ans
