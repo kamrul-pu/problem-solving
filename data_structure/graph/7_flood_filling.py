@@ -1,14 +1,16 @@
 """Flood filling."""
 
+from typing import List
+
 
 def dfs(
     sr,
     sc,
-    ans: list[list[int]],
-    image: list[list[int]],
+    ans: List[List[int]],
+    image: List[List[int]],
     new_color: int,
-    del_row: list[int],
-    del_col: list[int],
+    del_row: List[int],
+    del_col: List[int],
     init_color: int,
 ) -> None:
     # Mark the current cell with the new color
@@ -47,17 +49,17 @@ def dfs(
 
 
 def flood_fill(
-    image: list[list[int]], sr: int, sc: int, new_color: int
-) -> list[list[int]]:
+    image: List[List[int]], sr: int, sc: int, new_color: int
+) -> List[List[int]]:
     # Get the initial color of the starting point
     init_color: int = image[sr][sc]
 
     # Create a copy of the image to store the result
-    ans: list[list[int]] = image.copy()
+    ans: List[List[int]] = image.copy()
 
     # Define the directions to explore (up, right, down, left)
-    del_row: list[int] = [-1, 0, 1, 0]
-    del_col: list[int] = [0, 1, 0, -1]
+    del_row: List[int] = [-1, 0, 1, 0]
+    del_col: List[int] = [0, 1, 0, -1]
 
     # Call the DFS function to perform flood fill
     dfs(
@@ -77,7 +79,7 @@ def flood_fill(
 
 if __name__ == "__main__":
     # Example usage of the flood_fill function
-    image: list[list[int]] = [
+    image: List[List[int]] = [
         [1, 1, 1],
         [2, 2, 0],
         [2, 2, 2],
