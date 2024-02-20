@@ -1,15 +1,17 @@
 """Rotten Oranges."""
+
 from collections import deque
+from typing import Deque, List, Tuple
 
 
-def oranges_rotting(matrix: list[list[int]]) -> int:
+def oranges_rotting(matrix: List[List[int]]) -> int:
     # Get the number of rows and columns in the matrix
     n: int = len(matrix)
     m: int = len(matrix[0])
 
     # Initialize a deque for BFS, a matrix to track visited cells, and count of fresh oranges
-    q = deque()
-    visited: list[list[bool]] = [[False for col in range(m)] for row in range(n)]
+    q: Deque = deque()
+    visited: List[List[bool]] = [[False for col in range(m)] for row in range(n)]
     cnt_fresh: int = 0
 
     # Find all initially rotten oranges and add them to the queue
@@ -22,18 +24,14 @@ def oranges_rotting(matrix: list[list[int]]) -> int:
                 cnt_fresh += 1  # Count the number of fresh oranges
 
     tm: int = 0  # Initialize the time to 0
-    del_row: list[int] = [
-        -1,
-        0,
-        1,
-        0,
-    ]  # Delta for row in four directions (up, right, down, left)
-    del_col: list[int] = [0, 1, 0, -1]  # Delta for column in four directions
+    # Delta for row column for four directions (up, right, down, left)
+    del_row: List[int] = [-1, 0, 1, 0]
+    del_col: List[int] = [0, 1, 0, -1]
     cnt: int = 0  # Initialize count of rotten oranges
 
     # Perform BFS to find the minimum time for all oranges to rot
     while q:
-        front: tuple = q.popleft()
+        front: Tuple = q.popleft()
         r: int = front[0]
         c: int = front[1]
         t: int = front[2]
@@ -69,5 +67,6 @@ def oranges_rotting(matrix: list[list[int]]) -> int:
 
 if __name__ == "__main__":
     # Example usage of the oranges_rotting function
-    matrix: list[list[int]] = [[0, 1, 2], [0, 1, 1], [2, 1, 1]]
+    matrix: List[List[int]] = [[0, 1, 2], [0, 1, 1], [2, 1, 1]]
+    matrix = [[0, 1]]
     print("Time taken for all oranges to rot:", oranges_rotting(matrix=matrix))
