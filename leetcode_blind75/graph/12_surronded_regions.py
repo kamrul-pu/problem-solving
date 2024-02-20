@@ -4,7 +4,8 @@ Given an m x n matrix board containing 'X' and 'O', capture all regions that are
 A region is captured by flipping all 'O's into 'X's in that surrounded region.
 """
 
-from typing import List
+from collections import deque
+from typing import Deque, List, Tuple
 
 
 class Solution:
@@ -38,10 +39,56 @@ class Solution:
                 # Recursive call to explore the neighbor
                 self.__dfs(nrow, ncol, board, visited, n, m)
 
-    def solve(self, board: List[List[str]]) -> None:
-        """
-        Do not return anything, modify board in-place instead.
-        """
+    def __bfs(self, board: List[List[str]]) -> None:
+        n: int = len(board)
+        m: int = len(board[0])
+
+        # Initialize a 2D list to keep track of visited cells
+        visited: List[List[bool]] = [[False] * m for _ in range(n)]
+
+        q: Deque = deque()
+
+        # Traverse the boundary cells of the board and perform DFS for unvisited "O" cells
+        for j in range(m):
+            if board[0][j] == "O" and not visited[0][j]:
+                q.append((0, j))
+                visited[0][j] = True
+            if board[n - 1][j] == "O" and not visited[n - 1][j]:
+                q.append((n - 1, j))
+                visited[n - 1][j] = True
+
+        for i in range(n):
+            if board[i][0] == "O" and not visited[i][0]:
+                q.append((i, 0))
+                visited[i][0] = True
+            if board[i][m - 1] == "O" and not visited[i][m - 1]:
+                q.append(i, m - 1)
+                visited[i][m - 1] = True
+
+        while q:
+            front: Tuple = q.popleft()
+            row, col = front
+            # Traverse the boundary cells of the board and perform DFS for unvisited "O" cells
+            for i in range(4):
+                nrow: int = row + self.del_row[i]
+                ncol: int = col + self.del_col[i]
+                # Check if the neighbor is within grid boundaries, unvisited, and has value "O"
+                if (
+                    n > nrow >= 0
+                    and m > ncol >= 0
+                    and not visited[nrow][ncol]
+                    and board[nrow][ncol] == "O"
+                ):
+                    q.append((nrow, ncol))
+                    visited[nrow][ncol] = True
+
+        # Traverse the inner cells of the board and mark unvisited "O" cells as "X"
+        for i in range(1, n):
+            for j in range(1, m):
+                if not visited[i][j] and board[i][j] == "O":
+                    board[i][j] = "X"
+
+    def __surronded_regions(self, board: List[List[str]]) -> None:
         n: int = len(board)
         m: int = len(board[0])
 
@@ -66,6 +113,13 @@ class Solution:
             for j in range(1, m):
                 if not visited[i][j] and board[i][j] == "O":
                     board[i][j] = "X"
+
+    def solve(self, board: List[List[str]]) -> None:
+        """
+        Do not return anything, modify board in-place instead.
+        """
+        # self.__surronded_regions(board=board)
+        self.__bfs(board=board)
 
 
 # Test the solution
