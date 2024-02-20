@@ -1,8 +1,10 @@
 """Detect Cycle in an undirected graph. using dfs"""
+
 from collections import deque
+from typing import Deque, List, Tuple
 
 
-def detect(node: int, parent: int, graph: list[list[int]], visited: list[int]) -> bool:
+def detect(node: int, parent: int, graph: List[List[int]], visited: List[int]) -> bool:
     # Mark the current node as visited
     visited[node] = True
 
@@ -15,9 +17,9 @@ def detect(node: int, parent: int, graph: list[list[int]], visited: list[int]) -
     return False  # No cycle found
 
 
-def is_cycle(v: int, graph: list[list[int]]) -> bool:
-    # Initialize a list to track visited nodes
-    visited: list[bool] = [False] * (v + 1)
+def is_cycle(v: int, graph: List[List[int]]) -> bool:
+    # Initialize a List to track visited nodes
+    visited: List[bool] = [False] * (v + 1)
 
     # Start the cycle detection from the first node (can be any node)
     return detect(node=1, parent=-1, graph=graph, visited=visited)
@@ -32,8 +34,8 @@ def is_cycle(v: int, graph: list[list[int]]) -> bool:
 
 
 if __name__ == "__main__":
-    # Example usage of the is_cycle function with an undirected graph represented as an adjacency list
-    graph: list[list[int]] = [
+    # Example usage of the is_cycle function with an undirected graph represented as an adjacency List
+    graph: List[List[int]] = [
         [],
         [2, 3],
         [1, 5],
