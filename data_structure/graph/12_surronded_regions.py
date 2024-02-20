@@ -1,14 +1,16 @@
 """Surrounded Regions Replace 0's with X's."""
 
+from typing import List
+
 
 def dfs(
-    row: int, col: int, n: int, m: int, g: list[list[int]], visited: list[list[bool]]
+    row: int, col: int, n: int, m: int, g: List[List[int]], visited: List[List[bool]]
 ) -> None:
     """Depth-First Search to mark connected 'O' cells as visited."""
     visited[row][col] = True
     # Define directions for movement: up, right, down, left
-    dr: list[int] = [-1, 0, 1, 0]
-    dc: list[int] = [0, 1, 0, -1]
+    dr: List[int] = [-1, 0, 1, 0]
+    dc: List[int] = [0, 1, 0, -1]
 
     for i in range(len(dr)):
         nrow: int = row + dr[i]
@@ -27,9 +29,9 @@ def dfs(
             dfs(row=nrow, col=ncol, n=n, m=m, g=g, visited=visited)
 
 
-def replace_0s(g: list[list[str]], n: int, m: int) -> None:
+def replace_0s(g: List[List[str]], n: int, m: int) -> None:
     """Replace surrounded 'O' cells with 'X'."""
-    visited: list[list[bool]] = [[False for col in range(m)] for row in range(n)]
+    visited: List[List[bool]] = [[False for col in range(m)] for row in range(n)]
 
     # Visit top and bottom boundary
     for j in range(m):
@@ -54,7 +56,7 @@ def replace_0s(g: list[list[str]], n: int, m: int) -> None:
 
 if __name__ == "__main__":
     # Example usage with a 2D grid
-    g: list[list[str]] = [
+    g: List[List[str]] = [
         ["X", "X", "X", "X", "X"],
         ["X", "O", "O", "X", "O"],
         ["X", "X", "O", "X", "O"],
