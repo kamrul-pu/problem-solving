@@ -1,18 +1,20 @@
 """Distance of nearest cell."""
+
 from collections import deque
+from typing import Deque, List, Tuple
 
 
-def distance(g: list[list[int]]) -> list[list[int]]:
+def distance(g: List[List[int]]) -> List[List[int]]:
     # Get the number of rows and columns in the grid
     n: int = len(g)
     m: int = len(g[0])
 
     # Initialize a deque for BFS and visited matrix to keep track of visited cells
-    q = deque()
-    visited: list[list[bool]] = [[False for col in range(m)] for row in range(n)]
+    q: Deque = deque()
+    visited: List[List[bool]] = [[False for col in range(m)] for row in range(n)]
 
     # Initialize the answer matrix with placeholders
-    ans: list[list[int]] = [[False for col in range(m)] for row in range(n)]
+    ans: List[List[int]] = [[False for col in range(m)] for row in range(n)]
 
     # Iterate through the grid to find the cells with value 1 and start BFS from those cells
     for i in range(n):
@@ -24,12 +26,12 @@ def distance(g: list[list[int]]) -> list[list[int]]:
                 visited[i][j] = True  # Mark the cell as visited
 
     # Define the directions for movement: up, right, down, left
-    dr: list[int] = [-1, 0, 1, 0]
-    dc: list[int] = [0, 1, 0, -1]
+    dr: List[int] = [-1, 0, 1, 0]
+    dc: List[int] = [0, 1, 0, -1]
 
     # Perform BFS
     while q:
-        front: tuple = q.popleft()
+        front: Tuple = q.popleft()
         row: int = front[0]
         col: int = front[1]
         dist: int = front[2]
@@ -60,14 +62,14 @@ def distance(g: list[list[int]]) -> list[list[int]]:
 
 if __name__ == "__main__":
     # Example usage with a 2D grid
-    g: list[list[int]] = [
+    g: List[List[int]] = [
         [0, 0, 0],
         [0, 1, 0],
         [1, 0, 1],
     ]
 
     # Get the distance matrix using the defined function
-    ans: list[list[int]] = distance(g=g)
+    ans: List[List[int]] = distance(g=g)
 
     # Print the resulting distance matrix
     for row in ans:
