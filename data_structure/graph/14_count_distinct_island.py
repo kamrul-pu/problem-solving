@@ -1,12 +1,18 @@
-"""Count number of distinct island."""
+"""
+Given a boolean 2D matrix grid of size n * m. You have to find the number of distinct islands where a group of connected
+1s (horizontally or vertically) forms an island. Two islands are considered to be distinct if and only if one island is
+not equal to another (not rotated or reflected).
+"""
+
+from typing import List, Set
 
 
 def dfs(
     row: int,
     col: int,
-    g: list[list[int]],
-    visited: list[list[bool]],
-    lst: list[int],
+    g: List[List[int]],
+    visited: List[List[bool]],
+    lst: List[int],
     row0: int,
     col0: int,
     n: int,
@@ -17,8 +23,8 @@ def dfs(
     lst.append((row - row0, col - col0))
 
     # Define the possible moves: up, right, down, left
-    dr: list[int] = [-1, 0, 1, 0]
-    dc: list[int] = [0, 1, 0, -1]
+    dr: List[int] = [-1, 0, 1, 0]
+    dc: List[int] = [0, 1, 0, -1]
 
     # Explore neighbors
     for i in range(len(dr)):
@@ -48,18 +54,18 @@ def dfs(
             )
 
 
-def count_distinct_island(g: list[list[int]]) -> int:
+def count_distinct_island(g: List[List[int]]) -> int:
     n: int = len(g)
     m: int = len(g[0])
-    visited: list[list[bool]] = [[False for col in range(m)] for row in range(n)]
-    st: set = set()  # Set to store distinct islands
+    visited: List[List[bool]] = [[False for col in range(m)] for row in range(n)]
+    st: Set = set()  # Set to store distinct islands
 
     # Iterate through each cell in the grid
     for row in range(n):
         for col in range(m):
             # If the cell is part of an unvisited island
             if not visited[row][col] and g[row][col] == 1:
-                lst: list[int] = []
+                lst: List[int] = []
 
                 # Explore the entire island and store its relative positions
                 dfs(
@@ -81,7 +87,7 @@ def count_distinct_island(g: list[list[int]]) -> int:
 
 
 if __name__ == "__main__":
-    g: list[list[int]] = [
+    g: List[List[int]] = [
         [1, 1, 0, 1, 1],
         [1, 0, 0, 0, 0],
         [0, 0, 0, 1, 1],
