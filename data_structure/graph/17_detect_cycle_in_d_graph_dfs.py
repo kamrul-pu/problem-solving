@@ -1,12 +1,13 @@
 """Detect Cycle in an directed graph. using dfs"""
-from collections import deque
+
+from typing import List
 
 
 def detect(
     node: int,
-    graph: list[list[int]],
-    visited: list[int],
-    path_visited: list[bool],
+    graph: List[List[int]],
+    visited: List[int],
+    path_visited: List[bool],
 ) -> bool:
     # Mark the current node as visited
     visited[node] = True
@@ -28,10 +29,10 @@ def detect(
     return False  # No cycle found
 
 
-def is_cycle(v: int, graph: list[list[int]]) -> bool:
-    # Initialize a list to track visited nodes
-    visited: list[bool] = [False] * (v + 1)
-    path_visited: list[bool] = [False] * (v + 1)
+def is_cycle(v: int, graph: List[List[int]]) -> bool:
+    # Initialize a List to track visited nodes
+    visited: List[bool] = [False] * (v + 1)
+    path_visited: List[bool] = [False] * (v + 1)
 
     # for connected components
     for i in range(1, v + 1):
@@ -49,8 +50,8 @@ def is_cycle(v: int, graph: list[list[int]]) -> bool:
 
 
 if __name__ == "__main__":
-    # Example usage of the is_cycle function with an undirected graph represented as an adjacency list
-    graph: list[list[int]] = [
+    # Example usage of the is_cycle function with an undirected graph represented as an adjacency List
+    graph: List[List[int]] = [
         [],
         [2],
         [3],
