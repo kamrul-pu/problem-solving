@@ -34,13 +34,30 @@ class Solution:
 
         return True  # All nodes are colored in a bipartite manner
 
+    def __dfs(
+        self, node: int, col: int, color: List[int], graph: List[List[int]]
+    ) -> bool:
+        color[node] = col  # Color the current node with the specified color
+        # Explore neighbors of the current node
+        for neighbor in graph[node]:
+            if color[neighbor] == -1:  # Neighbor is not colored yet
+                # Recursively explore the neighbor node with the opposite color
+                if not self.__dfs(neighbor, not col, color, graph):
+                    return False
+            elif color[neighbor] == color[node]:  # Neighbor has the same color
+                return False  # Not bipartite
+
+        return True  # All neighbors are colored with different colors
+
     def isBipartite(self, graph: List[List[int]]) -> bool:
         n: int = len(graph)
         color: List[int] = [-1] * n
         for node in range(n):
             if color[node] == -1:  # node is unvisted
-                if not self.__f(graph=graph, start=node, color=color):
-                    return False  # not bipartite
+                # if not self.__f(graph=graph, start=node, color=color):
+                #     return False  # not bipartite
+                if not self.__dfs(node=node, col=0, color=color, graph=graph):
+                    return False
 
         return True
 
