@@ -3,7 +3,8 @@ Topological sort in python.
 Graph Must be DAG -> Directed Acyclic Graph.
 """
 
-from typing import List
+from collections import deque
+from typing import Deque, List
 
 
 class Solution:
@@ -48,6 +49,55 @@ class Solution:
 
         return st
 
+    def topo_sort_kahns_algo(self, g: List[List[int]]) -> List[int]:
+        """
+        Perform topological sorting using Kahn's algorithm.
+
+        Args:
+        - g (List[List[int]]): The adjacency list representation of the graph.
+
+        Returns:
+        - List[int]: The topologically sorted nodes.
+        """
+        # Calculate the number of nodes in the graph
+        n: int = len(g)
+
+        # Initialize a list to store the in-degree of each node
+        indegree: List[int] = [0] * n
+
+        # Calculate the in-degree of each node
+        for node in range(n):
+            for neighbor in g[node]:
+                indegree[neighbor] += 1
+
+        # Initialize a deque to perform BFS
+        q: Deque = deque()
+
+        # Enqueue nodes with in-degree zero
+        for i in range(n):
+            if indegree[i] == 0:
+                q.append(i)
+
+        # Initialize a list to store the topological ordering
+        topo: List[int] = []
+
+        # Perform BFS-based topological sorting
+        while q:
+            # Dequeue a node
+            node: int = q.popleft()
+
+            # Add the dequeued node to the topological ordering
+            topo.append(node)
+
+            # Update the in-degree of its neighbors and enqueue them if their in-degree becomes zero
+            for neighbor in g[node]:
+                indegree[neighbor] -= 1
+                if indegree[neighbor] == 0:
+                    q.append(neighbor)
+
+        # Return the topological ordering
+        return topo
+
 
 if __name__ == "__main__":
     # Example graph represented as an adjacency list
@@ -61,3 +111,5 @@ if __name__ == "__main__":
 
     # Print the topological order
     print(topo)
+
+    print(solution.topo_sort_kahns_algo(g=g))
