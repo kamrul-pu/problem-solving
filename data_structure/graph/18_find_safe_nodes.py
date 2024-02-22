@@ -1,12 +1,14 @@
 """Find safe nodes in directed graph using dfs."""
 
+from typing import List
+
 
 def dfs_check(
     node: int,
-    g: list[list[int]],
-    vis: list[int],
-    path_vis: list[bool],
-    check: list[bool],
+    g: List[List[int]],
+    vis: List[int],
+    path_vis: List[bool],
+    check: List[bool],
 ) -> bool:
     # Mark the current node as visited
     vis[node] = True
@@ -31,12 +33,12 @@ def dfs_check(
     return False  # No cycle found
 
 
-def find_safe_nodes(v: int, g: list[list[int]]) -> list[int]:
+def find_safe_nodes(v: int, g: List[List[int]]) -> List[int]:
     # Initialize lists to track visited nodes, path, and check safe nodes
-    vis: list[bool] = [False] * (v)
-    path_vis: list[bool] = [False] * (v)
-    check: list[bool] = [False] * v
-    safe_nodes: list[int] = []
+    vis: List[bool] = [False] * (v)
+    path_vis: List[bool] = [False] * (v)
+    check: List[bool] = [False] * v
+    safe_nodes: List[int] = []
 
     # Iterate through all nodes for connected components
     for i in range(0, v):
@@ -49,13 +51,13 @@ def find_safe_nodes(v: int, g: list[list[int]]) -> list[int]:
         if check[i] == True:
             safe_nodes.append(i)
 
-    # Return the list of safe nodes
+    # Return the List of safe nodes
     return safe_nodes
 
 
 if __name__ == "__main__":
-    # Example usage of the find_safe_nodes function with a directed graph represented as an adjacency list
-    g: list[list[int]] = [
+    # Example usage of the find_safe_nodes function with a directed graph represented as an adjacency List
+    g: List[List[int]] = [
         [1],
         [2],
         [3],
@@ -69,5 +71,5 @@ if __name__ == "__main__":
         [8],
         [9],
     ]
-    safe_nodes: list[int] = find_safe_nodes(v=12, g=g)
+    safe_nodes: List[int] = find_safe_nodes(v=12, g=g)
     print(safe_nodes)
