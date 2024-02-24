@@ -1,13 +1,14 @@
 # Importing the necessary module
 from collections import deque
+from typing import Deque, List
 
 
 # Function to find the shortest path using BFS
-def shortest_path(g: list[list[int]], n: int, src: int) -> list[int]:
-    # Initializing distance list with infinity for all nodes
-    dist: list[int] = [float("inf")] * n
+def shortest_path(g: List[List[int]], n: int, src: int) -> List[int]:
+    # Initializing distance List with infinity for all nodes
+    dist: List[int] = [float("inf")] * n
     # Creating a deque for BFS traversal
-    q: deque = deque()
+    q: Deque = deque()
     # Adding the source node to the queue and setting its distance to 0
     q.append(src)
     dist[src] = 0
@@ -27,14 +28,14 @@ def shortest_path(g: list[list[int]], n: int, src: int) -> list[int]:
                 # Add the neighbor to the queue for further exploration
                 q.append(it)
 
-    # Return the list of shortest distances from the source node
+    # Return the List of shortest distances from the source node
     return dist
 
 
 # Main block to test the function
 if __name__ == "__main__":
-    # Example graph represented as an adjacency list
-    g: list[list[int]] = [
+    # Example graph represented as an adjacency List
+    g: List[List[int]] = [
         [1, 3],
         [0, 2, 3],
         [1, 6],
@@ -46,6 +47,6 @@ if __name__ == "__main__":
         [6, 7],
     ]
     # Find the shortest path from node 5
-    ans: list[int] = shortest_path(g=g, n=len(g), src=0)
+    ans: List[int] = shortest_path(g=g, n=len(g), src=0)
     # Print the result
     print(ans)
