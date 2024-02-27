@@ -2,20 +2,22 @@
 
 import heapq
 
+from typing import List, Tuple
 
-def shortest_path_dijkstra(adj_list: list[list[int]], src: int) -> list[int]:
+
+def shortest_path_dijkstra(adj_list: List[Tuple[int]], src: int) -> List[int]:
     """
     Computes the shortest path distances from a source node to all other nodes using Dijkstra's algorithm.
 
     Parameters:
-    - adj_list (list[list[int]]): The adjacency list representing the weighted graph.
+    - adj_list (List[List[int]]): The adjacency List representing the weighted graph.
     - src (int): The source node from which to compute the shortest paths.
 
     Returns:
-    - distances (list[int]): A list containing the shortest path distances from the source node to each node.
+    - distances (List[int]): A List containing the shortest path distances from the source node to each node.
     """
     n: int = len(adj_list)
-    distances: list[int] = [float("inf")] * n
+    distances: List[int] = [float("inf")] * n
 
     distances[src] = 0
     # Create an empty priority queue
@@ -36,7 +38,7 @@ def shortest_path_dijkstra(adj_list: list[list[int]], src: int) -> list[int]:
 
 
 if __name__ == "__main__":
-    adj_list: list[list[int]] = [
+    adj_list: List[Tuple[int]] = [
         [(1, 4), (2, 4)],
         [(0, 4), (2, 2)],
         [(0, 4), (1, 2), (3, 3), (4, 1), (5, 6)],
@@ -45,5 +47,5 @@ if __name__ == "__main__":
         [(2, 6), (3, 2), (4, 3)],
     ]
 
-    distances: list[int] = shortest_path_dijkstra(adj_list=adj_list, src=0)
+    distances: List[int] = shortest_path_dijkstra(adj_list=adj_list, src=0)
     print(distances)
