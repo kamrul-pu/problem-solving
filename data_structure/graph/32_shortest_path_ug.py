@@ -1,20 +1,22 @@
 """Shortest path in undirected graph."""
+
 import heapq
+from typing import List
 
 
-def shortest_path_distance(adj_list: list[list[int]], src: int) -> list[int]:
+def shortest_path_distance(adj_list: List[List[int]], src: int) -> List[int]:
     # Number of nodes in the graph
     n: int = len(adj_list)
 
     # Initialize distance and parent arrays
-    distance: list[int] = [float("inf")] * (n)
-    parent: list[int] = [i for i in range(n)]
+    distance: List[int] = [float("inf")] * (n)
+    parent: List[int] = [i for i in range(n)]
 
     # Distance from source to itself is 0
     distance[src] = 0
 
     # Priority queue to keep track of nodes and their distances
-    pq: list[int] = []
+    pq: List[int] = []
     heapq.heappush(pq, (distance[src], src))
 
     # Dijkstra's algorithm
@@ -34,7 +36,7 @@ def shortest_path_distance(adj_list: list[list[int]], src: int) -> list[int]:
 
     # Reconstruct the shortest path from source to destination
     dest_node: int = n - 1
-    ans: list[int] = []
+    ans: List[int] = []
     ans.append(dest_node)
 
     # Traverse the parent array to get the path
@@ -47,8 +49,8 @@ def shortest_path_distance(adj_list: list[list[int]], src: int) -> list[int]:
 
 
 if __name__ == "__main__":
-    # Example graph represented as an adjacency list
-    adj_list: list[list[int]] = [
+    # Example graph represented as an adjacency List
+    adj_list: List[List[int]] = [
         [],
         [(2, 2), (4, 1)],
         [(1, 2), (3, 4), (5, 5)],
@@ -58,5 +60,5 @@ if __name__ == "__main__":
     ]
 
     # Find and print the shortest path from source node 1
-    ans: list[int] = shortest_path_distance(adj_list=adj_list, src=1)
+    ans: List[int] = shortest_path_distance(adj_list=adj_list, src=1)
     print(ans)
