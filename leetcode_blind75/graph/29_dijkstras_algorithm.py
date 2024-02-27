@@ -1,5 +1,5 @@
 """
-Dijkstra's algorithm using priority queue.
+Dijkstra's algorithm using priority queue and deque.
 1. Mark the source node with a current distance of 0 and the rest with infinity.
 2. Set the non-visited node with the smallest current distance as the current node.
 3. For each neighbor, N of the current node adds the current distance of the adjacent
@@ -11,10 +11,47 @@ distance of Node, set it as the new current distance of N.
 
 import heapq
 
-from typing import List, Tuple
+from collections import deque
+from typing import Deque, List, Tuple
 
 
 class Solution:
+    def __dijkstras_q(self, adj_list: List[Tuple[int]], src: int) -> List[int]:
+        # Number of nodes in the graph
+        n: int = len(adj_list)
+
+        # Initialize distances to all nodes as infinity
+        distances: List[int] = [float("inf")] * n
+
+        # Set distance to source node as 0
+        distances[src] = 0
+
+        # Initialize a deque for BFS
+        q: Deque = deque()
+        q.append(
+            (src, distances[src])
+        )  # Initialize queue with source node and its distance
+
+        while q:
+            # Pop the node and its distance from the left of the queue
+            node, distance = q.popleft()
+
+            # Explore neighbors of the current node
+            for neighbor in adj_list[node]:
+                n_node: int = neighbor[0]  # Neighbor node index
+                new_distance: int = (
+                    distance + neighbor[1]
+                )  # Updated distance to neighbor
+
+                # If new distance is smaller, update the distance and push the node to queue
+                if new_distance < distances[n_node]:
+                    distances[n_node] = new_distance
+                    q.append(
+                        (n_node, new_distance)
+                    )  # Append neighbor node and its distance to queue
+
+        return distances
+
     def __dijkstras(self, adj_list: List[Tuple[int]], src: int) -> List[int]:
         # Number of nodes in the graph
         n: int = len(adj_list)
@@ -49,7 +86,7 @@ class Solution:
 
     def shortest_path(self, adj_list: List[Tuple[int]], src: int) -> List[int]:
         # Call Dijkstra's algorithm to find shortest paths
-        return self.__dijkstras(adj_list=adj_list, src=src)
+        return self.__dijkstras_q(adj_list=adj_list, src=src)
 
 
 if __name__ == "__main__":
