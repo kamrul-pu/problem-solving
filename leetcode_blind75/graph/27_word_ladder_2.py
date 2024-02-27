@@ -11,8 +11,8 @@ or an empty list if no such sequence exists. Each sequence should be returned as
 [beginWord, s1, s2, ..., sk].
 """
 
-from collections import defaultdict, deque
-from typing import List, DefaultDict, Deque, Set
+from collections import deque
+from typing import List, Deque, Set
 
 
 class Solution:
@@ -20,62 +20,60 @@ class Solution:
         self, beginWord: str, endWord: str, wordList: List[str]
     ) -> List[List[str]]:
         # Create a set for quick word lookup
-        wordSet = set(wordList)
+        word_set: Set = set(wordList)
 
-        # If endWord is not in the wordList, return an empty list
-        if endWord not in wordSet:
-            return []
-
-        # Create a defaultdict to store word connections based on wildcard patterns
-        graph: DefaultDict = defaultdict(list)
-        for word in wordList:
-            for i in range(len(word)):
-                pattern = word[:i] + "*" + word[i + 1 :]
-                graph[pattern].append(word)
-
-        # Initialize a queue for BFS traversal
+        # Initialize a queue for BFS
         q: Deque = deque()
-        # Enqueue the starting word as the initial path
+
+        # Start the queue with the initial word
         q.append([beginWord])
-        # Initialize a set to keep track of visited words
-        visited: Set = set()
-        # Mark the starting word as visited
-        visited.add(beginWord)
-        # Initialize a list to store the result paths
-        result = []
-        # Flag to indicate if endWord is found
-        found = False
 
-        # Perform BFS traversal
-        while q and not found:
-            # Get the number of paths at the current level
-            level = len(q)
-            # Set to keep track of visited words at the current level
-            levelVisited: Set = set()
-            # Process each path at the current level
-            for _ in range(level):
-                # Dequeue a path
-                path = q.popleft()
-                # Get the last word in the path
-                word = path[-1]
-                # Generate wildcard patterns for all possible transformations of the word
-                for i in range(len(word)):
-                    pattern = word[:i] + "*" + word[i + 1 :]
-                    # Explore all words connected to the current word based on the wildcard pattern
-                    for nextWord in graph[pattern]:
-                        # If the nextWord is the endWord, add the path to the result
-                        if nextWord == endWord:
-                            found = True
-                            result.append(path + [endWord])
-                        # If the nextWord has not been visited, add it to the queue with the current path
-                        elif nextWord not in visited:
-                            levelVisited.add(nextWord)
-                            q.append(path + [nextWord])
-            # Mark all words visited at the current level
-            visited |= levelVisited
+        # Keep track of words used on each level to avoid repeating them
+        used_on_level: List[str] = []
+        used_on_level.append(beginWord)
 
-        # Return the list of shortest transformation sequences from beginWord to endWord
-        return result
+        # Initialize the current level
+        level: int = 0
+
+        # Initialize the list to store the resulting sequences
+        ans: List[List[str]] = []
+
+        while q:
+            # Pop the first sequence from the queue
+            front: List[str] = q.popleft()
+
+            # Check if we are moving to the next level
+            if len(front) > level:
+                level += 1
+
+                # Remove words used in the previous level from the word set
+                for word in used_on_level:
+                    if word in word_set:
+                        word_set.remove(word)
+
+            # Get the last word in the sequence
+            word: str = front[-1]
+
+            # Check if we have reached the endWord
+            if word == endWord:
+                # Check if this is the first sequence found or if it's as short as the ones found before
+                if len(ans) == 0:
+                    ans.append(front)
+                elif len(ans[0]) == len(front):
+                    ans.append(front)
+
+            # Generate new words by changing one letter at a time
+            for i in range(len(word)):
+                for ch in range(ord("a"), ord("z") + 1):
+                    new_word: str = word[:i] + chr(ch) + word[i + 1 :]
+                    if new_word in word_set:
+                        # Add the new word to the sequence and append it to the queue
+                        front.append(new_word)
+                        q.append(front.copy())
+                        used_on_level.append(new_word)
+                        front.pop()
+
+        return ans
 
 
 if __name__ == "__main__":

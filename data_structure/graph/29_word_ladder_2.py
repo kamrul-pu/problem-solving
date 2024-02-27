@@ -18,25 +18,26 @@ from typing import Deque, List, Set
 def word_ladder_sequence(
     start_word: str, target_word: str, word_list: List[str]
 ) -> List[List[str]]:
+    # Create a set for quick word lookup
+    word_set: Set = set(word_list)
     q: Deque = deque()
     q.append([start_word])
-    st: Set = set()
-    for item in word_list:
-        st.add(item)
-    # if start_word in st:
-    #     st.remove(start_word)
-    used_on_level: List[str] = [start_word]
+    used_on_level: List[str] = []
+    used_on_level.append(start_word)
     level: int = 0
     ans: List[List[str]] = []
+
     while q:
         front: List[str] = q.popleft()
         if len(front) > level:
             level += 1
-            for it in used_on_level:
-                if it in st:
-                    st.remove(it)
+            # erase all word used in previous level
+            for word in used_on_level:
+                if word in word_set:
+                    word_set.remove(word)
+
         word: str = front[-1]
-        if word == target_word:
+        if word == end_word:
             if len(ans) == 0:
                 ans.append(front)
             elif len(ans[0]) == len(front):
@@ -45,16 +46,17 @@ def word_ladder_sequence(
         for i in range(len(word)):
             for ch in range(ord("a"), ord("z") + 1):
                 new_word: str = word[:i] + chr(ch) + word[i + 1 :]
-                if new_word in st:
+                if new_word in word_set:
                     front.append(new_word)
                     q.append(front.copy())
+                    used_on_level.append(new_word)
                     front.pop()
 
     return ans
 
 
 if __name__ == "__main__":
-    word_list: List[str] = ["put", "bot", "pot", "poz", "coz"]
+    word_list: List[str] = ["pat", "bot", "pot", "poz", "coz"]
     start_word: str = "bat"
     end_word: str = "coz"
     ladder_sequence: List[List[str]] = word_ladder_sequence(
