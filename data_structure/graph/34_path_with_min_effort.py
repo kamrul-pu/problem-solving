@@ -1,10 +1,12 @@
 """Path With Minimum Effort."""
+
 import heapq
+from typing import List
 
 
-def minimum_effort(g: list[list[int]]) -> int:
+def minimum_effort(g: List[List[int]]) -> int:
     # Priority queue to store efforts and corresponding cell coordinates
-    pq: list[int] = []
+    pq: List[int] = []
 
     # Number of rows in the grid
     n: int = len(g)
@@ -13,7 +15,7 @@ def minimum_effort(g: list[list[int]]) -> int:
     m: int = len(g[0])
 
     # Matrix to store the minimum effort to reach each cell
-    difference: list[list[int]] = [
+    difference: List[List[int]] = [
         [float("inf") for col in range(m)] for row in range(n)
     ]
 
@@ -24,8 +26,8 @@ def minimum_effort(g: list[list[int]]) -> int:
     heapq.heappush(pq, (0, (0, 0)))
 
     # Direction arrays for moving up, right, down, left
-    dr: list[int] = [-1, 0, 1, 0]
-    dc: list[int] = [0, 1, 0, -1]
+    dr: List[int] = [-1, 0, 1, 0]
+    dc: List[int] = [0, 1, 0, -1]
 
     # Dijkstra's algorithm to find the minimum effort path
     while pq:
@@ -53,7 +55,7 @@ def minimum_effort(g: list[list[int]]) -> int:
 
 
 if __name__ == "__main__":
-    g: list[list[int]] = [
+    g: List[List[int]] = [
         [1, 2, 2],
         [3, 8, 2],
         [5, 3, 5],
