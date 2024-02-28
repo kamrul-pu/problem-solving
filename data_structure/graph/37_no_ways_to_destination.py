@@ -1,20 +1,22 @@
 """Number of ways to arrive destination."""
+
 import heapq
+from typing import List, Tuple
 
 # Define a constant for modulo operation
 MOD: int = 10000007
 
 
-def find_num_ways(g: list[list[int]], n: int) -> int:
+def find_num_ways(g: List[List[int]], n: int) -> int:
     # set number of ways zero to all nodes
-    ways: list[int] = [0] * n
+    ways: List[int] = [0] * n
     # set the source node ways to 1
     ways[0] = 1
     # create a distance array with infinity and set src distance zero
-    dist: list[int] = [float("inf")] * n
+    dist: List[int] = [float("inf")] * n
     dist[0] = 0
     # declare a priority queue
-    pq: list[int] = []
+    pq: Tuple[int] = []
     heapq.heappush(pq, (0, 0))
     while pq:
         # pop the front element of the priority q
@@ -41,7 +43,7 @@ def find_num_ways(g: list[list[int]], n: int) -> int:
 if __name__ == "__main__":
     n: int = 7
     m: int = 10
-    edges: list[int] = [
+    edges: List[int] = [
         [0, 6, 7],
         [0, 1, 2],
         [1, 2, 3],
@@ -54,7 +56,7 @@ if __name__ == "__main__":
         [4, 6, 2],
     ]
     # generate graph from edges
-    g: list[list[int]] = [[] for _ in range(n)]
+    g: List[List[int]] = [[] for _ in range(n)]
     for item in edges:
         g[item[0]].append((item[1], item[2]))
         g[item[1]].append((item[0], item[2]))
