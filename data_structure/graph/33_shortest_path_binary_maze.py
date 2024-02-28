@@ -1,8 +1,10 @@
 """Shortest path in a Binary Maze."""
+
 from collections import deque
+from typing import Deque, List, Tuple
 
 
-def shortest_distance(g: list[list[int]], src: tuple, dest: tuple) -> int:
+def shortest_distance(g: List[List[int]], src: Tuple, dest: Tuple) -> int:
     # Number of rows in the binary maze
     n: int = len(g)
 
@@ -10,20 +12,18 @@ def shortest_distance(g: list[list[int]], src: tuple, dest: tuple) -> int:
     m: int = len(g[0])
 
     # Initialize distance matrix with infinity values
-    distance: list[list[list]] = [
-        [float("inf") for col in range(m)] for row in range(n)
-    ]
+    distance: List[List[int]] = [[float("inf") for col in range(m)] for row in range(n)]
 
     # Set distance from source to itself as 0
     distance[src[0]][src[1]] = 0
 
     # Queue for BFS traversal
-    q: deque = deque()
+    q: Deque = deque()
     q.append((0, src[0], src[1]))  # Tuple: (distance, row, column)
 
     # Direction arrays for moving up, right, down, left
-    dr: list[int] = [-1, 0, 1, 0]
-    dc: list[int] = [0, 1, 0, -1]
+    dr: List[int] = [-1, 0, 1, 0]
+    dc: List[int] = [0, 1, 0, -1]
 
     # BFS traversal
     while q:
@@ -59,8 +59,8 @@ def shortest_distance(g: list[list[int]], src: tuple, dest: tuple) -> int:
 
 
 if __name__ == "__main__":
-    # Example binary maze represented as a 2D list
-    g: list[list[int]] = [
+    # Example binary maze represented as a 2D List
+    g: List[List[int]] = [
         [1, 1, 1, 1],
         [1, 1, 0, 1],
         [1, 1, 1, 1],
@@ -69,8 +69,8 @@ if __name__ == "__main__":
     ]
 
     # Source and destination coordinates
-    src: tuple = (0, 1)
-    dest: tuple = (2, 2)
+    src: Tuple = (0, 1)
+    dest: Tuple = (2, 2)
 
     # Find and print the shortest distance from source to destination
     distance: int = shortest_distance(g=g, src=src, dest=dest)
