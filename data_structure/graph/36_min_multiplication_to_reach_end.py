@@ -1,18 +1,20 @@
 """Minimum Multiplication to reach end."""
+
 from collections import deque
+from typing import Deque, List
 
 # Define a constant for modulo operation
 MOD: int = 100000
 
 
-def find_min_step(arr: list[int], start: int, end: int) -> int:
+def find_min_step(arr: List[int], start: int, end: int) -> int:
     # Initialize a deque for BFS traversal
-    q: deque = deque()
+    q: Deque = deque()
     # Add the starting node and steps to the queue
     q.append((start, 0))
 
     # Initialize distance array with infinity for all possible remainders after modulo operation
-    dist: list[int] = [float("inf")] * MOD
+    dist: List[int] = [float("inf")] * MOD
     # Distance from start to itself is 0
     dist[start] = 0
 
@@ -38,7 +40,7 @@ def find_min_step(arr: list[int], start: int, end: int) -> int:
 
 # Example usage
 if __name__ == "__main__":
-    arr: list[int] = [2, 5, 7]
+    arr: List[int] = [2, 5, 7]
     start: int = 3
     end: int = 75
 
