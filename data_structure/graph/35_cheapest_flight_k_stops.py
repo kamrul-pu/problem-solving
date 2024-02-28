@@ -1,20 +1,20 @@
 """Chepest flight within k Stops."""
 
 from collections import deque
-from typing import Deque, List, Tuple
+from typing import Deque, List
 
 
-def find_min_cost(g: list[list[int]], src: int, dest: int, k: int) -> int:
+def find_min_cost(g: List[List[int]], src: int, dest: int, k: int) -> int:
     # Number of nodes in the graph
     n: int = len(g)
 
     # Initialize a deque for BFS traversal
-    q: deque = deque()
+    q: Deque = deque()
     # Add the source node to the queue with initial stops, node, and distance
     q.append((0, (src, 0)))  # (stops, (node, distance))
 
     # Initialize distance array with infinity for all nodes
-    dist: list[int] = [float("inf")] * n
+    dist: List[int] = [float("inf")] * n
     # Distance from source to itself is 0
     dist[src] = 0
 
@@ -46,7 +46,7 @@ def find_min_cost(g: list[list[int]], src: int, dest: int, k: int) -> int:
 
 # Example usage
 if __name__ == "__main__":
-    g: list[list[int]] = [
+    g: List[List[int]] = [
         [(1, 5), (3, 2)],
         [(2, 5), (4, 1)],
         [],
