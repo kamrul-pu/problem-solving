@@ -27,6 +27,11 @@ class Solution:
                     # Update the shortest path from vertex i to vertex j passing through vertex k
                     matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j])
 
+        # Detect negative cycles
+        for i in range(v):
+            if matrix[i][i] < 0:
+                print("There is a negative cycle in the matrix")
+
     def shortest_path(self, edges: List[Tuple[int]], v: int) -> List[List[int]]:
         # Initialize adjacency matrix with INF for all pairs of vertices
         matrix: List[List[int]] = [
