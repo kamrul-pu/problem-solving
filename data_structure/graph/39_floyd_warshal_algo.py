@@ -1,7 +1,9 @@
 """Floyd Warshall Algorithm. Multi-source shortest path."""
 
+from typing import List, Tuple
 
-def floyd_warshall_algo(matrix: list[list[int]]) -> list[list[int]]:
+
+def floyd_warshall_algo(matrix: List[List[int]]) -> List[List[int]]:
     n: int = len(matrix)
 
     # Initialize matrix: replace -1 with a large value, set diagonal elements to 0
@@ -33,7 +35,7 @@ def floyd_warshall_algo(matrix: list[list[int]]) -> list[list[int]]:
 
 
 if __name__ == "__main__":
-    matrix: list[list[int]] = [
+    matrix: List[List[int]] = [
         [0, 1, 43],
         [1, 0, 6],
         [-1, -1, 0],
@@ -45,7 +47,7 @@ if __name__ == "__main__":
         print(row)
 
     # Apply Floyd-Warshall algorithm
-    matrix: list[list[int]] = floyd_warshall_algo(matrix=matrix)
+    matrix: List[List[int]] = floyd_warshall_algo(matrix=matrix)
 
     # Print the result after applying the algorithm
     print("\nResult Matrix:")
