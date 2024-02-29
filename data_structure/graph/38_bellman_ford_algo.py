@@ -1,9 +1,11 @@
 """Bellman Ford algorithm."""
 
+from typing import List, Tuple
 
-def bellman_ford(edges: list[int], n: int) -> list[int]:
+
+def bellman_ford(edges: List[Tuple[int]], n: int) -> List[int]:
     # Initialize an array to store the distances from the source node
-    distance: list[int] = [float("inf")] * n
+    distance: List[int] = [float("inf")] * n
     distance[0] = 0  # The distance from the source node to itself is 0
 
     # Perform relaxation for (n-1) iterations
@@ -27,7 +29,7 @@ def bellman_ford(edges: list[int], n: int) -> list[int]:
 
 
 if __name__ == "__main__":
-    edges: list[int] = [
+    edges: List[Tuple[int]] = [
         (3, 2, 6),
         (5, 3, 1),
         (0, 1, 5),
@@ -39,5 +41,5 @@ if __name__ == "__main__":
     n: int = 6
 
     # Find the distances using Bellman Ford algorithm
-    distance: list[int] = bellman_ford(edges=edges, n=n)
+    distance: List[int] = bellman_ford(edges=edges, n=n)
     print(distance)
