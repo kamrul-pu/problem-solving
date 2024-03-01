@@ -1,9 +1,13 @@
 """Find the city with the smallest number of neighbors within a threshold distance."""
 
+from typing import List, Tuple
 
-def find_city(n: int, m: int, edges: list[list[int]], distance_threshold: int) -> int:
+INF: int = float("inf")
+
+
+def find_city(n: int, m: int, edges: List[Tuple[int]], distance_threshold: int) -> int:
     # Initialize a matrix to store distances between cities, initially set to infinity
-    distance: list[list[int]] = [[float("inf") for col in range(n)] for row in range(n)]
+    distance: List[List[int]] = [[INF for col in range(n)] for row in range(n)]
 
     # Populate the distance matrix with given edge information
     for edge in edges:
@@ -18,7 +22,7 @@ def find_city(n: int, m: int, edges: list[list[int]], distance_threshold: int) -
     for k in range(n):
         for i in range(n):
             for j in range(n):
-                if distance[i][k] == float("inf") or distance[k][j] == float("inf"):
+                if distance[i][k] == INF or distance[k][j] == INF:
                     continue
 
                 distance[i][j] = min(distance[i][j], distance[i][k] + distance[k][j])
@@ -47,7 +51,7 @@ def find_city(n: int, m: int, edges: list[list[int]], distance_threshold: int) -
 if __name__ == "__main__":
     n: int = 4
     m: int = 4
-    edges: list[list[int]] = [(0, 1, 3), (1, 2, 1), (1, 3, 4), (2, 3, 1)]
+    edges: List[Tuple[int]] = [(0, 1, 3), (1, 2, 1), (1, 3, 4), (2, 3, 1)]
     distance_threshold: int = 4
     city: int = find_city(n=n, m=m, edges=edges, distance_threshold=distance_threshold)
     print(city)
