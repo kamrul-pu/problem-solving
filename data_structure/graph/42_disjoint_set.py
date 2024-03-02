@@ -1,11 +1,13 @@
 """Disjoint Set Data Structure (Union-Find) with Path Compression and Union by Rank."""
 
+from typing import List
+
 
 class DSU:
     def __init__(self, n: int) -> None:
         # Initialize the data structure with ranks and parent pointers.
-        self.rank: list[int] = [0] * (n + 1)
-        self.parent: list[int] = [0] * (n + 1)
+        self.rank: List[int] = [0] * (n + 1)
+        self.parent: List[int] = [0] * (n + 1)
 
         for i in range(n + 1):
             self.parent[i] = i
@@ -45,7 +47,7 @@ if __name__ == "__main__":
     dsu: DSU = DSU(n=7)
     dsu.display()
 
-    paths: list[tuple[int]] = [(1, 2), (2, 3), (4, 5), (6, 7), (5, 6)]
+    paths: List[tuple[int]] = [(1, 2), (2, 3), (4, 5), (6, 7), (5, 6)]
 
     for path in paths:
         # Union by rank operation for each path.
