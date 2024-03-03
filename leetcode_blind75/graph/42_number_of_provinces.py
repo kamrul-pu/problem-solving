@@ -1,11 +1,19 @@
-"""Number of Provinces, graph using Disjoint Set."""
+"""
+There are n cities. Some of them are connected, while some are not. If city a is connected directly with city b,
+and city b is connected directly with city c, then city a is connected indirectly with city c.
+
+A province is a group of directly or indirectly connected cities and no other cities outside of the group.
+
+You are given an n x n matrix isConnected where isConnected[i][j] = 1 if the ith city and the jth city are
+directly connected, and isConnected[i][j] = 0 otherwise.
+"""
 
 from typing import List
 
 
 class DSU:
     def __init__(self, n: int) -> None:
-        # Initialize the Disjoint Set data structure with size and parent pointers.
+        # Initialize the data structure with size and parent pointers.
         self.size: List[int] = [1] * n
         self.parent: List[int] = [0] * n
         for i in range(n):
@@ -37,41 +45,25 @@ class DSU:
             self.size[v_parent] += self.size[u_parent]
 
 
-def number_of_provinces(matrix: List[List[int]]) -> List[int]:
-    """Count the number of provinces using Disjoint Set."""
-    n: int = len(matrix)
-    ds: DSU = DSU(n=n)
+class Solution:
 
-    # Union by size for connected nodes in the matrix.
-    for i in range(n):
-        for j in range(n):
-            if matrix[i][j] == 1:
-                ds.union_by_size(i, j)
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        n: int = len(isConnected)
+        ds: DSU = DSU(n=n)
+        for i in range(n):
+            for j in range(n):
+                if isConnected[i][j] == 1:
+                    ds.union_by_size(u=i, v=j)
 
-    provinces: List[int] = []
-    p_cnt: int = 0
+        cnt: int = 0
+        for i in range(n):
+            if ds.parent[i] == i:
+                cnt += 1
 
-    # Collect unique parent nodes representing provinces.
-    for i in range(n):
-        # provinces.add(ds.parent[i])
-        if ds.parent[i] == i:
-            provinces.append(i)
-            p_cnt += 1
-
-    return provinces
+        return cnt
 
 
 if __name__ == "__main__":
-    # Example usage
-    matrix: List[List[int]] = [
-        [0, 1, 0, 0, 0, 0, 0],
-        [1, 0, 1, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0, 1, 0],
-    ]
-    provinces: set = number_of_provinces(matrix=matrix)
-    print(provinces)
-    print(len(provinces))
+    is_connected: List[List[int]] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    solution: Solution = Solution()
+    print(solution.findCircleNum(isConnected=is_connected))
