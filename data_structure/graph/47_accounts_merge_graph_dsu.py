@@ -1,11 +1,13 @@
 """Accounts Merge using DSU."""
 
+from typing import List
+
 
 class DSU:
     def __init__(self, n: int) -> None:
         # Initialize the data structure with size and parent pointers.
-        self.size: list[int] = [1] * (n)
-        self.parent: list[int] = [0] * (n)
+        self.size: List[int] = [1] * (n)
+        self.parent: List[int] = [0] * (n)
         for i in range(n):
             self.parent[i] = i
 
@@ -35,9 +37,9 @@ class DSU:
             self.size[v_parent] += self.size[u_parent]
 
 
-def merge_details(accounts: list[list[str]]) -> list[list[str]]:
+def merge_details(accounts: List[List[str]]) -> List[List[str]]:
     n: int = len(accounts)
-    merged_mails: list[list[str]] = [[] for i in range(n)]
+    merged_mails: List[List[str]] = [[] for i in range(n)]
     map_mail_node: dict = dict()
     ds: DSU = DSU(n=n)
 
@@ -55,14 +57,14 @@ def merge_details(accounts: list[list[str]]) -> list[list[str]]:
         parent: int = ds.find_parent(node=node)
         merged_mails[parent].append(mail)
 
-    ans: list[list[str]] = []
+    ans: List[List[str]] = []
 
-    # Construct the final merged details list.
+    # Construct the final merged details List.
     for i in range(n):
         if len(merged_mails[i]) == 0:
             continue
         merged_mails[i].sort()
-        temp: list[str] = [accounts[i][0]]
+        temp: List[str] = [accounts[i][0]]
         temp += merged_mails[i]
         ans.append(temp)
 
@@ -70,7 +72,7 @@ def merge_details(accounts: list[list[str]]) -> list[list[str]]:
 
 
 if __name__ == "__main__":
-    accounts: list[list[str]] = [
+    accounts: List[List[str]] = [
         ["John", "j1@com", "j2@com", "j3@com"],
         ["John", "j4@com"],
         ["Raj", "r1@com", "r2@com"],
@@ -78,5 +80,5 @@ if __name__ == "__main__":
         ["Raj", "r2@com", "r3@com"],
         ["Mary", "m1@com"],
     ]
-    details: list[list[str]] = merge_details(accounts=accounts)
+    details: List[List[str]] = merge_details(accounts=accounts)
     print(details)
