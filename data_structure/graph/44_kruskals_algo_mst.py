@@ -1,11 +1,13 @@
 """Kruskal's Algorithm - for Minimum Spanning Tree."""
 
+from typing import List, Tuple
+
 
 class DSU:
     def __init__(self, n: int) -> None:
         # Initialize the data structure with size and parent pointers.
-        self.size: list[int] = [1] * n
-        self.parent: list[int] = [0] * n
+        self.size: List[int] = [1] * n
+        self.parent: List[int] = [0] * n
         for i in range(n):
             self.parent[i] = i
 
@@ -40,9 +42,9 @@ class DSU:
         print("Parent:", self.parent)
 
 
-def spanning_tree(v: int, adj_list: list[list[int]]) -> int:
+def spanning_tree(v: int, adj_list: List[List[int]]) -> int:
     """Find the Minimum Spanning Tree using Kruskal's Algorithm."""
-    edges: list[tuple[int]] = []
+    edges: List[tuple[int]] = []
     for i in range(v):
         for item in adj_list[i]:
             adj_node: int = item[0]
@@ -54,7 +56,7 @@ def spanning_tree(v: int, adj_list: list[list[int]]) -> int:
 
     edges.sort()
     mst_weight: int = 0
-    mst: list[tuple[int]] = []
+    mst: List[tuple[int]] = []
     for edge in edges:
         wt, u, v = edge
         if ds.find_parent(node=u) != ds.find_parent(v):
@@ -69,7 +71,7 @@ def spanning_tree(v: int, adj_list: list[list[int]]) -> int:
 
 if __name__ == "__main__":
     # Example usage
-    adj_list: list[list[int]] = [
+    adj_list: List[List[Tuple[int]]] = [
         [(1, 2), (3, 1), (4, 4)],
         [(0, 2), (2, 3), (3, 3), (5, 7)],
         [(1, 3), (3, 5), (5, 8)],
