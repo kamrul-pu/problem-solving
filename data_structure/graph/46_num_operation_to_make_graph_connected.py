@@ -1,12 +1,14 @@
 """Number of operation required to connect a graph network."""
+
 """Number of Provinces, graph using Disjoint Set."""
+from typing import List
 
 
 class DSU:
     def __init__(self, n: int) -> None:
         # Initialize the Disjoint Set data structure with size and parent pointers.
-        self.size: list[int] = [1] * n
-        self.parent: list[int] = [0] * n
+        self.size: List[int] = [1] * n
+        self.parent: List[int] = [0] * n
         for i in range(n):
             self.parent[i] = i
 
@@ -36,7 +38,7 @@ class DSU:
             self.size[v_parent] += self.size[u_parent]
 
 
-def number_of_operation(adj_list: list[list[int]], n: int) -> list[int]:
+def number_of_operation(adj_list: List[List[int]], n: int) -> List[int]:
     """Count the number of provinces using Disjoint Set."""
     ds: DSU = DSU(n=n)
 
