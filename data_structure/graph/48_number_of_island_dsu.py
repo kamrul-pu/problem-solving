@@ -1,11 +1,13 @@
 """Number of Islands 2 using DSU."""
 
+from typing import List
+
 
 class DSU:
     def __init__(self, n: int) -> None:
         # Initialize the data structure with size and parent pointers.
-        self.size: list[int] = [1] * (n)
-        self.parent: list[int] = [0] * (n)
+        self.size: List[int] = [1] * (n)
+        self.parent: List[int] = [0] * (n)
         for i in range(n):
             self.parent[i] = i
 
@@ -40,10 +42,10 @@ def is_valid(row: int, col: int, n: int, m: int) -> bool:
     return row >= 0 and row < n and col >= 0 and col < m
 
 
-def num_of_island(n: int, m: int, operators: list[list[int]]) -> list[int]:
+def num_of_island(n: int, m: int, operators: List[List[int]]) -> List[int]:
     ds: DSU = DSU(n=n * m)
-    visited: list[list[bool]] = [[False for col in range(m)] for row in range(n)]
-    ans: list[int] = []
+    visited: List[List[bool]] = [[False for col in range(m)] for row in range(n)]
+    ans: List[int] = []
     cnt: int = 0
     dr: tuple[int] = (-1, 0, 1, 0)
     dc: tuple[int] = (0, 1, 0, -1)
@@ -76,7 +78,7 @@ def num_of_island(n: int, m: int, operators: list[list[int]]) -> list[int]:
 
 
 if __name__ == "__main__":
-    operators: list[list[int]] = [
+    operators: List[List[int]] = [
         [0, 0],
         [0, 0],
         [1, 1],
@@ -92,5 +94,5 @@ if __name__ == "__main__":
     ]
     n: int = 4
     m: int = 5
-    ans: list[int] = num_of_island(n=n, m=m, operators=operators)
+    ans: List[int] = num_of_island(n=n, m=m, operators=operators)
     print(ans)
