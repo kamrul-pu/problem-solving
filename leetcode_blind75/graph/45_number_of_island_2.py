@@ -52,21 +52,12 @@ class Solution:
         visited: List[List[bool]] = [
             [False] * m for _ in range(n)
         ]  # Initialize visited array to keep track of visited cells
-        dr: List[int] = [
-            -1,
-            0,
-            1,
-            0,
-        ]  # Define relative row directions for adjacent cells
-        dc: List[int] = [
-            0,
-            1,
-            0,
-            -1,
-        ]  # Define relative column directions for adjacent cells
-        ans: List[int] = (
-            []
-        )  # Initialize list to store the number of islands after each query
+        # Define relative row directions for adjacent cells
+        dr: Tuple[int] = (-1, 0, 1, 0)
+        # Define relative column directions for adjacent cells
+        dc: Tuple[int] = (0, 1, 0, -1)
+        # Initialize list to store the number of islands after each query
+        ans: List[int] = []
         cnt: int = 0  # Initialize count of islands
 
         # Iterate through each query
