@@ -1,12 +1,14 @@
 """Most stones removed with same row or column."""
+
 from collections import defaultdict
+from typing import DefaultDict, List
 
 
 class DSU:
     def __init__(self, n: int) -> None:
         # Initialize the data structure with size and parent pointers.
-        self.size: list[int] = [1] * (n)
-        self.parent: list[int] = [0] * (n)
+        self.size: List[int] = [1] * (n)
+        self.parent: List[int] = [0] * (n)
         for i in range(n):
             self.parent[i] = i
 
@@ -39,7 +41,7 @@ class DSU:
 # TODO: the solution has some problem need to fix it
 
 
-def max_remove(stones: list[tuple[int]], n: int) -> int:
+def max_remove(stones: List[tuple[int]], n: int) -> int:
     max_row: int = 0
     max_col: int = 0
     for item in stones:
@@ -47,7 +49,7 @@ def max_remove(stones: list[tuple[int]], n: int) -> int:
         max_col = max(max_col, item[1])
 
     ds: DSU = DSU(n=max_row + max_col + 2)
-    stone_nodes: defaultdict = defaultdict(int)
+    stone_nodes: DefaultDict = defaultdict(int)
     for item in stones:
         node_row: int = item[0]
         node_col: int = item[1] + max_row + 1
@@ -64,8 +66,8 @@ def max_remove(stones: list[tuple[int]], n: int) -> int:
 
 if __name__ == "__main__":
     n: int = 6
-    stones: list[tuple[int]] = [(0, 0), (0, 1), (1, 0), (1, 2), (2, 1), (2, 2)]
-    # grid: list[list[int]] = [
+    stones: List[tuple[int]] = [(0, 0), (0, 1), (1, 0), (1, 2), (2, 1), (2, 2)]
+    # grid: List[List[int]] = [
     #     [1, 0, 1, 0],
     #     [0, 0, 0, 1],
     #     [0, 1, 1, 0],
