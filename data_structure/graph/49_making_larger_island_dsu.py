@@ -1,11 +1,13 @@
 """Making Larger Island DSU."""
 
+from typing import List, Tuple, Set
+
 
 class DSU:
     def __init__(self, n: int) -> None:
         # Initialize the data structure with size and parent pointers.
-        self.size: list[int] = [1] * (n)
-        self.parent: list[int] = [0] * (n)
+        self.size: List[int] = [1] * (n)
+        self.parent: List[int] = [0] * (n)
         for i in range(n):
             self.parent[i] = i
 
@@ -40,10 +42,10 @@ def is_valid(row: int, col: int, n: int, m: int) -> bool:
     return row >= 0 and row < n and col >= 0 and col < m
 
 
-def max_connection(n: int, m: int, grid: list[list[int]]) -> int:
+def max_connection(n: int, m: int, grid: List[List[int]]) -> int:
     ds: DSU = DSU(n=n * m)
-    dr: tuple[int] = (-1, 0, 1, 0)
-    dc: tuple[int] = (0, 1, 0, -1)
+    dr: Tuple[int] = (-1, 0, 1, 0)
+    dc: Tuple[int] = (0, 1, 0, -1)
     for row in range(n):
         for col in range(m):
             if grid[row][col] == 0:
@@ -63,7 +65,7 @@ def max_connection(n: int, m: int, grid: list[list[int]]) -> int:
         for col in range(m):
             if grid[row][col] == 1:
                 continue
-            components: set = set()
+            components: Set = set()
             for ind in range(4):
                 adj_row: int = row + dr[ind]
                 adj_col: int = col + dc[ind]
@@ -83,7 +85,7 @@ def max_connection(n: int, m: int, grid: list[list[int]]) -> int:
 
 
 if __name__ == "__main__":
-    grid: list[list[int]] = [
+    grid: List[List[int]] = [
         [1, 1, 0, 1, 1],
         [1, 1, 0, 1, 1],
         [1, 1, 0, 1, 1],
