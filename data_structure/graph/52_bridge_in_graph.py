@@ -8,11 +8,11 @@ TIMER: int = 1
 def dfs(
     node: int,
     parent: int,
-    visited: list[int],
-    adj_list: list[list[int]],
-    tin: list[int],
-    low: list[int],
-    bridges: list[list[int]],
+    visited: List[int],
+    adj_list: List[List[int]],
+    tin: List[int],
+    low: List[int],
+    bridges: List[List[int]],
 ) -> None:
     global TIMER
     visited[node] = True
@@ -39,15 +39,15 @@ def dfs(
             low[node] = min(low[node], low[item])
 
 
-def critical_connections(n: int, connections: list[list[int]]) -> list[list[int]]:
-    adj_list: list[list[int]] = [[] for _ in range(n)]
+def critical_connections(n: int, connections: List[List[int]]) -> List[List[int]]:
+    adj_list: List[List[int]] = [[] for _ in range(n)]
     for item in connections:
         adj_list[item[0]].append(item[1])
         adj_list[item[1]].append(item[0])
-    visited: list[bool] = [False] * n
-    tin: list[int] = [0] * n
-    low: list[int] = [0] * n
-    bridges: list[list[int]] = []
+    visited: List[bool] = [False] * n
+    tin: List[int] = [0] * n
+    low: List[int] = [0] * n
+    bridges: List[List[int]] = []
     dfs(
         node=0,
         parent=-1,
@@ -62,6 +62,6 @@ def critical_connections(n: int, connections: list[list[int]]) -> list[list[int]
 
 if __name__ == "__main__":
     n: int = 4
-    connections: list[list[int]] = [[0, 1], [1, 2], [2, 0], [1, 3]]
-    critical: list[list[int]] = critical_connections(n=n, connections=connections)
+    connections: List[List[int]] = [[0, 1], [1, 2], [2, 0], [1, 3]]
+    critical: List[List[int]] = critical_connections(n=n, connections=connections)
     print(critical)
