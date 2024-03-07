@@ -1,16 +1,18 @@
 """Articulation points in Graph."""
 
+from typing import List
+
 TIMER: int = 0
 
 
 def dfs(
     node: int,
     parent: int,
-    visited: list[int],
-    adj_list: list[list[int]],
-    tin: list[int],
-    low: list[int],
-    mark: list[int],
+    visited: List[int],
+    adj_list: List[List[int]],
+    tin: List[int],
+    low: List[int],
+    mark: List[int],
 ) -> None:
     global TIMER
     visited[node] = True
@@ -37,15 +39,15 @@ def dfs(
             low[node] = min(low[node], tin[item])
 
 
-def articulation_points(n: int, connections: list[list[int]]) -> list[int]:
-    adj_list: list[list[int]] = [[] for _ in range(n)]
+def articulation_points(n: int, connections: List[List[int]]) -> List[int]:
+    adj_list: List[List[int]] = [[] for _ in range(n)]
     for item in connections:
         adj_list[item[0]].append(item[1])
         adj_list[item[1]].append(item[0])
-    visited: list[bool] = [False] * n
-    tin: list[int] = [0] * n
-    low: list[int] = [0] * n
-    mark: list[int] = [0] * n
+    visited: List[bool] = [False] * n
+    tin: List[int] = [0] * n
+    low: List[int] = [0] * n
+    mark: List[int] = [0] * n
     for i in range(n):
         if not visited[i]:
             dfs(
@@ -57,7 +59,7 @@ def articulation_points(n: int, connections: list[list[int]]) -> list[int]:
                 low=low,
                 mark=mark,
             )
-    ans: list[int] = []
+    ans: List[int] = []
     for i in range(n):
         if mark[i] == 1:
             ans.append(i)
@@ -66,6 +68,6 @@ def articulation_points(n: int, connections: list[list[int]]) -> list[int]:
 
 if __name__ == "__main__":
     n: int = 4
-    connections: list[list[int]] = [[0, 1], [1, 2], [2, 0], [1, 3]]
-    points: list[int] = articulation_points(n=n, connections=connections)
+    connections: List[List[int]] = [[0, 1], [1, 2], [2, 0], [1, 3]]
+    points: List[int] = articulation_points(n=n, connections=connections)
     print(points)
