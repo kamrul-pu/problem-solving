@@ -1,5 +1,7 @@
 """Bridge in Graph."""
 
+from typing import List
+
 TIMER: int = 1
 
 
