@@ -1,5 +1,7 @@
 """Binary Tree Pre order Traversal."""
 
+from typing import List
+
 
 class Node:
     def __init__(self, data: int) -> None:
@@ -44,7 +46,7 @@ class Node:
         # root left right
         if self == None:
             return
-        stack: list[Node] = []
+        stack: List[Node] = []
         stack.append(self)
 
         while stack:
@@ -63,7 +65,7 @@ class Node:
             return
 
         current: Node = self
-        stack: list[Node] = []
+        stack: List[Node] = []
 
         while True:
             if current is not None:
@@ -83,8 +85,8 @@ class Node:
         if self is None:
             return
 
-        stack1: list[Node] = []
-        stack2: list[Node] = []
+        stack1: List[Node] = []
+        stack2: List[Node] = []
         stack1.append(self)
         while stack1:
             curr_node: Node = stack1.pop()
@@ -107,7 +109,7 @@ class Node:
             return
 
         curr: Node = self
-        stack: list[Node] = []
+        stack: List[Node] = []
         while curr or stack:
             if curr is not None:
                 stack.append(curr)
