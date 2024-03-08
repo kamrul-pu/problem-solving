@@ -1,6 +1,7 @@
 """Binary Tree Level Order Traversal."""
 
 from collections import deque
+from typing import List, Deque
 
 
 class TreeNode:
@@ -11,20 +12,20 @@ class TreeNode:
 
 
 def level_order_trversal(root):
-    ans: list[list[int]] = []
+    ans: List[List[int]] = []
 
     # Return null if the tree is empty
     if root is None:
         return ans
     # Initialize queue
-    queue = deque()
+    queue: Deque = deque()
     queue.append(root)
 
     # iterate the queue until it's empty
     while queue:
         # check the length of queue
         curr_size = len(queue)
-        curr_list: list[int] = []
+        curr_list: List[int] = []
 
         while curr_size > 0:
             curr_node = queue.popleft()
@@ -45,8 +46,8 @@ def level_order_trversal(root):
     return ans
 
 
-def level_wise_traversal(root: TreeNode) -> list[list[int]]:
-    ans: list[list[int]] = []
+def level_wise_traversal(root: TreeNode) -> List[List[int]]:
+    ans: List[List[int]] = []
     if root is None:
         return ans
 
@@ -55,7 +56,7 @@ def level_wise_traversal(root: TreeNode) -> list[list[int]]:
 
     while q:
         size: int = len(q)
-        curr_list: list[int] = []
+        curr_list: List[int] = []
         for i in range(0, size):
             curr_node = q.popleft()
             curr_list.append(curr_node.data)
