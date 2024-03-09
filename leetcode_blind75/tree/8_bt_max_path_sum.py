@@ -28,7 +28,7 @@ class TreeNode:
 
 
 class Solution:
-    MAXI: int = 0
+    MAXI: int = float("-inf")
 
     def __f(self, node: TreeNode) -> int:
         """
@@ -42,8 +42,8 @@ class Solution:
         """
         if node is None:
             return 0
-        ls: int = self.__f(node=node.left)
-        rs: int = self.__f(node=node.right)
+        ls: int = max(0, self.__f(node=node.left))
+        rs: int = max(0, self.__f(node=node.right))
         # Update MAXI with the maximum sum of paths involving the current node
         self.MAXI = max(self.MAXI, ls + rs + node.val)
         # Return the maximum sum of paths starting from the current node
