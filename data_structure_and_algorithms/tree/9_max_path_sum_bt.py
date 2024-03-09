@@ -1,5 +1,7 @@
 """Maximum path sum in a binary tree."""
 
+from typing import List
+
 
 class Node:
     def __init__(self, data: int) -> None:
@@ -23,8 +25,8 @@ class Node:
         return maxi[0]
 
 
-def build_tree():
-    root = Node(-10)
+def build_tree() -> Node:
+    root: Node = Node(-10)
     root.left = Node(9)
     root.right = Node(20)
     root.right.left = Node(15)
@@ -34,7 +36,7 @@ def build_tree():
 
 
 if __name__ == "__main__":
-    root = build_tree()
+    root: Node = build_tree()
     # print(root.max_height(root))
-    maxi: list[int] = [0]
+    maxi: List[int] = [0]
     print(root.diameter_of_bt(maxi))
