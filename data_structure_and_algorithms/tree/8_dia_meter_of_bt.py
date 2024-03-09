@@ -1,5 +1,7 @@
 """Dia meter of a binary tree."""
 
+from typing import List
+
 
 class Node:
     def __init__(self, data: int) -> None:
@@ -7,7 +9,7 @@ class Node:
         self.left = None
         self.right = None
 
-    def find_max(self, node, maxi: list[int]) -> int:
+    def find_max(self, node, maxi: List[int]) -> int:
         if node is None:
             return 0
 
@@ -18,7 +20,7 @@ class Node:
 
         return 1 + max(lh, rh)
 
-    def diameter_of_bt(self, maxi: list[int]) -> int:
+    def diameter_of_bt(self, maxi: List[int]) -> int:
         self.find_max(self, maxi)
         return maxi[0]
 
@@ -40,5 +42,5 @@ def build_tree():
 if __name__ == "__main__":
     root = build_tree()
     # print(root.max_height(root))
-    maxi: list[int] = [0]
+    maxi: List[int] = [0]
     print(root.diameter_of_bt(maxi))
