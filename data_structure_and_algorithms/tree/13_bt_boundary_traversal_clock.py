@@ -1,63 +1,84 @@
-"""Binary Tree Boundary Traversal Anti clock wise."""
+"""Binary tree boundary traversal clockwise"""
 
-from collections import deque
+from typing import List, Optional
 
 
 class Node:
-    def __init__(self, data: int) -> None:
-        self.data = data
-        self.left = None
+    def __init__(self, val):
         self.right = None
+        self.data = val
+        self.left = None
 
-    def is_leaf_node(self, node) -> bool:
-        return node.left is None and node.right is None
 
-    def add_left_boundary(self, root, res: list[int]):
-        curr: Node = root.left
+class Solution:
+    def __is_leaf(self, node: Optional[Node]) -> bool:
+        # Helper function to check if a node is a leaf node (has no children).
+        return node.left == None and node.right == None
+
+    def __right_boundary_clock(self, root: Optional[Node], result: List[int]) -> None:
+        # Helper function to traverse and collect the right boundary of the tree in a clockwise manner.
+        # It starts from the root's right child and iteratively moves down to the rightmost non-leaf node.
+        curr: Node = root.right
         while curr:
-            if not self.is_leaf_node(curr):
-                res.append(curr.data)
+            if not self.__is_leaf(node=curr):
+                result.append(curr.data)
+            if curr.right:
+                curr = curr.right
+            else:
+                curr = curr.left
+
+    def __left_boundary_clock(self, root: Optional[Node], result: List[int]) -> None:
+        # Helper function to traverse and collect the left boundary of the tree in a clockwise manner.
+        # It starts from the root's left child and iteratively moves down to the leftmost non-leaf node.
+        curr: Node = root.left
+        tmp: List[int] = (
+            []
+        )  # Temporary storage for left boundary nodes (excluding leaves).
+        while curr:
+            if not self.__is_leaf(node=curr):
+                tmp.append(curr.data)
             if curr.left:
                 curr = curr.left
             else:
                 curr = curr.right
 
-    def add_right_boundary(self, root, res: list[int]):
-        curr: Node = root
-        tmp: list[int] = []
-        while curr:
-            if not self.is_leaf_node(curr):
-                tmp.append(curr.data)
-            if curr.right:
-                curr = curr.right
-            else:
-                curr = curr.left
+        # Add the collected left boundary nodes (excluding leaves) to the result list.
         while tmp:
-            res.append(tmp.pop())
+            result.append(tmp.pop())
 
-    def add_leaves(self, root, res: list[int]):
-        if self.is_leaf_node(root):
-            res.append(root.data)
+    def __add_leaves(self, node: Optional[Node], result: List[int]) -> None:
+        # Helper function to collect all the leaf nodes in the tree.
+        if self.__is_leaf(node):
+            result.append(node.data)
             return
-        if root.left:
-            self.add_leaves(root.left, res)
-        if root.right:
-            self.add_leaves(root.right, res)
+        if node.left:
+            self.__add_leaves(node.left, result)
+        if node.right:
+            self.__add_leaves(node.right, result)
 
-    def print_boundary_clock_wise(self, root) -> list[int]:
-        res: list[int] = []
+    def boundary_clock(self, root: Optional[Node]) -> List[int]:
+        # Main function to compute the boundary of the tree in a clockwise manner.
+        result: List[int] = []
         if root is None:
-            return res
-        if not self.is_leaf_node(root):
-            res.append(root.data)
+            return result
 
-        self.add_right_boundary(root, res)
-        self.add_leaves(root, res)
-        self.add_left_boundary(root, res)
-        return res
+        if not self.__is_leaf(root):
+            result.append(root.data)
+
+        leaves: List[int] = []  # Temporary storage for collecting leaf nodes.
+        # Collect the right boundary, leaves, and left boundary in a clockwise manner.
+        self.__right_boundary_clock(root=root, result=result)
+        self.__add_leaves(node=root, result=leaves)
+        # Reverse the order of collected leaves and add them to the result list.
+        while leaves:
+            result.append(leaves.pop())
+        self.__left_boundary_clock(root=root, result=result)
+
+        return result
 
 
 def build_tree():
+    # Build a sample binary tree for testing purposes.
     root = Node(-10)
     root.left = Node(9)
     root.right = Node(20)
@@ -68,5 +89,7 @@ def build_tree():
 
 
 if __name__ == "__main__":
+    # Build a sample binary tree.
     root = build_tree()
-    print(root.print_boundary_clock_wise(root))
+    solution: Solution = Solution()
+    print(solution.boundary_clock(root=root))
