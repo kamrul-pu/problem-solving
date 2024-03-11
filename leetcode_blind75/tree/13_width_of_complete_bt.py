@@ -1,3 +1,5 @@
+"""Widht of a Complete Binary Tree."""
+
 from collections import deque
 from typing import Deque, Optional
 
