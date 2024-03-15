@@ -1,6 +1,8 @@
 """Serialize and Deserialize Binary Tree."""
 
-from collections import deque, defaultdict
+from collections import deque
+
+from typing import Deque, List
 
 
 class TreeNode:
@@ -10,14 +12,13 @@ class TreeNode:
         self.right = None
 
 
-def serialize(root: TreeNode) -> list[int]:
+def serialize(root: TreeNode) -> List[int]:
     if root is None:
         return ""
     result = []
-    q = deque()
+    q: Deque = deque()
     q.append(root)
     while q:
-        # print("qqqqq", q)
         node: TreeNode = q.popleft()
         if node == "#":
             result.append("#")
@@ -35,11 +36,11 @@ def serialize(root: TreeNode) -> list[int]:
     return result
 
 
-def de_serialize(serialized: list[int]) -> TreeNode:
+def de_serialize(serialized: List[int]) -> TreeNode:
     if len(serialized) == 0:
         return None
     root = TreeNode(serialized[0])
-    q = deque()
+    q: Deque = deque()
     q.append(root)
     i: int = 1
     while q:
@@ -65,8 +66,8 @@ def de_serialize(serialized: list[int]) -> TreeNode:
     return root
 
 
-def build_tree():
-    root = TreeNode(1)
+def build_tree() -> TreeNode:
+    root: TreeNode = TreeNode(1)
     root.left = TreeNode(2)
     root.right = TreeNode(3)
     root.right.left = TreeNode(4)
@@ -76,7 +77,7 @@ def build_tree():
 
 
 if __name__ == "__main__":
-    root = build_tree()
+    root: TreeNode = build_tree()
     serialized = serialize(root=root)
     print(serialized)
     root1 = de_serialize(serialized)
