@@ -8,7 +8,7 @@ Basically, the deletion can be divided into two stages:
 2. If the node is found, delete the node.
 """
 
-from typing import Optional
+from typing import Any, Optional
 
 
 # Definition for a binary tree node.
