@@ -90,9 +90,9 @@ if __name__ == "__main__":
     solution: Solution = Solution()
 
     # Find the successor and predecessor nodes for the key value
-    successor: Node = solution.get_successor(root=root, key=6)
-    predicessor: Node = solution.get_predicessor(root=root, key=6)
+    successor: Node = solution.get_successor(root=root, key=60)
+    predicessor: Node = solution.get_predicessor(root=root, key=60)
 
     # Print the values of the successor and predecessor nodes
-    print(successor.val)
-    print(predicessor.val)
+    print(successor.val if successor else "Null")
+    print(predicessor.val if predicessor else "Null")
