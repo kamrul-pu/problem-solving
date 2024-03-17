@@ -19,14 +19,6 @@ from typing import Deque, Optional
 # Definition for a binary tree node.
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
-        """
-        Initialize a node of the binary tree.
-
-        Parameters:
-            val (int): The value of the node.
-            left (TreeNode): The left child node.
-            right (TreeNode): The right child node.
-        """
         self.val = val
         self.left = left
         self.right = right
