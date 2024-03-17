@@ -43,6 +43,33 @@ class Solution:
 
         return node
 
+    def __lca(self, root: "TreeNode", p: "TreeNode", q: "TreeNode") -> "TreeNode":
+        """
+        Helper method to find the lowest common ancestor (LCA) node of two given nodes in the BST iteratively.
+
+        Parameters:
+            root (TreeNode): The root node of the binary search tree.
+            p (TreeNode): The first node whose LCA needs to be found.
+            q (TreeNode): The second node whose LCA needs to be found.
+
+        Returns:
+            TreeNode: The lowest common ancestor (LCA) node of the given nodes.
+        """
+        curr: TreeNode = root
+        while curr:
+            # If both p and q are greater than the current node's value, move to the right subtree
+            if curr.val < p.val and curr.val < q.val:
+                curr = curr.right
+            # If both p and q are less than the current node's value, move to the left subtree
+            elif curr.val > p.val and curr.val > q.val:
+                curr = curr.left
+            # If the current node's value falls between p and q, or one of them equals the current node's value,
+            # it means that the current node is the lowest common ancestor (LCA), so return the current node
+            else:
+                return curr
+        # If no LCA is found (e.g., if the tree is empty or the nodes p and q are not in the tree), return None
+        return None
+
     def lowestCommonAncestor(
         self, root: "TreeNode", p: "TreeNode", q: "TreeNode"
     ) -> "TreeNode":
