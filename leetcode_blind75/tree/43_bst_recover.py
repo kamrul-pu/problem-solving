@@ -15,32 +15,39 @@ class TreeNode:
 
 
 class Solution:
-    i: int = 0
+    def __init__(self) -> None:
+        # Initialize variables to keep track of the nodes involved in the incorrect swaps
+        self.first: TreeNode = None
+        self.prev: TreeNode = None
+        self.middle: TreeNode = None
+        self.last: TreeNode = None
 
-    def __inorder(self, node: Optional[TreeNode], inorder: List[int]) -> None:
-        # Perform in-order traversal of the BST to construct the list of values in sorted order
+    def __inorder(self, node: Optional[TreeNode]) -> None:
+        # Perform in-order traversal of the BST to identify incorrectly swapped nodes
         if node is None:
             return
-        self.__inorder(node=node.left, inorder=inorder)
-        inorder.append(node.val)
-        self.__inorder(node=node.right, inorder=inorder)
-
-    def __f(self, node: Optional[TreeNode], inorder: List[int]) -> None:
-        # Correct the misplaced nodes by comparing with the sorted list of values
-        if node is None:
-            return
-        self.__f(node=node.left, inorder=inorder)
-        if node.val != inorder[self.i]:
-            node.val = inorder[self.i]
-        self.i += 1
-        self.__f(node=node.right, inorder=inorder)
+        self.__inorder(node=node.left)
+        if self.prev and node.val < self.prev.val:
+            # If current node is less than previous node, it indicates a violation
+            if self.first is None:
+                # For the first violation, mark the previous and current nodes
+                self.first = self.prev
+                self.middle = node
+            else:
+                # For the second violation, mark the current node as last
+                self.last = node
+        self.prev = node
+        self.__inorder(node=node.right)
 
     def __recover(self, root: Optional[TreeNode]) -> None:
-        # Recover the tree by performing in-order traversal and correcting the misplaced nodes
-        inorder: List[int] = []
-        self.__inorder(node=root, inorder=inorder)
-        inorder.sort()
-        self.__f(node=root, inorder=inorder)
+        # Method to recover the tree by swapping the incorrectly swapped nodes
+        self.__inorder(node=root)
+        if self.first and self.last:
+            # If there are two nodes swapped, swap their values
+            self.first.val, self.last.val = self.last.val, self.first.val
+        elif self.first and self.middle:
+            # If only one node is swapped with its adjacent node, swap their values
+            self.first.val, self.middle.val = self.middle.val, self.first.val
 
     def recoverTree(self, root: Optional[TreeNode]) -> None:
         """
