@@ -1,29 +1,41 @@
-"""Tree Data Structure in Python."""
+"""Tree Data structure in Python."""
+
+from typing import List
 
 
 class TreeNode:
     def __init__(self, data) -> None:
-        self.data = data
-        self.children = []
+        """
+        Initialize a TreeNode with data and an empty list of children.
+        """
+        self.data: int = data
+        self.children: List[int] = []
         self.parent = None
 
     def add_child(self, child) -> None:
+        """
+        Add a child TreeNode to the current TreeNode.
+        """
         child.parent = self
         self.children.append(child)
 
-    def get_level(self) -> int:
-        level = 0
+    def __get_level(self) -> int:
+        """
+        Get the level of the TreeNode in the tree.
+        """
+        level: int = 0
         p = self.parent
-
         while p:
             level += 1
             p = p.parent
-
         return level
 
     def print_tree(self) -> None:
-        spaces = " " * self.get_level() * 3
-        prefix = spaces + "|__" if self.parent else ""
+        """
+        Print the tree structure starting from the current TreeNode.
+        """
+        spaces = " " * self.__get_level() * 3
+        prefix = spaces + "|--" if self.parent else ""
         print(prefix + self.data)
         if len(self.children) > 0:
             for child in self.children:
@@ -31,6 +43,9 @@ class TreeNode:
 
 
 def build_product_tree():
+    """
+    Build a sample product tree and return the root node.
+    """
     root = TreeNode("Electronic")
     laptop = TreeNode("Laptop")
     laptop.add_child(TreeNode("Mac"))

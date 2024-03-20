@@ -1,104 +1,68 @@
-"""Two Sum in Binary Search Tree."""
+"""
+Given the root of a binary search tree and an integer k, return true if there exist
+two elements in the BST such that their sum is equal to k, or false otherwise.
+"""
+
+from typing import List, Optional
 
 
-class Node:
-    def __init__(self, data: int) -> None:
-        self.data = data
-        self.left = None
-        self.right = None
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
 
-class BSTIterator:
-    def __init__(self, root: Node, is_reversed: bool) -> None:
-        self.stack: list[Node] = []
-        self.reverse: bool = is_reversed
-        self.push_all(root)
+class Solution:
+    def __inorder(self, node: TreeNode, inorder: List[int]) -> None:
+        # Helper method to perform in-order traversal of the BST and store the values in a list.
+        if node is None:
+            return
+        self.__inorder(node=node.left, inorder=inorder)
+        inorder.append(node.val)
+        self.__inorder(node=node.right, inorder=inorder)
 
-    def push_all(self, node: Node) -> None:
-        while node is not None:
-            self.stack.append(node)
-            if self.reverse:
-                node = node.right
+    def __f(self, root: Optional[TreeNode], k: int) -> bool:
+        # Helper method to find if there are two elements in the BST that sum up to k.
+        inorder: List[int] = []
+        # Store the in-order traversal of the BST in the list.
+        self.__inorder(node=root, inorder=inorder)
+        low: int = 0
+        high: int = len(inorder) - 1
+        # Use two pointers to find the pair of elements summing up to k.
+        while low < high:
+            s: int = inorder[low] + inorder[high]
+            if s == k:
+                return True
+            elif s < k:
+                low += 1
             else:
-                node = node.left
+                high -= 1
 
-    def has_next(self):
-        return len(self.stack) != 0
-
-    def next(self) -> int:
-        if self.has_next():
-            node: Node = self.stack.pop()
-            if not self.reverse:
-                self.push_all(node.right)
-            else:
-                self.push_all(node.left)
-            return node.data
-        return 0
-
-
-def tow_sum(root: Node, key: int) -> bool:
-    if root is None:
         return False
-    left = BSTIterator(root=root, is_reversed=False)
-    right = BSTIterator(root=root, is_reversed=True)
-    i: int = left.next()
-    j: int = right.next()
-    while i < j:
-        if i + j == key:
-            return True
-        elif (i + j) < key:
-            i = left.next()
-        else:
-            j = right.next()
 
-    return False
+    def findTarget(self, root: Optional[TreeNode], k: int) -> bool:
+        # Main method to find if there exist two elements in the BST such that their sum is equal to k.
+        return self.__f(root=root, k=k)
 
 
-def insert_node(root: Node, data: int) -> Node:
-    """Iterative approach."""
-    if root is None:
-        return Node(data)
+def build_tree() -> TreeNode:
+    """
+    Helper method to build a sample binary tree for testing.
 
-    cur: Node = root
-    while True:
-        if cur.data <= data:
-            # insert in the right
-            if cur.right:
-                cur = cur.right
-            else:
-                cur.right = Node(data)
-                break
-        else:
-            # insert in the left subtree
-            if cur.left:
-                cur = cur.left
-            else:
-                cur.left = Node(data)
-                break
-
-    return root
-
-
-def in_order(root: Node) -> None:
-    if root is None:
-        return
-    in_order(root.left)
-    print(root.data, end="->")
-    in_order(root.right)
-
-
-def build_tree(elements: list[int]) -> Node:
-    root = Node(elements[0])
-    for i in range(1, len(elements)):
-        insert_node(root=root, data=elements[i])
-
+    Returns:
+        TreeNode: The root node of the constructed binary tree.
+    """
+    root: TreeNode = TreeNode(5)
+    root.left = TreeNode(3)
+    root.right = TreeNode(6)
+    root.left.left = TreeNode(2)
+    root.left.right = TreeNode(4)
+    root.right.right = TreeNode(7)
     return root
 
 
 if __name__ == "__main__":
-    elements: list[int] = [8, 5, 1, 7, 10, 12]
-    root: Node = build_tree(elements=elements)
-    in_order(root)
-    print("None")
-    key: int = 14
-    print(tow_sum(root=root, key=key))
+    root: TreeNode = build_tree()
+    solution: Solution = Solution()
+    print(solution.findTarget(root=root, k=9))

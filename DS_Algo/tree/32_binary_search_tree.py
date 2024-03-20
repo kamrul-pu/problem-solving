@@ -1,3 +1,7 @@
+"""
+Binary Search Tree. Left<Root<Right
+"""
+
 from typing import List, Optional
 
 

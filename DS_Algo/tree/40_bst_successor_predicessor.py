@@ -1,5 +1,3 @@
-"""Successors predecessor of Binary Search Tree"""
-
 from typing import Optional
 
 

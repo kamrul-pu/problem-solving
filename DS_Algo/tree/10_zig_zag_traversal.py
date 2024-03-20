@@ -83,7 +83,7 @@ class Solution:
         return self.__f(root=root)
 
 
-def build_tree():
+def build_tree() -> TreeNode:
     """
     Build a sample binary tree for testing purposes.
 

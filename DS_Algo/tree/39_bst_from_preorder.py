@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 # Definition for a binary tree node.
@@ -72,6 +72,42 @@ class Solution:
         """
         i: List[int] = [0]
         return self.__build(preorder=preorder, i=i, upper_bound=float("inf"))
+
+    # def __build(
+    #     self, preorder: List[int], i: int, upper_bound: int
+    # ) -> Tuple[TreeNode, int]:
+    #     """
+    #     Helper method to build a binary search tree (BST) from a preorder traversal.
+
+    #     Parameters:
+    #         preorder (List[int]): The list representing the preorder traversal of the BST.
+    #         i (int): The index of the current node in the preorder traversal.
+    #         upper_bound (int): The upper bound value for the current subtree.
+
+    #     Returns:
+    #         Tuple[TreeNode, int]: A tuple containing the root node of the constructed BST and the updated index.
+    #     """
+    #     if i == len(preorder) or preorder[i] > upper_bound:
+    #         return None, i
+
+    #     root: TreeNode = TreeNode(preorder[i])
+    #     i += 1
+    #     root.left, i = self.__build(preorder=preorder, i=i, upper_bound=root.val)
+    #     root.right, i = self.__build(preorder=preorder, i=i, upper_bound=upper_bound)
+    #     return root, i
+
+    # def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
+    #     """
+    #     Constructs a binary search tree (BST) from its preorder traversal.
+
+    #     Parameters:
+    #         preorder (List[int]): The preorder traversal of the BST.
+
+    #     Returns:
+    #         Optional[TreeNode]: The root node of the constructed BST.
+    #     """
+    #     return self.__build(preorder=preorder, i=0, upper_bound=float("inf"))[0]
+    # ============ Without passing list to maintain index
 
     def __in_order(self, root: TreeNode) -> None:
         """
