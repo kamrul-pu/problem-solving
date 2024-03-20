@@ -78,7 +78,7 @@ class QuickSort:
 
 
 if __name__ == "__main__":
-    numbers = [38, 9, 29, 7, 2, 15, 28]
+    numbers: List[int] = [38, 9, 29, 7, 2, 15, 28]
     print("Before sort: ", numbers)
     # Sort the list
     qs: QuickSort = QuickSort(arr=numbers)
