@@ -82,6 +82,7 @@ class DoublyLinkedList:
         if self.head is None:
             return "No item in the list."
         if self.head.data == data:
+            # Delete the head node
             self.head = self.head.next
             if self.head:
                 self.head.prev = None
@@ -89,17 +90,24 @@ class DoublyLinkedList:
                 self.tail = None
             return "Deleted successfully!"
         elif self.tail.data == data:
+            # Delete the tail node
+            tail: Node = self.tail
             self.tail = self.tail.prev
             self.tail.next = None
+            tail.prev = None
             return "Deleted successfully!"
         else:
+            # Find and delete the node
             cur: Node = self.head
             while cur.next and cur.next.data != data:
                 cur = cur.next
             if cur.next is None:
                 return "Item is not in the list."
             else:
+                temp: Node = cur.next
                 cur.next = cur.next.next
+                temp.next = None
+                temp.prev = None
                 if cur.next:
                     cur.next.prev = cur
                 return "Deleted successfully!"
