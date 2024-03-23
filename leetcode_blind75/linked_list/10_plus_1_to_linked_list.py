@@ -74,6 +74,34 @@ class Solution:
 
         return head
 
+    def __helper(self, node: Node) -> int:
+        """
+        Recursively add 1 to the number represented by the linked list.
+
+        Parameters:
+            node (Node): The current node in the linked list.
+
+        Returns:
+            int: The carry value (0 or 1) after adding 1 to the number.
+        """
+        # Base case: if node is None, return 1 indicating carry
+        if node is None:
+            return 1
+
+        # Recursively process the next node and get the carry value
+        carry = self.__helper(node.next)
+
+        # Add the carry to the current node's data
+        node.data = node.data + carry
+
+        # If the result is less than 10, return 0 indicating no carry
+        if node.data < 10:
+            return 0
+
+        # If the result is 10 or greater, set the node's data to 0 and return 1 indicating carry
+        node.data = 0
+        return 1
+
     def addOne(self, head: Node) -> Node:
         """
         Add 1 to the number represented by the linked list.
@@ -84,7 +112,16 @@ class Solution:
         Returns:
             Node: The head of the linked list representing the incremented number.
         """
-        return self.__f(head=head)
+        # Call the recursive helper function to add 1 to the linked list
+        carry: int = self.__helper(head)
+
+        # If there's a carry after adding 1 to the linked list, create a new node with value 1 and append it to the head
+        if carry == 1:
+            node = Node(1)
+            node.next = head
+            head = node
+
+        return head
 
 
 def print_list(head: Node) -> None:
