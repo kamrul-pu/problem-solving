@@ -127,7 +127,8 @@ class Solution:
         while t1 != t2:
             t1 = t1.next
             t2 = t2.next
-
+            if t1 == t2:
+                return t1
             # If the end of one list is reached, start from the head of the other list
             if t1 is None and t2:
                 t1 = head_2
