@@ -15,12 +15,6 @@ from typing import Optional, DefaultDict
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, x):
-        """
-        Initialize a ListNode with a value and an optional next pointer.
-
-        Parameters:
-            x: The value stored in the node.
-        """
         self.val = x
         self.next = None
 
