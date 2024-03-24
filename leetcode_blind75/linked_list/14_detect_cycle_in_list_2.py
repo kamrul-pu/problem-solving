@@ -47,6 +47,48 @@ class Solution:
 
         return None
 
+    def __find_node(self, slow: ListNode, fast: ListNode) -> Optional[ListNode]:
+        """
+        Finds the node where the cycle starts in the linked list.
+
+        Parameters:
+            slow (ListNode): The node where slow pointer meets fast pointer.
+            fast (ListNode): The node where fast pointer meets slow pointer.
+
+        Returns:
+            ListNode or None: The node where the cycle starts if found, otherwise None.
+        """
+        # traverse while they are not equal
+        while slow != fast:
+            # move each pointer one step
+            slow = slow.next
+            fast = fast.next
+
+        return slow
+
+    def __detect_cycle_optimal(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        """
+        Detects a cycle in the linked list using Floyd's Tortoise and Hare algorithm.
+
+        Parameters:
+            head (ListNode): The head of the linked list.
+
+        Returns:
+            ListNode or None: The node where the cycle starts if found, otherwise None.
+        """
+        # detect loop by initializing slow and fast pointer
+        slow: ListNode = head
+        fast: ListNode = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            # if there is a loop find the starting node
+            if slow == fast:
+                # start one of the pointer from head
+                return self.__find_node(slow=head, fast=fast)
+
+        return None
+
     def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
         """
         Finds the node where a cycle starts in a linked list.
@@ -59,11 +101,11 @@ class Solution:
         Returns:
             ListNode or None: The node where the cycle starts if found, otherwise None.
         """
-        return self.__detect_cycle(head=head)
+        return self.__detect_cycle_optimal(head=head)
 
 
 if __name__ == "__main__":
-    two: ListNode = ListNode(3)
+    two: ListNode = ListNode(2)
     head: ListNode = ListNode(3)
     head.next = two
     two.next = ListNode(0)
@@ -71,4 +113,4 @@ if __name__ == "__main__":
     two.next.next.next = two
 
     solution: Solution = Solution()
-    print(solution.detectCycle(head=head))
+    print(solution.detectCycle(head=head).val)
