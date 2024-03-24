@@ -6,9 +6,6 @@ each element appears only once. Return the linked list sorted as well.
 from typing import Optional
 
 
-from typing import Optional
-
-
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, val=0, next=None):
