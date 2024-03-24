@@ -54,7 +54,7 @@ class Solution:
         """
         cnt: int = 1
         fast = fast.next
-        while fast and slow != fast:
+        while slow != fast:
             cnt += 1
             fast = fast.next
 
