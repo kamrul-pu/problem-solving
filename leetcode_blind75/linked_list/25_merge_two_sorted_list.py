@@ -87,17 +87,8 @@ class Solution:
 
             temp = temp.next
 
-        # Attach remaining nodes from list1
-        while temp1:
-            temp.next = temp1
-            temp1 = temp1.next
-            temp = temp.next
-
-        # Attach remaining nodes from list2
-        while temp2:
-            temp.next = temp2
-            temp2 = temp2.next
-            temp = temp.next
+        # Attach remaining nodes from either list1 or list2
+        temp.next = list1 if list1 else list2
 
         return dummy.next
 
