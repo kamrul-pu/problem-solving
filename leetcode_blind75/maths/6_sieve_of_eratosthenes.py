@@ -2,7 +2,7 @@
 
 from typing import List
 
-N: int = int(1e1 + 7)
+N: int = int(1e2 + 7)
 
 
 class Solution:
