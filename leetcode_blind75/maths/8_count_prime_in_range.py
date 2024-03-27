@@ -1,5 +1,6 @@
 """Count Prime in range."""
 
+import random
 from typing import List
 
 N: int = int(1e3 + 7)
@@ -24,7 +25,7 @@ def sieve_algo():
 
 
 class Solution:
-    def count_primes(self, l: int, r: int) -> int:
+    def __primes(self, l: int, r: int) -> int:
         """
         Count the number of prime numbers within a given range [l, r].
 
@@ -41,10 +42,16 @@ class Solution:
                 cnt += 1
         return cnt
 
+    def count_primes(self, l: int, r: int) -> int:
+        return self.__primes(l=l, r=r)
+
 
 if __name__ == "__main__":
     sieve_algo()
     solution: Solution = Solution()
-    l: int = 2
-    r: int = 100
-    print(solution.count_primes(l=l, r=r))
+    q: int = int(input())
+    while q:
+        l: int = random.randint(1, 100)
+        r: int = random.randint(l + 1, 500)
+        print(solution.count_primes(l=l, r=r))
+        q -= 1
