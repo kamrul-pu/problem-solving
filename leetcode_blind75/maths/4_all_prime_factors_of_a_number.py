@@ -67,7 +67,7 @@ class Solution:
         factors: List[int] = []
         i: int = 2
         # Iterate through numbers up to num
-        while i <= num:
+        while i * i <= num:
             if num % i == 0:
                 # If i is a factor of num, add it to factors list
                 factors.append(i)
@@ -75,6 +75,9 @@ class Solution:
                 while num % i == 0:
                     num //= i
             i += 1
+        # If num is not 1, it is a prime factor
+        if num != 1:
+            factors.append(num)
 
         return factors
 
