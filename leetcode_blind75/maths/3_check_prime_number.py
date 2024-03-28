@@ -12,12 +12,10 @@ class Solution:
         Returns:
             bool: True if the number is prime, False otherwise.
         """
-        # Check if the number is less than 2
-        if num < 2:
-            return False
+        # Check if the number is less than equal to 2
+        if num <= 2:
+            return num == 2
         # Handle special cases for 2 and odd numbers
-        if num == 2:
-            return True
         if num % 2 == 0:
             return False
         # Iterate through odd numbers up to the square root of num
