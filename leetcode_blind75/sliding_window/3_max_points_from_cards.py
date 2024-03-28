@@ -31,9 +31,9 @@ from typing import List
 class Solution:
     def maxScore(self, cardPoints: List[int], k: int) -> int:
         # Get the length of the cardPoints array
-        n: int = len(card_points)
+        n: int = len(cardPoints)
         # Initialize the left sum with the sum of the first k elements
-        left_sum: int = sum(card_points[0:k])
+        left_sum: int = sum(cardPoints[0:k])
         # Initialize the right sum with 0
         right_sum: int = 0
         # Initialize the maximum sum with the left sum
@@ -44,9 +44,9 @@ class Solution:
         # Iterate over the indices from k - 1 to 0 (inclusive)
         for i in range(k - 1, -1, -1):
             # Update the left sum by subtracting the value of the card at the current index
-            left_sum = left_sum - card_points[i]
+            left_sum = left_sum - cardPoints[i]
             # Update the right sum by adding the value of the card at the corresponding index from the end of the array
-            right_sum = right_sum + card_points[right_index]
+            right_sum = right_sum + cardPoints[right_index]
             # Decrement the right index to move towards the beginning of the array
             right_index -= 1
             # Calculate the total sum of points by adding the left and right sums
