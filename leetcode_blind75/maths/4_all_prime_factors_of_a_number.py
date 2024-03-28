@@ -53,9 +53,37 @@ class Solution:
 
         return factors
 
+    def __prime_factors_all(self, num: int) -> List[int]:
+        """
+        Find all prime factors of a number using an optimal approach.
+
+        Args:
+            num (int): The number for which to find prime factors.
+
+        Returns:
+            List[int]: List of prime factors of the given number.
+        """
+
+        factors: List[int] = []
+        i: int = 2
+        # Iterate through numbers up to num
+        while i * i <= num:
+            if num % i == 0:
+                # If i is a factor of num, add it to factors list
+                # Divide num by i repeatedly to get all occurrences of the factor
+                while num % i == 0:
+                    factors.append(i)
+                    num //= i
+            i += 1
+        # If num is not 1, it is a prime factor
+        if num != 1:
+            factors.append(num)
+
+        return factors
+
     def __prime_factors_optimal(self, num: int) -> List[int]:
         """
-        Find prime factors of a number using an optimal approach.
+        Find distinct prime factors of a number using an optimal approach.
 
         Args:
             num (int): The number for which to find prime factors.
@@ -92,7 +120,10 @@ class Solution:
             List[int]: List of prime factors of the given number.
         """
         # Use optimal method to find prime factors
-        return self.__prime_factors_optimal(num=num)
+        # for finding distinct prime factors
+        # return self.__prime_factors_optimal(num=num)
+        # for finding all factors
+        return self.__prime_factors_all(num=num)
 
 
 if __name__ == "__main__":
