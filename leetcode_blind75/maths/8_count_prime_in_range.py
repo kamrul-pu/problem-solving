@@ -7,9 +7,9 @@ N: int = int(1e3 + 7)
 
 
 # Initialize a list to store whether each number is prime or not
-prime: List[int] = [True] * N
+prime: List[int] = [1] * N
 # Set 0 and 1 as non-prime numbers
-prime[0] = prime[1] = False
+prime[0] = prime[1] = 0
 
 
 def sieve_algo():
@@ -20,8 +20,16 @@ def sieve_algo():
             # Mark all multiples of i as non-prime
             j: int = i * i
             while j < N:
-                prime[j] = False
+                prime[j] = 0
                 j += i
+
+
+sieve_algo()
+
+cnt: int = 0
+for i in range(2, N):
+    cnt = cnt + prime[i]
+    prime[i] = cnt
 
 
 class Solution:
@@ -43,11 +51,11 @@ class Solution:
         return cnt
 
     def count_primes(self, l: int, r: int) -> int:
-        return self.__primes(l=l, r=r)
+        # return self.__primes(l=l, r=r)
+        return prime[r] - prime[l - 1]
 
 
 if __name__ == "__main__":
-    sieve_algo()
     solution: Solution = Solution()
     q: int = int(input())
     while q:
