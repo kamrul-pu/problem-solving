@@ -2,10 +2,30 @@
 Given a string s, find the length of the longest substring without repeating characters.
 """
 
-from typing import Dict
+from typing import Dict, Set
 
 
 class Solution:
+    def __f(self, s: str) -> int:
+        # Initialize an empty set to keep track of characters in the current window
+        char_set: Set[str] = set()
+        # Initialize variables to keep track of the left pointer (`l`), maximum length (`mx_len`), and current length (`l`)
+        l: int = 0
+        mx_len: int = 0
+        # Iterate through each character in the string `s` using a sliding window approach
+        for r in range(len(s)):
+            # If the current character `s[r]` is already in the set (indicating a repeating character)
+            while s[r] in char_set:
+                # Remove characters from the left side of the window until the repeating character is removed
+                char_set.remove(s[l])
+                l += 1
+            # Add the current character `s[r] to the characters set
+            char_set.add(s[r])
+            # Update the max length if bigger length string found
+            mx_len = max(mx_len, r - l + 1)
+
+        return mx_len
+
     def __brute(self, s: str) -> int:
         """
         Brute force approach to find the length of the longest substring without repeating characters.
