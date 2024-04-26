@@ -50,38 +50,47 @@ class Solution:
         # Optimized approach using binary search (O(log(min(n, m))))
         n: int = len(nums1)
         m: int = len(nums2)
-        total: int = n + m
-        half: int = total // 2
 
         # Ensure nums1 is the smaller array for optimization
-        if m < n:
-            nums1, nums2 = nums2, nums1
-            n, m = m, n
+        if n > m:
+            return self.__optimal(nums1=nums2, nums2=nums1)  # Swap if nums1 is larger
 
-        l, r = 0, n - 1
-        while True:
-            i: int = (l + r) // 2  # Partition point for nums1
-            j: int = half - i - 2  # Partition point for nums2
+        low: int = 0
+        high: int = n
+        left: int = (n + m) // 2  # Total number of elements in the left half
 
-            # Determine elements around partition points
-            a_left: int = nums1[i] if i >= 0 else float("-inf")
-            a_right: int = nums1[i + 1] if (i + 1) < n else float("inf")
-            b_left: int = nums2[j] if j >= 0 else float("-inf")
-            b_right: int = nums2[j + 1] if (j + 1) < m else float("inf")
+        while low <= high:
+            mid1: int = (low + high) // 2  # Partition point for nums1
+            mid2: int = left - mid1  # Corresponding partition point for nums2
 
-            # Check if the partition is correct
-            if a_left <= b_right and b_left <= a_right:
-                # If total length is odd, return the minimum of the two middle elements
-                if total % 2:
-                    return min(a_right, b_right)
-                # If total length is even, return the average of the two middle elements
-                return (max(a_left, b_left) + min(a_right, b_right)) / 2
+            # Determine the elements around the partition points
+            r1 = (
+                nums1[mid1] if mid1 < n else float("inf")
+            )  # Right element of nums1 partition
+            r2 = (
+                nums2[mid2] if mid2 < m else float("inf")
+            )  # Right element of nums2 partition
+            l1 = (
+                nums1[mid1 - 1] if mid1 - 1 >= 0 else float("-inf")
+            )  # Left element of nums1 partition
+            l2 = (
+                nums2[mid2 - 1] if mid2 - 1 >= 0 else float("-inf")
+            )  # Left element of nums2 partition
 
-            # Adjust partition based on comparison results
-            elif a_left > b_right:
-                r = i - 1  # Adjust partition in nums1 to the left
+            # Check if the partitions are valid
+            if l1 <= r2 and l2 <= r1:
+                # If the total number of elements is odd, return the maximum of the left elements
+                if (n + m) % 2 == 1:
+                    return max(l1, l2)
+                else:
+                    # If the total number of elements is even, return the average of the middle elements
+                    return (max(l1, l2) + min(r1, r2)) / 2.0
+            elif l1 > r2:
+                high = mid1 - 1  # Adjust the partition in nums1 to the left
             else:
-                l = i + 1  # Adjust partition in nums1 to the right
+                low = mid1 + 1  # Adjust the partition in nums1 to the right
+
+        return 0  # Default return value (should not reach here in valid scenarios)
 
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
         # Entry point for finding the median of two sorted arrays
