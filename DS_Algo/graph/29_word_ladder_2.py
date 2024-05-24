@@ -12,73 +12,62 @@ or an empty list if no such sequence exists. Each sequence should be returned as
 """
 
 from collections import deque
-from typing import Deque, List, Set
+from typing import Deque, List, Set, Tuple
 
 
-def word_ladder_sequence(
-    start_word: str, target_word: str, word_list: List[str]
-) -> List[List[str]]:
-    word_set: Set = set(word_list)
+class Solution:
+    def __f(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        # Initialize a queue for BFS traversal
+        q: Deque[Tuple[str, int]] = deque()
 
-    # Initialize a queue for BFS
-    q: Deque = deque()
+        # Append the starting word and its step count (1) to the queue
+        q.append((beginWord, 1))
 
-    # Start the queue with the initial word
-    q.append([start_word])
+        # Initialize a set to store words from the wordList
+        st: Set = set()
 
-    # Keep track of words used on each level to avoid repeating them
-    used_on_level: List[str] = []
-    used_on_level.append(start_word)
+        # Add all words from wordList to the set
+        for word in wordList:
+            st.add(word)
 
-    # Initialize the current level
-    level: int = 0
+        # Remove the starting word from the set if it exists
+        if beginWord in st:
+            st.remove(beginWord)
 
-    # Initialize the list to store the resulting sequences
-    ans: List[List[str]] = []
+        # Perform BFS traversal
+        while q:
+            # Dequeue a word and its step count from the queue
+            front: Tuple = q.popleft()
+            word: str = front[0]
+            steps: int = front[1]
 
-    while q:
-        # Pop the first sequence from the queue
-        front: List[str] = q.popleft()
+            # If the dequeued word matches the target word, return the step count
+            if word == endWord:
+                return steps
 
-        # Check if we are moving to the next level
-        if len(front) > level:
-            level += 1
+            # Generate all possible one-letter mutations of the dequeued word
+            for i in range(len(word)):
+                for ch in range(ord("a"), ord("z") + 1):
+                    new_word: str = word[:i] + chr(ch) + word[i + 1 :]
 
-            # Remove words used in the previous level from the word set
-            for word in used_on_level:
-                if word in word_set:
-                    word_set.remove(word)
+                    # If the mutated word is in the set, remove it and enqueue it with the updated step count
+                    if new_word in st:
+                        st.remove(new_word)
+                        q.append((new_word, steps + 1))
 
-        # Get the last word in the sequence
-        word: str = front[-1]
+        # If no transformation sequence exists, return 0
+        return 0
 
-        # Check if we have reached the endWord
-        if word == target_word:
-            # Check if this is the first sequence found or if it's as short as the ones found before
-            if len(ans) == 0:
-                ans.append(front)
-            elif len(ans[0]) == len(front):
-                ans.append(front)
-
-        # Generate new words by changing one letter at a time
-        for i in range(len(word)):
-            for ch in range(ord("a"), ord("z") + 1):
-                new_word: str = word[:i] + chr(ch) + word[i + 1 :]
-                if new_word in word_set:
-                    # Add the new word to the sequence and append it to the queue
-                    front.append(new_word)
-                    q.append(front.copy())
-                    used_on_level.append(new_word)
-                    front.pop()
-
-    return ans
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        return self.__f(beginWord, endWord, wordList)
 
 
 if __name__ == "__main__":
     word_list: List[str] = ["pat", "bot", "pot", "poz", "coz"]
     start_word: str = "bat"
     end_word: str = "coz"
-    ladder_sequence: List[List[str]] = word_ladder_sequence(
-        start_word=start_word, target_word=end_word, word_list=word_list
+    solution: Solution = Solution()
+    ladder_sequence: List[List[str]] = solution.ladderLength(
+        start_word, end_word, word_list
     )
     print(ladder_sequence)
