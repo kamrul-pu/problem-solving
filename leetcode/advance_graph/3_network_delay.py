@@ -11,6 +11,7 @@ import heapq
 from collections import defaultdict
 from typing import DefaultDict, List, Tuple
 
+
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         # Step 1: Create an adjacency list to represent the graph
@@ -44,6 +45,7 @@ class Solution:
         # Step 5: Check if all nodes are reachable and return the maximum distance
         max_distance = max(distance[1:])  # Ignore the 0th index
         return max_distance if max_distance < float("inf") else -1
+
 
 if __name__ == "__main__":
     times: List[List[int]] = [[2, 1, 1], [2, 3, 1], [3, 4, 1]]
