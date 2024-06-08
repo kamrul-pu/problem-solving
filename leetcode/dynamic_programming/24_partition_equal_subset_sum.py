@@ -8,8 +8,6 @@ from typing import List
 
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
-        # Get the length of the input array
-        n = len(nums)
         # Calculate the total sum of all elements in the array
         s = sum(nums)
         # If the total sum is odd, it's impossible to partition the array into two subsets with equal sum
