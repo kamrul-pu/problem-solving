@@ -26,6 +26,19 @@ class Solution:
         # Return the final missing number
         return missing
 
+    def __missing_2(self, nums: List[int]) -> int:
+        # Get the length of the input list
+        n: int = len(nums)
+        # Initialize 'res' to 'n', which is the maximum possible number
+        res: int = n
+        # Iterate through each index in the range from 0 to 'n-1'
+        for i in range(n):
+            # Update 'res' by adding the difference between the current index 'i'
+            # and the value at index 'i' in 'nums'
+            res += i - nums[i]
+        # Return 'res', which holds the missing number after iterating through the entire list
+        return res
+
     # Main function to find the missing number in the given list
     def missingNumber(self, nums: list[int]) -> int:
         n: int = len(nums)  # Get the length of the input list
