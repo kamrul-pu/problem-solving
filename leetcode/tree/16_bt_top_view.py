@@ -50,8 +50,8 @@ class Solution:
                 q.append((node.right, line + 1))
 
         # Append values from the dictionary to the result list, sorted by vertical lines
-        for key in sorted(mp.keys()):
-            ans.append(mp[key])
+        for key, val in sorted(mp.items()):
+            ans.append(val)
         return ans
 
     def top_view(self, root: Optional[TreeNode]) -> List[int]:
