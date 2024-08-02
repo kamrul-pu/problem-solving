@@ -1,60 +1,91 @@
-def merge(nums: list[int], low: int, mid: int, high: int) -> None:
-    temp: list[int] = []
-    left: int = low
-    right: int = mid + 1
+"""
+Given the roots of two binary trees p and q, write a function to check if they are the same or not.
 
-    while left <= mid and right <= high:
-        if nums[left] <= nums[right]:
-            temp.append(nums[left])
-            left += 1
-        else:
-            temp.append(nums[right])
-            right += 1
+Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+"""
 
-    while left <= mid:
-        temp.append(nums[left])
-        left += 1
-    while right <= high:
-        temp.append(nums[right])
-        right += 1
-
-    for i in range(low, high + 1):
-        nums[i] = temp[i - low]
+from collections import deque
+from typing import Optional, List, Deque
 
 
-def merge_sort(nums: list[int], low: int, high: int) -> None:
-    if low < high:
-        mid: int = (low + high) // 2
-        merge_sort(nums=nums, low=low, high=mid)
-        merge_sort(nums=nums, low=mid + 1, high=high)
-        merge(nums=nums, low=low, mid=mid, high=high)
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        """
+        Initialize a TreeNode with a value and optional left and right children.
+
+        Args:
+            val (int, optional): Value of the node. Defaults to 0.
+            left (TreeNode, optional): Left child of the node. Defaults to None.
+            right (TreeNode, optional): Right child of the node. Defaults to None.
+        """
+        self.val = val
+        self.left = left
+        self.right = right
 
 
-def partition(nums: list[int], low: int, high: int) -> int:
-    pivot: int = nums[low]
-    i: int = low
-    j: int = high
-    while i < j:
-        while i < high and nums[i] <= pivot:
-            i += 1
-        while j > low and nums[j] > pivot:
-            j -= 1
-        if i < j:
-            nums[i], nums[j] = nums[j], nums[i]
-    nums[low], nums[j] = nums[j], nums[low]
-    return j
+class Solution:
+    def zig_zag(self, root: Optional["TreeNode"]) -> List[List[int]]:
+        ans: List[List[int]] = []
+        if root is None:
+            return ans
+        q: Deque[TreeNode] = deque()
+        q.append(root)
+        flag: bool = True
+        while q:
+            tmp: List[int] = []
+            n: int = len(q)
+            while n > 0:
+                node: TreeNode = q.popleft()
+                tmp.append(node.val)
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+                n -= 1
+            if flag:
+                ans.append(tmp)
+                flag = False
+            else:
+                ans.append(list(reversed(tmp)))
+                flag = True
+        return ans
 
 
-def quick_sort(nums: list[int], low: int, high: int) -> None:
-    if low < high:
-        p_i: int = partition(nums=nums, low=low, high=high)
-        quick_sort(nums=nums, low=low, high=p_i - 1)
-        quick_sort(nums=nums, low=p_i + 1, high=high)
+def build_tree():
+    """
+    Build a sample binary tree for testing purposes.
+
+    Returns:
+        TreeNode: The root of the constructed binary tree.
+    """
+    root = TreeNode(-10)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+
+    return root
+
+
+def build_tree2():
+    """
+    Build another sample binary tree for testing purposes.
+
+    Returns:
+        TreeNode: The root of the constructed binary tree.
+    """
+    root = TreeNode(-10)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+
+    return root
 
 
 if __name__ == "__main__":
-    nums: list[int] = [19, 3, 78, 3, 2, 5, 9, -5]
-    print(nums)
-    # merge_sort(nums=nums, low=0, high=len(nums) - 1)
-    quick_sort(nums=nums, low=0, high=len(nums) - 1)
-    print(nums)
+    root1: TreeNode = build_tree()
+    root2: TreeNode = build_tree2()
+    solution: Solution = Solution()
+    print(solution.zig_zag(root1))
