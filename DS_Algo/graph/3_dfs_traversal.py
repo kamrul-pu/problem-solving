@@ -40,10 +40,10 @@ def dfs(
     ans.append(node)
 
     # Recur for all adjacent nodes of the current node
-    for item in adj_list[node]:
+    for neighbor in adj_list[node]:
         # If the adjacent node has not been visited, perform DFS on it
-        if not visited[item]:
-            dfs(item, adj_list, visited, ans)
+        if not visited[neighbor]:
+            dfs(neighbor, adj_list, visited, ans)
 
 
 # Initialize the visited list with zeros (False)
