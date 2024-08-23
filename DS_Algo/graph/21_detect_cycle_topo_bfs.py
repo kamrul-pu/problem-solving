@@ -3,18 +3,19 @@ Detect cycle using topological sort and Kahn's Algorithm.
 """
 
 from collections import deque
+from typing import Deque, List
 
 
-def topo_sort(g: list[list[int]], v: int) -> bool:
+def topo_sort(g: List[List[int]], v: int) -> bool:
     """
     Perform topological sorting on a Directed Acyclic Graph (DAG) using BFS Kahn's Algorithm.
 
-    :param g: Adjacency list representing the directed acyclic graph.
+    :param g: Adjacency List representing the directed acyclic graph.
     :param v: Number of vertices in the graph.
     :return: True if the graph contains a cycle, False otherwise.
     """
     # Initialize indegree array for each vertex
-    indegree: list[int] = [0] * v
+    indegree: List[int] = [0] * v
 
     # Calculate indegree for each vertex
     for i in range(v):
@@ -22,7 +23,7 @@ def topo_sort(g: list[list[int]], v: int) -> bool:
             indegree[item] += 1
 
     # Initialize a queue for BFS
-    q: deque = deque()
+    q: Deque[int] = deque()
 
     # Enqueue vertices with indegree 0
     for i in range(v):
@@ -30,7 +31,7 @@ def topo_sort(g: list[list[int]], v: int) -> bool:
             q.append(i)
 
     # List to store the topological ordering
-    topo: list[int] = []
+    topo: List[int] = []
 
     # BFS
     while q:
@@ -49,7 +50,7 @@ def topo_sort(g: list[list[int]], v: int) -> bool:
 
 if __name__ == "__main__":
     # Example usage:
-    g: list[list[int]] = [
+    g: List[List[int]] = [
         [1],
         [2],
         [3, 4],
