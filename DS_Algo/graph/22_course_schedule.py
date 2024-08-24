@@ -12,7 +12,7 @@ from typing import Deque, List
 
 
 class Solution:
-    def __is_possible(self, n: int, prerequisities: list[List[int]]) -> bool:
+    def __is_possible(self, n: int, prerequisities: List[List[int]]) -> bool:
         adj: List[List[int]] = [[] for _ in range(n)]
         for item in prerequisities:
             adj[item[0]].append(item[1])
