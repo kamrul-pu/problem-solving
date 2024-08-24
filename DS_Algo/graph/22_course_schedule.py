@@ -7,50 +7,50 @@ For example, the pair [0, 1], indicates that to take course 0 you have to first 
 Return true if you can finish all courses. Otherwise, return false.
 """
 
-from collections import defaultdict
-from typing import DefaultDict, List, Set
+from collections import deque
+from typing import Deque, List
 
 
 class Solution:
+    def __is_possible(self, n: int, prerequisities: list[List[int]]) -> bool:
+        adj: List[List[int]] = [[] for _ in range(n)]
+        for item in prerequisities:
+            adj[item[0]].append(item[1])
+
+        # Initialize indegree array for each vertex
+        indegree: List[int] = [0] * n
+
+        # Calculate indegree for each vertex
+        for i in range(n):
+            for item in adj[i]:
+                indegree[item] += 1
+
+        # Initialize a queue for BFS
+        q: Deque[int] = deque()
+
+        # Enqueue vertices with indegree 0
+        for i in range(n):
+            if indegree[i] == 0:
+                q.append(i)
+
+        # List to store the topological ordering
+        topo: List[int] = []
+
+        # BFS
+        while q:
+            node = q.popleft()
+            topo.append(node)
+
+            # Update indegree for adjacent vertices
+            for it in adj[node]:
+                indegree[it] -= 1
+                if indegree[it] == 0:
+                    q.append(it)
+
+        return len(topo) == n
+
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        # Create a defaultdict to store prerequisites as a mapping of course to its prerequisites
-        pre_map: DefaultDict[int, List] = defaultdict(list)
-        for course, pre in prerequisites:
-            pre_map[course].append(pre)
-
-        # Set to keep track of visited courses during DFS traversal
-        visit: Set[int] = set()
-
-        # Define a recursive DFS function to check if it's possible to complete all courses
-        def dfs(course: int) -> bool:
-            # If the course is already visited, it indicates a cycle, so return False
-            if course in visit:
-                return False
-            # If there are no prerequisites for the course, return True
-            if pre_map[course] == []:
-                return True
-            # Mark the current course as visited
-            visit.add(course)
-            # Traverse through each prerequisite of the current course
-            for pre in pre_map[course]:
-                # Recursively check if it's possible to complete the prerequisite
-                if not dfs(pre):
-                    return False
-            # Remove the current course from visited set to backtrack
-            visit.remove(course)
-            # Once all prerequisites are visited and processed, remove them from the pre_map
-            pre_map[course] = []
-            # Return True indicating completion of the current course
-            return True
-
-        # Iterate through each course and check if it's possible to complete it
-        for course in range(numCourses):
-            # If the course is not visited and it's not possible to complete it, return False
-            if course not in visit and not dfs(course):
-                return False
-
-        # If all courses are visited and it's possible to complete them, return True
-        return True
+        return self.__is_possible(n=numCourses, prerequisities=prerequisites)
 
 
 if __name__ == "__main__":
