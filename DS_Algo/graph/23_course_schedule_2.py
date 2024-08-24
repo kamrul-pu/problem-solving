@@ -6,45 +6,53 @@ from collections import deque
 from typing import Deque, List
 
 
-def find_order(n: int, prerequisities: List[List[int]]) -> List[int]:
-    adj: List[List[int]] = [[] for _ in range(n)]
-    for item in prerequisities:
-        adj[item[0]].append(item[1])
+class Solution:
+    def __f(self, n: int, prerequisites: List[List[int]]) -> List[int]:
+        # Initialize an adjacency list to represent the graph
+        adj_list: List[List[int]] = [[] for _ in range(n)]
 
-    # Initialize indegree array for each vertex
-    indegree: List[int] = [0] * n
+        # Populate the adjacency list based on the prerequisites
+        for edge in prerequisites:
+            adj_list[edge[0]].append(edge[1])
 
-    # Calculate indegree for each vertex
-    for i in range(n):
-        for item in adj[i]:
-            indegree[item] += 1
+        # Initialize an array to store the in-degree of each course
+        indegree: List[int] = [0] * n
 
-    # Initialize a queue for BFS
-    q: Deque = deque()
+        # Calculate the in-degree of each course
+        for node in range(n):
+            for neighbor in adj_list[node]:
+                indegree[neighbor] += 1
 
-    # Enqueue vertices with indegree 0
-    for i in range(n):
-        if indegree[i] == 0:
-            q.append(i)
+        # Initialize a deque for topological sorting
+        q: Deque = deque()
 
-    # List to store the topological ordering
-    topo: List[int] = []
+        # Enqueue courses with in-degree zero
+        for node in range(n):
+            if indegree[node] == 0:
+                q.append(node)
 
-    # BFS
-    while q:
-        node = q.popleft()
-        topo.append(node)
+        # Initialize a list to store the topological ordering
+        topo: List[int] = []
 
-        # Update indegree for adjacent vertices
-        for it in adj[node]:
-            indegree[it] -= 1
-            if indegree[it] == 0:
-                q.append(it)
+        # Perform BFS-based topological sorting
+        while q:
+            node: int = q.popleft()
+            topo.append(node)
+            for neighbor in adj_list[node]:
+                indegree[neighbor] -= 1
+                if indegree[neighbor] == 0:
+                    q.append(neighbor)
 
-    return topo if len(topo) == n else []
+        # If the length of the topological ordering is equal to the number of courses, return True
+        return topo[::-1] if len(topo) == n else []
+
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        return self.__f(n=numCourses, prerequisites=prerequisites)
 
 
 if __name__ == "__main__":
     # Example usage:
     g: List[List[int]] = [[1, 0], [2, 1], [3, 2]]
-    print(find_order(n=4, prerequisities=g))
+    n: int = 4
+    solution: Solution = Solution()
+    print(solution.findOrder(n, g))
