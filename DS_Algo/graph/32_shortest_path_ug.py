@@ -1,64 +1,91 @@
 """Shortest path in undirected graph."""
 
-import heapq
 from typing import List
+import heapq
+from collections import defaultdict
 
 
-def shortest_path_distance(adj_list: List[List[int]], src: int) -> List[int]:
-    # Number of nodes in the graph
-    n: int = len(adj_list)
+class Solution:
+    def shortestPath(self, n: int, m: int, edges: List[List[int]]) -> List[int]:
+        """
+        Finds the shortest path from node 1 to node n in a graph using Dijkstra's algorithm.
 
-    # Initialize distance and parent arrays
-    distance: List[int] = [float("inf")] * (n)
-    parent: List[int] = [i for i in range(n)]
+        Parameters:
+        n (int): Number of nodes in the graph.
+        m (int): Number of edges in the graph.
+        edges (List[List[int]]): A list of edges where each edge is represented as [u, v, wt].
+                                 u and v are nodes, and wt is the weight of the edge between u and v.
 
-    # Distance from source to itself is 0
-    distance[src] = 0
+        Returns:
+        List[int]: A list representing the shortest path from node 1 to node n. Returns [-1] if no path exists.
+        """
+        # Initialize adjacency list, distances, and parents
+        adj = defaultdict(list)
+        for u, v, wt in edges:
+            adj[u].append((v, wt))
+            adj[v].append((u, wt))
 
-    # Priority queue to keep track of nodes and their distances
-    pq: List[int] = []
-    heapq.heappush(pq, (distance[src], src))
+        # Distance from node 1 to all other nodes
+        distances = [float("inf")] * (n + 1)
+        distances[1] = 0
 
-    # Dijkstra's algorithm
-    while pq:
-        dist, node = heapq.heappop(pq)
+        # Parent array to reconstruct the path
+        parent = [-1] * (n + 1)
 
-        # Explore neighbors of the current node
-        for neighbor in adj_list[node]:
-            n_node: int = neighbor[0]
-            new_dist: int = dist + neighbor[1]
+        # Priority queue to select the node with the smallest distance
+        pq = []
+        heapq.heappush(pq, (0, 1, -1))  # (distance, current_node, parent_node)
 
-            # If a shorter path is found, update distance and push to the priority queue
-            if new_dist < distance[n_node]:
-                distance[n_node] = new_dist
-                heapq.heappush(pq, (new_dist, n_node))
-                parent[n_node] = node
+        while pq:
+            dist, node, par = heapq.heappop(pq)
 
-    # Reconstruct the shortest path from source to destination
-    dest_node: int = n - 1
-    ans: List[int] = []
-    ans.append(dest_node)
+            # Skip processing if the distance is not the smallest found so far
+            if dist > distances[node]:
+                continue
 
-    # Traverse the parent array to get the path
-    while dest_node != src and dest_node > 0:
-        dest_node = parent[dest_node]
-        ans.append(dest_node)
+            # Update parent node
+            if parent[node] == -1:
+                parent[node] = par
 
-    # Return the reversed path
-    return ans[::-1]
+            # Process each adjacent node
+            for neighbor, weight in adj[node]:
+                new_dist = dist + weight
+                # If a shorter path to neighbor is found
+                if new_dist < distances[neighbor]:
+                    distances[neighbor] = new_dist
+                    heapq.heappush(pq, (new_dist, neighbor, node))
+
+        # Check if there's a path to the destination node
+        if distances[n] == float("inf"):
+            return [-1]
+
+        # Reconstruct the shortest path from node n to node 1
+        path = []
+        current = n
+        while current != -1:
+            path.append(current)
+            current = parent[current]
+
+        # Reverse the path to get the correct order from node 1 to node n
+        path.reverse()
+
+        return path
 
 
 if __name__ == "__main__":
     # Example graph represented as an adjacency List
-    adj_list: List[List[int]] = [
-        [],
-        [(2, 2), (4, 1)],
-        [(1, 2), (3, 4), (5, 5)],
-        [(2, 4), (4, 3), (5, 1)],
-        [(1, 1), (3, 3)],
-        [(2, 5), (3, 1)],
+    n: int = 5
+    m: int = 6
+    edges: List[List[int]] = [
+        [1, 2, 2],
+        [2, 5, 5],
+        [2, 3, 4],
+        [1, 4, 1],
+        [4, 3, 3],
+        [3, 5, 1],
     ]
 
     # Find and print the shortest path from source node 1
-    ans: List[int] = shortest_path_distance(adj_list=adj_list, src=1)
+    solution: Solution = Solution()
+    ans: List[int] = solution.shortestPath(n, m, edges)
     print(ans)
