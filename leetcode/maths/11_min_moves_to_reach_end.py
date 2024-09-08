@@ -13,13 +13,12 @@ Given the two integers target and maxDoubles, return the minimum number of moves
 
 class Solution:
     def minMoves(self, target: int, maxDoubles: int) -> int:
-        c = 0  # Initialize the count of moves to zero
+        c: int = 0  # Initialize the count of moves to zero
 
         # Continue until we have maxDoubles left or target is reduced to 1
         while maxDoubles and target > 1:
             # If the target is even and we still have doubles left
             if target % 2 == 0:
-                c += 1  # Increment move count because we will use a double operation
                 maxDoubles -= 1  # Use up one of the allowed double operations
                 target //= (
                     2  # Double the current integer, which means we halve the target
@@ -27,7 +26,7 @@ class Solution:
             else:
                 # If the target is odd, we need to decrement the target by 1
                 target -= 1  # Perform increment operation (in this case, decrement to make it even)
-                c += 1  # Increment move count for the decrement operation
+            c += 1  # Increment move count for the decrement operation
 
         # After exhausting double operations or reducing target to 1, we might still need to decrement
         # the target to 1 using only increments
