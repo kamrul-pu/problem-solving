@@ -66,6 +66,7 @@ class Solution:
             if visited[row][
                 col
             ]:  # If the cell has been visited, continue to the next query
+                ans.append(cnt)
                 continue
             visited[row][col] = True  # Mark the cell as visited
             cnt += 1  # Increment count of islands
