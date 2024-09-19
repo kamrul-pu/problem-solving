@@ -1,72 +1,87 @@
+from typing import List
+
+# Define a constant for a large integer value.
 INT_MAX: int = 999999
 
 
-def min_energy(ind: int, arr: list[int], memo: dict = {}) -> int:
-    """
-    Calculate the minimum energy required to traverse a sequence of fog jumps.
+class Solution:
+    # Recursive function with memoization to find the minimum energy
+    def __f(self, n: int, arr: List[int], dp: List[int]) -> int:
+        # Base case: if we are at the first step, no energy is needed
+        if n == 0:
+            return 0
+        # Return already computed value from dp if it exists
+        if dp[n] != -1:
+            return dp[n]
 
-    Args:
-        ind (int): Current index in the array.
-        arr (list[int]): Array representing fog jump heights.
-        memo (dict): Memoization dictionary to store already calculated results.
+        # Calculate energy cost to jump from (n-1) to n
+        left: int = self.__f(n - 1, arr, dp) + abs(arr[n] - arr[n - 1])
+        right: int = INT_MAX  # Initialize right jump cost to a large value
 
-    Returns:
-        int: Minimum energy required to traverse the fog jumps up to the current index.
-    """
-    # Base case: Reached the beginning of the array
-    if ind == 0:
-        return 0
+        # If we can jump from (n-2) to n, calculate that cost as well
+        if n > 1:
+            right = self.__f(n - 2, arr, dp) + abs(arr[n] - arr[n - 2])
 
-    # Check if the result for the current index is already memoized
-    if ind in memo:
-        return memo[ind]
+        # Store the minimum energy required in dp
+        dp[n] = min(left, right)
+        return dp[n]
 
-    # Calculate the energy required for the current index by considering both left and right jumps
-    left: int = min_energy(ind=ind - 1, arr=arr, memo=memo) + abs(
-        arr[ind] - arr[ind - 1]
-    )
-    right: int = (
-        min_energy(ind=ind - 2, arr=arr, memo=memo) + abs(arr[ind] - arr[ind - 2])
-        if ind > 1
-        else INT_MAX
-    )
+    # Tabulation method to iteratively find minimum energy
+    def __tabulation(self, n: int, arr: List[int]) -> int:
+        dp: List[int] = [0] * n  # DP array initialized to zero
+        for i in range(1, n):
+            # Calculate energy cost if jumping from (i-1) to i
+            left = dp[i - 1] + abs(arr[i] - arr[i - 1])
+            right = INT_MAX  # Initialize right jump cost to a large value
 
-    # Memoize the result and return the minimum energy for the current index
-    memo[ind] = min(left, right)
-    return memo[ind]
+            # Calculate energy cost if jumping from (i-2) to i if possible
+            if i > 1:
+                right = dp[i - 2] + abs(arr[i] - arr[i - 2])
+
+            # Store the minimum energy required to reach step i
+            dp[i] = min(left, right)
+        return dp[
+            n - 1
+        ]  # The last element gives the minimum energy to reach the last step
+
+    # Optimized version using constant space
+    def __optimized(self, n: int, arr: List[int]) -> int:
+        prev2 = INT_MAX  # Energy cost for two steps back
+        prev = 0  # Energy cost for the last step
+        for i in range(1, n):
+            # Calculate energy cost if jumping from (i-1) to i
+            left = prev + abs(arr[i] - arr[i - 1])
+            right = prev2  # Energy cost for jumping from (i-2) to i
+
+            # If possible, calculate cost from (i-2) to i
+            if i > 1:
+                right = prev2 + abs(arr[i] - arr[i - 2])
+
+            # Current minimum energy to reach step i
+            cur = min(left, right)
+            # Update previous energies for the next iteration
+            prev2 = prev
+            prev = cur
+
+        return prev  # Return the minimum energy to reach the last step
+
+    # Main function to determine minimum energy required
+    def min_energy(self, n: int, arr: List[int]) -> int:
+        dp: List[int] = [-1] * n  # DP array initialized to -1
+        # Uncomment to use different approaches
+        # return self.__f(n - 1, arr, dp)  # Recursive with memoization
+        # return self.__tabulation(n, arr)  # Tabulation method
+        return self.__optimized(n, arr)  # Optimized space approach
 
 
-def find_mn_cost(n: int, arr: list[int]) -> int:
-    dp: list[int] = [-1] * (n + 1)
-    dp[0] = 0
-    for i in range(1, n):
-        fs: int = dp[i - 1] + abs(arr[i] - arr[i - 1])
-        ss: int = dp[i - 2] + abs(arr[i] - arr[i - 2]) if i > 1 else INT_MAX
-        dp[i] = min(fs, ss)
-
-    return dp[n - 1]
-
-
-def find_mn_optimal(n: int, arr: list[int]) -> int:
-    prev_2i: int = 0
-    prev_i: int = 0
-    cur_i: int = 0
-    for i in range(1, n):
-        fs: int = prev_i + abs(arr[i] - arr[i - 1])
-        ss: int = prev_2i + abs(arr[i] - arr[i - 2]) if i > 1 else INT_MAX
-        cur_i = min(fs, ss)
-        prev_2i = prev_i
-        prev_i = cur_i
-
-    return prev_i
-
-
+# Example usage
 if __name__ == "__main__":
-    n: int = 4
-    arr: list[int] = [10, 20, 30, 10]
+    n: int = 4  # Number of steps
+    arr: List[int] = [10, 20, 30, 10]  # Energy levels at each step
 
-    # Calculate and print the minimum energy required for the entire fog jump sequence
-    min_cost: int = min_energy(ind=n - 1, arr=arr)
+    # Create an instance of the Solution class
+    solution: Solution = Solution()
+
+    # Calculate and print the minimum energy required for the entire jump sequence
+    min_cost: int = solution.min_energy(n, arr)
     print("Minimum energy required:", min_cost)
-    print("find min cost", find_mn_cost(n=n, arr=arr))
-    print("find cost space optimation", find_mn_optimal(n=n, arr=arr))
