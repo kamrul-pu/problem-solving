@@ -1,83 +1,87 @@
-"""Minimum Path Sum in a Triangle"""
+"""
+Given a triangle array, return the minimum path sum from top to bottom.
+
+For each step, you may move to an adjacent number of the row below.
+More formally, if you are on index i on the current row, you may
+move to either index i or index i + 1 on the next row.
+"""
+
+from typing import List
 
 
-def min_path_sum(
-    i: int, j: int, n: int, m: int, triangle: list[list[int]], dp=list[list[int]]
-) -> int:
-    """Recursive approach with memoization"""
-    # Base case: reach the bottom of the triangle
-    if i == n - 1:
-        return triangle[i][j]
-    # Check if the result for the current position is already calculated
-    if dp[i][j] != -1:
+class Solution:
+    def __f(
+        self, i: int, j: int, n: int, triangle: List[List[int]], dp: List[List[int]]
+    ) -> int:
+        # Base case: If we are at the last row of the triangle, return the value at that position
+        if i == n - 1:
+            return triangle[i][j]
+
+        # If the value has already been computed, return it from the dp array
+        if dp[i][j] != -1:
+            return dp[i][j]
+
+        # Calculate the minimum path sum for moving down and diagonally
+        down: int = triangle[i][j] + self.__f(
+            i + 1, j, n, triangle, dp
+        )  # Move down to the next row, same column
+        diagonal: int = triangle[i][j] + self.__f(
+            i + 1, j + 1, n, triangle, dp
+        )  # Move down to the next row, next column
+
+        # Store the minimum of the two path sums in the dp array
+        dp[i][j] = min(down, diagonal)
         return dp[i][j]
-    # Calculate the sum for moving down and diagonally, and store the minimum
-    down: int = triangle[i][j] + min_path_sum(
-        i=i + 1, j=j, n=n, m=m, triangle=triangle, dp=dp
-    )
-    diagonal: int = triangle[i][j] + min_path_sum(
-        i=i + 1, j=j + 1, n=n, m=m, triangle=triangle, dp=dp
-    )
-    dp[i][j] = min(down, diagonal)
-    return dp[i][j]
 
+    def __tabulation(self, triangle: List[List[int]], n: int) -> int:
+        # Create a dp table initialized to 0
+        dp: List[List[int]] = [[0] * n for _ in range(n)]
+        dp[n - 1] = triangle[n - 1][:]  # Start with the last row of the triangle
 
-def min_path_tabulation(n: int, m: int, triangle: list[list[int]]) -> int:
-    """Tabulation approach for dynamic programming"""
-    # Initialize the dp table with the bottom row of the triangle
-    dp: list[list[int]] = [[0 for col in range(m)] for row in range(n)]
-    for j in range(m):
-        dp[n - 1][j] = triangle[n - 1][j]
+        # Fill in the dp table from the second-to-last row to the top
+        for i in range(n - 2, -1, -1):
+            for j in range(i + 1):
+                # Calculate the minimum path sum for each cell
+                down: int = triangle[i][j] + dp[i + 1][j]  # Move down
+                diagonal: int = triangle[i][j] + dp[i + 1][j + 1]  # Move diagonally
+                # Store the minimum of the two path sums
+                dp[i][j] = min(down, diagonal)
 
-    # Fill in the dp table from bottom to top
-    for i in range(n - 2, -1, -1):
-        for j in range(i, -1, -1):
-            d: int = triangle[i][j] + dp[i + 1][j]
-            dg: int = triangle[i][j] + dp[i + 1][j + 1]
-            dp[i][j] = min(d, dg)
+        # The minimum path sum to the top of the triangle is now at dp[0][0]
+        return dp[0][0]
 
-    return dp[0][0]
+    def __optimized(self, triangle: List[List[int]], n: int) -> int:
+        # Start with the last row as our initial "previous" row
+        prev: List[int] = triangle[n - 1][:]
 
+        # Iterate from the second-to-last row to the top
+        for i in range(n - 2, -1, -1):
+            cur: List[int] = [0] * (i + 1)  # Current row's dp values
+            for j in range(i + 1):
+                # Calculate the minimum path sum for this position
+                down: int = triangle[i][j] + prev[j]  # Move down
+                diagonal: int = triangle[i][j] + prev[j + 1]  # Move diagonally
+                cur[j] = min(down, diagonal)  # Store the minimum path sum
+            prev = cur  # Update prev to current for the next iteration
 
-def min_path_optimal(n: int, m: int, triangle: list[list[int]]) -> int:
-    """Optimized space complexity using only two rows"""
-    # Initialize the current row with the bottom row of the triangle
-    prev: list[int] = [0] * m
-    for j in range(m):
-        prev[j] = triangle[n - 1][j]
+        # The minimum path sum to the top of the triangle is now at prev[0]
+        return prev[0]
 
-    # Update the row iteratively from bottom to top
-    for i in range(n - 2, -1, -1):
-        cur: list[int] = [0] * (i + 1)
-        for j in range(i, -1, -1):
-            d: int = triangle[i][j] + prev[j]
-            dg: int = triangle[i][j] + prev[j + 1]
-            cur[j] = min(d, dg)
-        prev = cur
-
-    return prev[0]
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        n: int = len(triangle)  # Get the number of rows in the triangle
+        # Uncomment one of the following lines to use the desired approach:
+        # dp: List[List[int]] = [[-1] * n for _ in range(n)]  # Memoization approach
+        # return self.__f(0, 0, n, triangle, dp)  # Recursive memoization
+        # return self.__tabulation(triangle, n)  # Tabulation approach
+        return self.__optimized(triangle, n)  # Optimized space approach
 
 
 if __name__ == "__main__":
-    # Example triangle
-    triangle: list[list[int]] = [
-        [1],
-        [2, 3],
-        [3, 6, 7],
-        [8, 9, 6, 10],
-    ]
-    n: int = len(triangle)
-    m: int = len(triangle[n - 1])
-    # Initialize memoization table with -1
-    dp: list[list[int]] = [[-1 for col in range(m)] for row in range(n)]
-    # Calculate and print results using different approaches
-    mn_path: int = min_path_sum(i=0, j=0, n=n, m=m, triangle=triangle, dp=dp)
-    print("Minimum Path Sum (Recursive with Memoization):", mn_path)
-    print(
-        "Minimum Path Sum (Tabulation):",
-        min_path_tabulation(n=n, m=m, triangle=triangle),
-    )
-    print(
-        "Minimum Path Sum (Optimized Space):",
-        min_path_optimal(n=n, m=m, triangle=triangle),
-    )
+    triangle: List[List[int]] = [
+        [2],
+        [3, 4],
+        [6, 5, 7],
+        [4, 1, 8, 3],
+    ]  # Example triangle input
+    solution: Solution = Solution()
+    print(solution.minimumTotal(triangle))  # Output the minimum path sum
