@@ -1,102 +1,116 @@
 """Subset Sum equals to target sum."""
 
-
-def generate_subset(
-    arr: list[int], i: int, n: int, subsets: list[list[int]], subset: list[int]
-) -> None:
-    if i == n:
-        subsets.append(subset.copy())
-        return
-    # take the ith element
-    subset.append(arr[i])
-    generate_subset(arr=arr, i=i + 1, n=n, subsets=subsets, subset=subset)
-    # back track remove the element
-    subset.pop()
-    # ignore the ith element
-    generate_subset(arr=arr, i=i + 1, n=n, subsets=subsets, subset=subset)
+from typing import *
 
 
-def subset_sum(arr: list[int], i: int, n: int, k: int, sum: int) -> bool:
-    if i == n:
-        print("curr sum", sum)
-        return sum == k
-    sum += arr[i]
-    if subset_sum(arr=arr, i=i + 1, n=n, k=k, sum=sum):
-        return True
-    sum -= arr[i]
-    if subset_sum(arr=arr, i=i + 1, n=n, k=k, sum=sum):
-        return True
+class Solution:
+    # Recursive approach with memoization
+    def __f(self, i: int, nums: List[int], target: int, dp: List[List[int]]) -> bool:
+        # Base case: if the target is 0, we've found a valid subset
+        if target == 0:
+            return True
+        # Base case: if we've reached the first element
+        if i == 0:
+            return target == nums[i]  # Check if the first number matches the target
+        # Check if the result is already computed and stored in dp
+        if dp[i][target] != -1:
+            return dp[i][target]
 
-    return False
+        # Option 1: Not taking the current number
+        not_take: bool = self.__f(i - 1, nums, target, dp)
 
+        # Option 2: Taking the current number, if it's not greater than the target
+        take: bool = False
+        if target >= nums[i]:
+            take = self.__f(i - 1, nums, target - nums[i], dp)
 
-def subset_sum_2(arr: list[int], i: int, target: int, dp) -> bool:
-    if target == 0:
-        return True
-    if i == 0:
-        return arr[0] == target
-    if dp[i][target] != -1:
+        # Store the result in dp table for future reference
+        dp[i][target] = take or not_take
         return dp[i][target]
-    # considering current index
-    take: bool = (
-        subset_sum_2(arr=arr, i=i - 1, target=target - arr[i], dp=dp)
-        if target >= arr[i]
-        else False
-    )
 
-    # not considering current value
-    not_take: bool = subset_sum_2(arr=arr, i=i - 1, target=target, dp=dp)
-    dp[i][target] = take or not_take
-    return dp[i][target]
+    # Tabulation approach
+    def __tabulation(self, nums: List[int], n: int, k: int) -> bool:
+        # Create a DP table with dimensions n x (k+1)
+        dp: List[List[bool]] = [[False] * (k + 1) for _ in range(n)]
 
+        # Base case: A sum of 0 can always be achieved with any number of elements
+        for i in range(n):
+            dp[i][0] = True
 
-def subset_sum_tabulation(arr: list[int], n: int, k: int) -> bool:
-    dp: list[list[bool]] = [[False for c in range(k + 1)] for r in range(n)]
-    for i in range(n):
-        dp[i][0] = True
-    if arr[0] <= target:
-        dp[0][arr[0]] = True
-    for i in range(1, n):
-        for target in range(1, k + 1):
-            # considering current index
-            take: bool = dp[i - 1][target - arr[i]] if target >= arr[i] else False
+        # If the first element is less than or equal to the target, we can form that sum
+        if nums[0] <= k:
+            dp[0][nums[0]] = True
 
-            # not considering current value
-            not_take: bool = dp[i - 1][target]
-            dp[i][target] = take or not_take
+        # Fill the DP table
+        for i in range(1, n):
+            for target in range(1, k + 1):
+                # Option 1: Not taking the current number
+                not_take: bool = dp[i - 1][target]
 
-    return dp[n - 1][k]
+                # Option 2: Taking the current number if it does not exceed the target
+                take: bool = False
+                if target >= nums[i]:
+                    take = dp[i - 1][target - nums[i]]
 
+                # Store the result in the DP table
+                dp[i][target] = take or not_take
 
-def subset_sum_optimal(arr: list[int], n: int, k: int) -> bool:
-    prev: list[bool] = [False for _ in range(k + 1)]
+        # The answer will be in the last cell of the DP table
+        return dp[n - 1][k]
 
-    if arr[0] <= k:
-        prev[arr[0]] = True
+    # Optimized space approach using a 1D DP array
+    def __optimized(self, nums: List[int], n: int, k: int) -> bool:
+        # Create a 1D array to keep track of achievable sums
+        prev: List[bool] = [False] * (k + 1)
+        prev[0] = True  # Base case: sum of 0 is always achievable
 
-    for i in range(1, n):
-        cur: list[bool] = [False for _ in range(k + 1)]
-        cur[0] = True
-        for target in range(1, k + 1):
-            not_take: bool = prev[target]
-            take: bool = False
-            if arr[i] <= target:
-                take = prev[target - arr[i]]
-            cur[target] = take or not_take
+        # If the first element is less than or equal to the target, mark that sum as achievable
+        if nums[0] <= k:
+            prev[nums[0]] = True
 
-        prev = cur
+        # Iterate through the elements of nums
+        for i in range(1, n):
+            # Create a new array for the current row's results
+            cur: List[bool] = [False] * (k + 1)
+            for target in range(1, k + 1):
+                # Option 1: Not taking the current number
+                not_take: bool = prev[target]
 
-    return prev[k]
+                # Option 2: Taking the current number if it does not exceed the target
+                take: bool = False
+                if target >= nums[i]:
+                    take = prev[target - nums[i]]
+
+                # Store the result in the current row
+                cur[target] = take or not_take
+
+            # Move to the next row by updating prev to cur
+            prev = cur
+
+        # The answer will be in the last position of the array
+        return prev[k]
+
+    # Main function to determine if there's a subset with a sum equal to target
+    def target_sum(self, nums: List[int], target: int) -> bool:
+        # If the input list is empty, return False
+        if not nums:
+            return False
+        n: int = len(nums)
+
+        # Uncomment one of the following lines to choose the approach:
+        # Using the recursive approach with memoization
+        # dp: List[List[int]] = [[-1] * (target + 1) for _ in range(n)]
+        # return self.__f(n - 1, nums, target, dp)
+
+        # Using the tabulation approach
+        # return self.__tabulation(nums, n, target)
+
+        # Using the optimized space approach
+        return self.__optimized(nums, n, target)
 
 
 if __name__ == "__main__":
-    arr: list[int] = [1, 2, 3, 4]
-    n: int = len(arr)
-    subsets: list[list[int]] = []
-    generate_subset(arr=arr, i=0, n=n, subsets=subsets, subset=[])
-    print(subsets)
-    print(subset_sum(arr=arr, i=0, n=n, k=8, sum=0))
-    dp: list[list[int]] = [[-1 for col in range(100)] for _ in range(n)]
-    print(subset_sum_2(arr=arr, i=n - 1, target=8, dp=dp))
-    print(subset_sum_tabulation(arr=arr, n=n, k=11))
-    print(subset_sum_optimal(arr=arr, n=n, k=11))
+    nums: List[int] = [1, 2, 3, 4]
+    target: int = 11
+    solution: Solution = Solution()
+    print(solution.target_sum(nums, target))  # Output: False
