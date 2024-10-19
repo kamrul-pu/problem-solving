@@ -75,6 +75,34 @@ class Solution:
         # The final answer is the number of ways to achieve the target sum
         return dp[target]
 
+    # Optimized dynamic programming approach using a single array
+    def __optimized1(self, nums: List[int], target: int) -> int:
+        n: int = len(nums)
+        # Create a 1D dp array where dp[s] represents the number of ways to achieve sum 's'
+        dp: List[int] = [0] * (target + 1)
+        cur: List[int] = [0] * (target + 1)
+        dp[0] = 1  # There's one way to reach a target sum of 0: choose nothing.
+        if nums[0] <= target:
+            dp[nums[0]] = 1
+
+        # Iterate over each number in the list
+        for i in range(1, n):
+            # Iterate backwards to avoid overwriting the dp values from the current round
+            for s in range(target + 1):
+                not_pick = dp[s]
+
+                # Option 2: Pick the current number if it does not exceed the target 's'
+                pick = 0
+                if nums[i] <= s:
+                    pick = dp[s - nums[i]]
+
+                # Store the total ways in the dp table
+                cur[s] = pick + not_pick
+            dp = cur
+
+        # The final answer is the number of ways to achieve the target sum
+        return dp[target]
+
     # Main function to count the number of subsets with a given target sum
     def count_subsets(self, nums: List[int], target: int) -> int:
         n: int = len(nums)
