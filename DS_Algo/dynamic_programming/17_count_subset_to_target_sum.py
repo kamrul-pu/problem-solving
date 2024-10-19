@@ -43,8 +43,8 @@ class Solution:
             dp[0][nums[0]] = 1
 
         # Fill the dp table
-        for i in range(n):
-            for s in range(1, target + 1):
+        for i in range(1, n):
+            for s in range(target + 1):
                 # Option 1: Do not pick the current number
                 not_pick = dp[i - 1][s]
 
