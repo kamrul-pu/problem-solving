@@ -1,74 +1,95 @@
 """Count subsets with sum k."""
 
+from typing import List
 
-def generate_subset(arr: list[int], i: int, target: int, memo={}) -> int:
-    if i == 0:
-        if target == 0 and arr[0] == 0:
-            return 2
-        if target == 0 or target == arr[0]:
+
+class Solution:
+    # Recursive solution with memoization
+    def __f(self, i: int, s: int, nums: List[int], dp: List[List[int]]) -> int:
+        # Base case: if the target sum 's' is 0, there is one way to achieve it (by picking no elements)
+        if s == 0:
             return 1
-        return 0
-    key: tuple[int] = (i, target)
-    if key in memo:
-        return memo[key]
-    take: int = (
-        generate_subset(arr=arr, i=i - 1, target=target - arr[i], memo=memo)
-        if arr[i] <= target
-        else 0
-    )
-    not_take: int = generate_subset(arr=arr, i=i - 1, target=target, memo=memo)
-    memo[key] = take + not_take
-    return memo[key]
+        # If we're at the first element (i = 0), check if it equals the target sum 's'
+        if i == 0:
+            return int(nums[0] == s)
+        # If we've already computed this state, return the cached result
+        if dp[i][s] != -1:
+            return dp[i][s]
+
+        # Option 1: Do not pick the current number (nums[i])
+        not_pick = self.__f(i - 1, s, nums, dp)
+
+        # Option 2: Pick the current number, if it does not exceed the target 's'
+        pick = 0
+        if nums[i] <= s:
+            pick = self.__f(i - 1, s - nums[i], nums, dp)
+
+        # Cache the result in the dp table and return it
+        dp[i][s] = pick + not_pick
+        return dp[i][s]
+
+    # Dynamic programming approach using tabulation
+    def __tabulation(self, nums: List[int], target: int) -> int:
+        n: int = len(nums)
+        # Create a 2D dp table where dp[i][s] represents the number of ways to achieve sum 's' with first 'i+1' elements
+        dp: List[List[int]] = [[0] * (target + 1) for _ in range(n)]
+
+        # There's one way to reach a target sum of 0: by selecting no elements
+        for i in range(n):
+            dp[i][0] = 1
+
+        # Initialize for the first element
+        if nums[0] <= target:
+            dp[0][nums[0]] = 1
+
+        # Fill the dp table
+        for i in range(n):
+            for s in range(1, target + 1):
+                # Option 1: Do not pick the current number
+                not_pick = dp[i - 1][s]
+
+                # Option 2: Pick the current number if it does not exceed the target 's'
+                pick = 0
+                if nums[i] <= s:
+                    pick = dp[i - 1][s - nums[i]]
+
+                # Store the total ways in the dp table
+                dp[i][s] = pick + not_pick
+
+        # The result is in the last row and the column corresponding to 'target'
+        return dp[n - 1][target]
+
+    # Optimized dynamic programming approach using a single array
+    def __optimized(self, nums: List[int], target: int) -> int:
+        n: int = len(nums)
+        # Create a 1D dp array where dp[s] represents the number of ways to achieve sum 's'
+        dp: List[int] = [0] * (target + 1)
+        dp[0] = 1  # There's one way to reach a target sum of 0: choose nothing.
+
+        # Iterate over each number in the list
+        for i in range(n):
+            # Iterate backwards to avoid overwriting the dp values from the current round
+            for s in range(target, nums[i] - 1, -1):
+                dp[s] += dp[s - nums[i]]  # Update the dp array based on previous values
+
+        # The final answer is the number of ways to achieve the target sum
+        return dp[target]
+
+    # Main function to count the number of subsets with a given target sum
+    def count_subsets(self, nums: List[int], target: int) -> int:
+        n: int = len(nums)
+        # Uncomment any of the following lines to switch between approaches
+        # dp: List[List[int]] = [[-1] * (target + 1) for _ in range(n)]
+        # return self.__f(n - 1, target, nums, dp)  # Recursive with memoization
+        # return self.__tabulation(nums, target)     # Tabulation approach
+        return self.__optimized(nums, target)  # Optimized approach
 
 
-def number_of_subset(arr: list[int], n: int, target: int) -> int:
-    return generate_subset(arr=arr, i=n - 1, target=target, memo={})
-
-
-def number_of_subset_tabulation(arr: list[int], n: int, target: int) -> int:
-    dp: list[list[int]] = [[0 for col in range(target + 1)] for row in range(n)]
-    for i in range(n):
-        dp[i][0] = 1
-
-    if arr[0] <= target:
-        dp[0][arr[0]] = 1
-
-    for i in range(1, n):
-        for t in range(1, target + 1):
-            take: int = dp[i - 1][t - arr[i]] if arr[i] <= t else 0
-            not_take: int = dp[i - 1][t]
-
-            dp[i][t] = take + not_take
-
-    return dp[n - 1][target]
-
-
-def number_of_subset_optimal(arr: list[int], n: int, target: int) -> int:
-    prev: list[int] = [0 for _ in range(target + 1)]
-    cur: list[int] = [0 for _ in range(target + 1)]
-    cur[0] = 1
-    prev[0] = 1
-    if arr[0] <= target:
-        prev[arr[0]] = 1
-
-    for i in range(1, n):
-        for t in range(1, target + 1):
-            not_take: int = prev[t]
-            take: int = 0
-            if arr[i] <= t:
-                take = prev[t - arr[i]]
-
-            cur[t] = take + not_take
-
-        prev = cur.copy()
-
-    return prev[target]
-
-
+# Testing the Solution
 if __name__ == "__main__":
-    arr: list[int] = [1, 2, 2, 3]
-    n: int = len(arr)
-    target: int = 3
-    print(number_of_subset(arr=arr, n=n, target=target))
-    print(number_of_subset_tabulation(arr=arr, n=n, target=target))
-    print(number_of_subset_optimal(arr=arr, n=n, target=target))
+    nums: List[int] = [1, 2, 2, 3]  # Example input array
+    target: int = 3  # Example target sum
+    solution: Solution = Solution()
+    print(
+        solution.count_subsets(nums, target)
+    )  # Output the number of subsets that sum to target
