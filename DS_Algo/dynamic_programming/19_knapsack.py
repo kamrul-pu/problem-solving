@@ -1,94 +1,140 @@
 """0/1 knapsack problem solution."""
 
+from typing import List
 
-def knapsack(wt: list[int], val: list[int], i: int, W: int, memo={}) -> int:
-    # Base case: If no items are left or the remaining capacity is 0, return 0
-    if i == 0:
+
+class Solution:
+    # Recursive solution with memoization
+    def __f(
+        self, i: int, W: int, wt: List[int], val: List[int], dp: List[List[int]]
+    ) -> int:
+        # Base case: if there's only one item (i == 0)
+        if i == 0:
+            return (
+                val[0] if wt[0] <= W else 0
+            )  # If the item's weight is within the capacity W, return its value
+
+        # If the result for this state has been computed, return it
+        if dp[i][W] != -1:
+            return dp[i][W]
+
+        # Option 1: Include the current item (if it fits)
+        pick: int = float("-inf")  # Initialize as negative infinity
         if wt[i] <= W:
-            return val[i]
-        return 0
+            pick = val[i] + self.__f(
+                i - 1, W - wt[i], wt, val, dp
+            )  # Add value of the item to the result of remaining capacity
 
-    # Memoization: Check if the result for the current state is already computed
-    key: tuple[int] = (i, W)
-    if key in memo:
-        return memo[key]
+        # Option 2: Exclude the current item
+        not_pick: int = 0 + self.__f(
+            i - 1, W, wt, val, dp
+        )  # Proceed with the next item
 
-    # Recursive calls to calculate the maximum value by either taking or not taking the current item
-    not_take: int = 0 + knapsack(wt=wt, val=val, i=i - 1, W=W, memo=memo)
-    take: int = float("-inf")
-    if wt[i] <= W:
-        take = val[i] + knapsack(wt=wt, val=val, i=i - 1, W=W - wt[i], memo=memo)
+        # Store the maximum value we can achieve at this state
+        dp[i][W] = max(pick, not_pick)
+        return dp[i][W]
 
-    # Store the result in the memo dictionary and return the maximum value
-    memo[key] = max(take, not_take)
-    return memo[key]
+    # Dynamic programming approach using tabulation
+    def __tabulation(self, W: int, wt: List[int], val: List[int]) -> int:
+        n: int = len(wt)
+        # Create a 2D dp table where dp[i][w] represents the max value with first 'i+1' items and capacity 'w'
+        dp: List[List[int]] = [[0] * (W + 1) for _ in range(n)]
+
+        # Initialize the first row for the first item
+        for w in range(wt[0], W + 1):
+            dp[0][w] = val[0]  # If the first item's weight fits, take its value
+
+        # Fill the dp table for remaining items
+        for i in range(1, n):
+            for w in range(W + 1):
+                # Option 1: Include the current item
+                pick: int = float("-inf")
+                if wt[i] <= w:  # Only consider including if it fits
+                    pick = (
+                        val[i] + dp[i - 1][w - wt[i]]
+                    )  # Value if we include this item
+
+                # Option 2: Exclude the current item
+                not_pick: int = 0 + dp[i - 1][w]  # Value if we exclude this item
+
+                # Store the max value for the current state
+                dp[i][w] = max(pick, not_pick)
+
+        return dp[n - 1][W]  # Return the max value for the full capacity
+
+    # Optimized dynamic programming approach using a single array
+    def __optimized(self, W: int, wt: List[int], val: List[int]) -> int:
+        n: int = len(wt)
+        # Create a 1D dp array where dp[w] represents the max value for capacity 'w'
+        prev: List[int] = [0] * (W + 1)
+        cur: List[int] = [0] * (W + 1)
+
+        # Initialize the first item in the dp array
+        for w in range(wt[0], W + 1):
+            prev[w] = val[0]
+
+        # Fill the dp array for the remaining items
+        for i in range(1, n):
+            for w in range(W + 1):
+                # Option 1: Include the current item
+                pick: int = float("-inf")
+                if wt[i] <= w:  # Only consider including if it fits
+                    pick = val[i] + prev[w - wt[i]]  # Add value of current item
+
+                # Option 2: Exclude the current item
+                not_pick: int = 0 + prev[w]  # Value if we exclude this item
+
+                # Update the current state in the dp array
+                cur[w] = max(pick, not_pick)
+
+            prev = cur  # Move to the next item by updating prev to cur
+
+        return prev[W]  # Return the max value for the full capacity
+
+    # Alternative optimized method
+    def __optimized1(self, W: int, wt: List[int], val: List[int]) -> int:
+        n: int = len(wt)
+        prev: List[int] = [0] * (W + 1)
+
+        # Initialize the first item in the dp array
+        for w in range(wt[0], W + 1):
+            prev[w] = val[0]
+
+        # Fill the dp array for the remaining items
+        for i in range(1, n):
+            for w in range(W, -1, -1):  # Iterate backwards to avoid overwriting
+                # Option 1: Include the current item
+                pick: int = float("-inf")
+                if wt[i] <= w:  # Only consider including if it fits
+                    pick = val[i] + prev[w - wt[i]]  # Add value of current item
+
+                # Option 2: Exclude the current item
+                not_pick: int = 0 + prev[w]  # Value if we exclude this item
+
+                # Update the dp array
+                prev[w] = max(pick, not_pick)
+
+        return prev[W]  # Return the max value for the full capacity
+
+    # Main method to solve the knapsack problem
+    def knapsack(self, W: int, wt: List[int], val: List[int]) -> int:
+        n: int = len(wt)
+        # Uncomment any of the following lines to switch between approaches
+        # dp: List[List[int]] = [[-1] * (W + 1) for _ in range(n)]
+        # return self.__f(n - 1, W, wt, val, dp)  # Recursive with memoization
+        # return self.__tabulation(W, wt, val)     # Tabulation approach
+        # return self.__optimized(W, wt, val)      # Optimized approach
+        return self.__optimized1(W, wt, val)  # Alternative optimized approach
 
 
-def knapsack_tabulation(wt: list[int], val: list[int], max_weight: int) -> int:
-    n: int = len(wt)
-
-    # Initialize a 2D array for dynamic programming (DP) with zeros
-    dp: list[list[int]] = [[0 for col in range(max_weight + 1)] for row in range(n)]
-
-    # Initialize the first row with the value of the first item for weights greater than or equal to its weight
-    for w in range(wt[0], max_weight + 1):
-        dp[0][w] = val[0]
-
-    # Fill in the DP array using bottom-up approach
-    for i in range(1, n):
-        for w in range(max_weight + 1):
-            # Calculate the maximum value by either taking or not taking the current item
-            not_take: int = 0 + dp[i - 1][w]
-            take: int = float("-inf")
-            if wt[i] <= w:
-                take = val[i] + dp[i - 1][w - wt[i]]
-
-            # Update the DP array with the maximum value
-            dp[i][w] = max(take, not_take)
-
-    # The result is stored in the bottom-right corner of the DP array
-    return dp[n - 1][max_weight]
-
-
-def knapsack_optimal(wt: list[int], val: list[int], max_weight: int) -> int:
-    n: int = len(wt)
-
-    # Use a 1D array to store the DP values for the current row
-    prev: list[int] = [0 for col in range(max_weight + 1)]
-
-    # Initialize the first row with the value of the first item for weights greater than or equal to its weight
-    for w in range(wt[0], max_weight + 1):
-        prev[w] = val[0]
-
-    # Fill in the DP array using bottom-up approach with optimized space complexity
-    for i in range(1, n):
-        for w in range(max_weight, -1, -1):
-            # Calculate the maximum value by either taking or not taking the current item
-            not_take: int = 0 + prev[w]
-            take: int = float("-inf")
-            if wt[i] <= w:
-                take = val[i] + prev[w - wt[i]]
-
-            # Update the DP array with the maximum value
-            prev[w] = max(take, not_take)
-
-    # The result is stored in the last element of the 1D DP array
-    return prev[max_weight]
-
-
+# Testing the Solution
 if __name__ == "__main__":
     # Example input data
-    wt: list[int] = [3, 2, 5]
-    val: list[int] = [30, 40, 60]
+    wt: List[int] = [3, 2, 5]  # Weights of the items
+    val: List[int] = [30, 40, 60]  # Values of the items
     n: int = len(wt)
-    W: int = 6
-
-    # Test each knapsack function and print the result
-    max_val: int = knapsack(wt=wt, val=val, i=n - 1, W=W)
-    print("Recursive with Memoization:", max_val)
-
-    max_val_tabulation: int = knapsack_tabulation(wt=wt, val=val, max_weight=W)
-    print("Tabulation:", max_val_tabulation)
-
-    max_val_optimal: int = knapsack_optimal(wt=wt, val=val, max_weight=W)
-    print("Optimal Space Complexity:", max_val_optimal)
+    W: int = 6  # Maximum capacity of the knapsack
+    solution: Solution = Solution()
+    print(
+        solution.knapsack(W, wt, val)
+    )  # Output the maximum value that can be achieved
