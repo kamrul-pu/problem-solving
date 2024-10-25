@@ -1,58 +1,88 @@
 """Unbounded knapsack. Infinite supply of items."""
 
-
-def knapsack(i: int, W: int, wt: list[int], val: list[int], dp: list[list[int]]) -> int:
-    if i == 0:
-        return (W // wt[0]) * val[0]
-
-    if dp[i][W] != -1:
-        return dp[i][W]
-
-    not_take: int = 0 + knapsack(i=i - 1, W=W, wt=wt, val=val, dp=dp)
-    take: int = 0
-    if wt[i] <= W:
-        take = val[i] + knapsack(i=i, W=W - wt[i], wt=wt, val=val, dp=dp)
-    dp[i][W] = max(not_take, take)
-    return dp[i][W]
+from typing import List
 
 
-def knapsack_tabulation(wt: list[int], n: int, W: int, val: list[int]) -> int:
-    dp: list[list[int]] = [[0 for col in range(W + 1)] for row in range(n)]
-
-    for w in range(W + 1):
-        dp[0][w] = (w // wt[0]) * val[0]
-
-    for i in range(1, n):
-        for w in range(W + 1):
-            not_take: int = 0 + dp[i - 1][w]
-            take: int = 0
+class Solution:
+    # Helper function for the recursive approach with memoization
+    def __f(
+        self, i: int, w: int, wt: List[int], val: List[int], dp: List[List[int]]
+    ) -> int:
+        # Base case: If we are at the first item
+        if i == 0:
+            # If the weight of the first item is less than or equal to the current capacity
             if wt[i] <= w:
-                take = val[i] + dp[i][w - wt[i]]
-            dp[i][w] = max(not_take, take)
+                return (w // wt[i]) * val[i]  # Maximum times we can take the first item
+            return 0  # Cannot take this item since it exceeds capacity
 
-    return dp[n - 1][W]
+        # Return cached value if it has been computed before
+        if dp[i][w] != -1:
+            return dp[i][w]
 
+        # Recursive case: explore both options (taking or not taking the item)
+        not_take: int = 0 + self.__f(i - 1, w, wt, val, dp)  # If we don't take the item
+        take: int = float("-inf")  # Initialize taking option as invalid
+        if wt[i] <= w:
+            take = val[i] + self.__f(
+                i, w - wt[i], wt, val, dp
+            )  # Take the item and keep the index
 
-def knapsack_optimal(wt: list[int], n: int, W: int, val: list[int]) -> int:
-    prev: list[int] = [(col // wt[0]) * val[0] for col in range(W + 1)]
+        # Store the maximum of taking or not taking the item in the DP table
+        dp[i][w] = max(take, not_take)
+        return dp[i][w]
 
-    for i in range(1, n):
-        for w in range(W + 1):
-            not_take: int = 0 + prev[w]
-            take: int = 0
-            if wt[i] <= w:
-                take = val[i] + prev[w - wt[i]]
-            prev[w] = max(not_take, take)
+    # Function for the tabulation (bottom-up) dynamic programming approach
+    def __tabulation(self, W: int, wt: List[int], val: List[int]) -> int:
+        n: int = len(wt)  # Number of items
+        # Initialize DP table with 0 values
+        dp: List[List[int]] = [[0] * (W + 1) for _ in range(n)]
 
-    return prev[W]
+        # Fill the first row for the first item
+        for w in range(wt[0], W + 1):
+            dp[0][w] = (w // wt[0]) * val[0]  # Maximum times we can take the first item
+
+        # Fill the DP table
+        for i in range(1, n):
+            for w in range(W + 1):
+                not_take: int = 0 + dp[i - 1][w]  # Not taking the current item
+                take: int = float("-inf")  # Initialize taking option as invalid
+                if wt[i] <= w:
+                    take = val[i] + dp[i][w - wt[i]]  # Take the item and keep the index
+
+                # Store the maximum value between taking and not taking the item
+                dp[i][w] = max(take, not_take)
+
+        return dp[n - 1][W]  # Return the maximum value for the full capacity
+
+    # Function for the optimized space complexity approach
+    def __optimized(self, W: int, wt: List[int], val: List[int]) -> int:
+        n: int = len(wt)  # Number of items
+        dp: List[int] = [0] * (W + 1)  # Single array to store current results
+
+        # Fill the DP array
+        for i in range(n):
+            for w in range(wt[i], W + 1):  # Start from wt[i] to W
+                dp[w] = max(
+                    dp[w], val[i] + dp[w - wt[i]]
+                )  # Take the item and keep the index
+
+        return dp[W]  # Return the maximum value for the full capacity
+
+    # Main function to find the maximum value that can be achieved within the given weight limit
+    def max_weights(self, wt: List[int], val: List[int], W: int) -> int:
+        # Uncomment one of the following lines to choose the desired approach
+        # n: int = len(wt)
+        # dp: List[List[int]] = [[-1] * (W + 1) for _ in range(n)]
+        # return self.__f(n - 1, W, wt, val, dp)
+        # return self.__tabulation(W, wt, val)
+        return self.__optimized(W, wt, val)  # Call the optimized solution
 
 
 if __name__ == "__main__":
-    wt: list[int] = [2, 4, 6]
-    val: list[int] = [5, 11, 13]
-    n: int = len(wt)
-    max_weight: int = 1000
-    dp: list[list[int]] = [[-1 for _ in range(max_weight + 1)] for row in range(n)]
-    print(knapsack(i=n - 1, W=max_weight, wt=wt, val=val, dp=dp))
-    print(knapsack_tabulation(wt=wt, n=n, W=max_weight, val=val))
-    print(knapsack_optimal(wt=wt, n=n, W=max_weight, val=val))
+    wt: List[int] = [2, 4, 6]  # Weights of the items
+    val: List[int] = [5, 11, 13]  # Values of the items
+    W: int = 10  # Maximum weight capacity
+    solution: Solution = Solution()
+    print(
+        solution.max_weights(wt, val, W)
+    )  # Output the maximum value that can be carried
