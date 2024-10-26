@@ -1,83 +1,122 @@
-def rod_cutting(i: int, n: int, price: list[int], memo={}) -> int:
-    # Base case: if the rod length is 0, return 0
-    if i == 0:
-        return n * price[0]
-
-    # Check if the result for the current parameters is already memoized
-    if (i, n) in memo:
-        return memo[(i, n)]
-
-    # Option 1: Do not take the current piece of the rod
-    not_take: int = 0 + rod_cutting(i=i - 1, n=n, price=price, memo=memo)
-
-    # Option 2: Take the current piece of the rod if it fits
-    take: int = float("-inf")
-    rod_length: int = i + 1
-    if rod_length <= n:
-        take = price[i] + rod_cutting(i=i, n=n - rod_length, price=price, memo=memo)
-
-    # Memoize the result and return the maximum of the two options
-    memo[(i, n)] = max(take, not_take)
-    return memo[(i, n)]
+"""
+Given a wooden stick of length n units. The stick is labelled from 0 to n. For example, a stick of length 6 is labelled as follows:
 
 
-def rod_cutting_tabulation(price: list[int], n: int, N: int) -> int:
-    # Initialize a table for dynamic programming
-    dp: list[list[int]] = [[0 for col in range(N + 1)] for row in range(n)]
+Given an integer array cuts where cuts[i] denotes a position you should perform a cut at.
 
-    # Fill in the base case for the smallest rod length
-    for i in range(N + 1):
-        dp[0][i] = price[0] * i
+You should perform the cuts in order, you can change the order of the cuts as you wish.
 
-    # Fill in the DP table using bottom-up approach
-    for i in range(1, n):
+The cost of one cut is the length of the stick to be cut, the total cost is the sum of costs of all cuts. When you cut a stick,
+it will be split into two smaller sticks (i.e. the sum of their lengths is the length of the stick before the cut).
+Please refer to the first example for a better explanation.
+
+Return the minimum total cost of the cuts.
+"""
+
+from typing import List
+
+
+class Solution:
+    # Dynamic programming approach to find the minimum cost of making cuts
+    def __f(self, i: int, N: int, cuts: List[int], dp: List[List[int]]) -> int:
+        # Base case: If we're at the first cut, the cost is simply the length of the stick
+        if i == 0:
+            return N * cuts[0]
+
+        # Return the cached result if it exists
+        if dp[i][N] != -1:
+            return dp[i][N]
+
+        # Option 1: Not taking the current cut
+        not_take: int = self.__f(i - 1, N, cuts, dp)
+
+        # Option 2: Taking the current cut
+        take: int = float("-inf")
+        r: int = i + 1  # the number of units this cut would reduce the stick length by
+        if r <= N:  # Check if the remaining length allows this cut
+            take = cuts[i] + self.__f(
+                i, N - r, cuts, dp
+            )  # Cost of cut + cost of remaining stick
+
+        # Store the result in dp table and return the max cost from taking or not taking
+        dp[i][N] = max(take, not_take)
+        return dp[i][N]
+
+    # Tabulation approach to find the minimum cost of making cuts
+    def __tabulation(self, N: int, cuts: List[int]) -> int:
+        n: int = len(cuts)
+        # Initialize the dp table with zeros
+        dp: List[List[int]] = [[0] * (N + 1) for _ in range(n)]
+
+        # Fill the first row: cost of making cuts when only the first cut is considered
         for c in range(N + 1):
-            # Option 1: Do not take the current piece of the rod
-            not_take: int = 0 + dp[i - 1][c]
+            dp[0][c] = c * cuts[0]
 
-            # Option 2: Take the current piece of the rod if it fits
-            take: int = float("-inf")
-            rod_length: int = i + 1
-            if rod_length <= c:
-                take = price[i] + dp[i][c - rod_length]
+        # Fill the dp table for each cut
+        for i in range(1, n):
+            for c in range(N + 1):
+                # Option 1: Not taking the current cut
+                not_take: int = dp[i - 1][c]
 
-            # Store the maximum of the two options in the table
-            dp[i][c] = max(take, not_take)
+                # Option 2: Taking the current cut
+                take: int = float("-inf")
+                r: int = (
+                    i + 1
+                )  # Number of units this cut would reduce the stick length by
+                if r <= c:  # Check if the remaining length allows this cut
+                    take = (
+                        cuts[i] + dp[i][c - r]
+                    )  # Cost of cut + cost of remaining stick
 
-    # Return the result for the maximum rod length and total available length
-    return dp[n - 1][N]
+                # Store the maximum cost from taking or not taking in the dp table
+                dp[i][c] = max(take, not_take)
 
+        # Return the result for the whole stick and all cuts
+        return dp[n - 1][N]
 
-def rod_cutting_optimal(price: list[int], n: int, N: int) -> int:
-    # Initialize a 1D array to store the optimal values for each subproblem
-    prev: list[int] = [price[0] * col for col in range(N + 1)]
+    # Optimized space approach to find the minimum cost of making cuts
+    def __optimized(self, N: int, cuts: List[int]) -> int:
+        n: int = len(cuts)
+        # Initialize a 1D dp array for space optimization
+        dp: List[int] = [0] * (N + 1)
 
-    # Fill in the 1D array using bottom-up approach
-    for i in range(1, n):
+        # Fill the first row: cost of making cuts when only the first cut is considered
         for c in range(N + 1):
-            # Option 1: Do not take the current piece of the rod
-            not_take: int = 0 + prev[c]
+            dp[c] = c * cuts[0]
 
-            # Option 2: Take the current piece of the rod if it fits
-            take: int = float("-inf")
-            rod_length: int = i + 1
-            if rod_length <= c:
-                take = price[i] + prev[c - rod_length]
+        # Fill the dp array for each cut
+        for i in range(1, n):
+            # Store the previous values for not taking the current cut
+            for c in range(N + 1):
+                # Option 1: Not taking the current cut
+                not_take: int = dp[c]
 
-            # Store the maximum of the two options in the array
-            prev[c] = max(take, not_take)
+                # Option 2: Taking the current cut
+                take: int = float("-inf")
+                r: int = (
+                    i + 1
+                )  # Number of units this cut would reduce the stick length by
+                if r <= c:  # Check if the remaining length allows this cut
+                    take = cuts[i] + dp[c - r]  # Cost of cut + cost of remaining stick
 
-    # Return the result for the maximum rod length and total available length
-    return prev[N]
+                # Update the dp array with the maximum cost from taking or not taking
+                dp[c] = max(take, not_take)
+
+        # Return the result for the whole stick and all cuts
+        return dp[N]
+
+    # Main function to determine the minimum cost of cuts
+    def minCost(self, N: int, cuts: List[int]) -> int:
+        # n: int = len(cuts)
+        # dp: List[List[int]] = [[-1] * (N + 1) for _ in range(n)]
+        # return self.__f(n - 1, N, cuts, dp)
+        # return self.__tabulation(N, cuts)
+        return self.__optimized(N, cuts)  # Use the optimized space version
 
 
 if __name__ == "__main__":
     # Example usage
-    price: list[int] = [2, 5, 7, 8, 10]
-    N: int = 5
-    n: int = len(price)
-
-    # Print results from different approaches
-    print(rod_cutting(i=n - 1, n=N, price=price))
-    print(rod_cutting_tabulation(price=price, n=n, N=N))
-    print(rod_cutting_optimal(price=price, n=n, N=N))
+    price: List[int] = [2, 5, 7, 8, 10]
+    N: int = 10
+    solution: Solution = Solution()
+    print(solution.minCost(N=N, cuts=price))
