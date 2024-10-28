@@ -35,8 +35,10 @@ class Solution:
                     # from either excluding the current character of s1 or s2
                     dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
 
-        # The dp[n][m] now contains the length of the LCS
-        ans: str = ""  # This will hold the actual LCS
+        lcs: int = dp[n][m]  # The length of the LCS
+        ans: List[str] = [
+            ""
+        ] * lcs  # Initialize a list to hold the actual LCS characters
         i: int = n  # Start from the end of s1
         j: int = m  # Start from the end of s2
 
@@ -44,7 +46,10 @@ class Solution:
         while i > 0 and j > 0:
             # If characters match, include this character in LCS
             if s1[i - 1] == s2[j - 1]:
-                ans += s1[i - 1]  # Append matched character
+                ans[lcs - 1] = s1[
+                    i - 1
+                ]  # Place the matched character at the current position
+                lcs -= 1  # Move to the next position in the LCS
                 i -= 1  # Move diagonally in the dp table
                 j -= 1  # Move diagonally in the dp table
             # If they do not match, move in the direction of the larger value
@@ -53,8 +58,8 @@ class Solution:
             else:
                 j -= 1  # Move left in the dp table
 
-        # The LCS is constructed in reverse order, so reverse it before returning
-        return ans[::-1]
+        # Join the list of characters to form the final LCS string
+        return "".join(ans)
 
 
 if __name__ == "__main__":
