@@ -1,106 +1,84 @@
-"""Shortest common Supersequence problem."""
+"""
+Given two strings str1 and str2, return the shortest string that has both str1 and str2 as subsequences.
+If there are multiple valid strings, return any of them.
+
+A string s is a subsequence of string t if deleting some number of characters from t (possibly 0) results in the string s.
+"""
+
+from typing import List
 
 
-def lcs(s1: str, s2: str) -> int:
-    """
-    Function to find the length of the Longest Common Subsequence (LCS)
-    using an optimized space (rolling array) dynamic programming approach.
+class Solution:
+    def __f(self, s1: str, s2: str) -> str:
+        # Initialize the lengths of the two strings
+        n = len(s1)  # Length of the first string
+        m = len(s2)  # Length of the second string
 
-    Args:
-        s1 (str): First input string.
-        s2 (str): Second input string.
+        # Create a DP table initialized to 0
+        # dp[i][j] will hold the length of the longest common subsequence (LCS)
+        dp: List[List[int]] = [[0] * (m + 1) for _ in range(n + 1)]
 
-    Returns:
-        int: Length of LCS for the input strings.
-    """
-    n: int = len(s1)
-    m: int = len(s2)
-    prev: list[int] = [0 for col in range(m + 1)]
-    cur: list[int] = [0 for col in range(m + 1)]
+        # Fill the DP table based on LCS (Longest Common Subsequence) rules
+        for i in range(1, n + 1):  # Iterate through each character of s1
+            for j in range(1, m + 1):  # Iterate through each character of s2
+                # If the characters match, extend the length of LCS by 1
+                if s1[i - 1] == s2[j - 1]:
+                    dp[i][j] = 1 + dp[i - 1][j - 1]  # Increment from the diagonal
+                else:
+                    # If characters don't match, take the maximum from left or above
+                    dp[i][j] = max(
+                        dp[i - 1][j], dp[i][j - 1]
+                    )  # Choose the longer subsequence
 
-    for i in range(1, n + 1):
-        for j in range(1, m + 1):
-            # If the current characters match, increment the LCS length.
+        # The bottom-right cell contains the length of the LCS
+        lcs: int = dp[n][m]
+        # Calculate the length of the shortest common supersequence
+        scs: int = n + m - lcs  # SCS length
+
+        # Initialize a list to construct the SCS
+        ans: List[str] = [""] * scs
+        scs -= 1  # Adjust index for ans array
+        i: int = n  # Start from the end of s1
+        j: int = m  # Start from the end of s2
+
+        # Backtrack to construct the SCS
+        while i > 0 and j > 0:
             if s1[i - 1] == s2[j - 1]:
-                cur[j] = 1 + prev[j - 1]
+                ans[scs] = s1[i - 1]  # If characters match, add to result
+                i -= 1
+                j -= 1
+            elif dp[i - 1][j] > dp[i][j - 1]:
+                ans[scs] = s1[i - 1]  # Take character from s1
+                i -= 1
             else:
-                # If the current characters don't match, choose the maximum LCS
-                # from excluding one character from either of the strings.
-                cur[j] = max(prev[j], cur[j - 1])
+                ans[scs] = s2[j - 1]  # Take character from s2
+                j -= 1
+            scs -= 1  # Move to the next position in the result
 
-        # Update the previous array for the next iteration.
-        prev = cur.copy()
-
-    return prev[m]
-
-
-def shortest_common_super_seq(s1: str, s2: str) -> int:
-    # get the length of string 1 and 2
-    n: int = len(s1)
-    m: int = len(s2)
-    # calculate length of lcs
-    lcs_len: int = lcs(s1, s2)
-    # result will be total length - lcs (common subsequence length.)
-    return (n + m) - lcs_len
-
-
-def get_lcs(s1: str, s2: str) -> str:
-    """
-    Function to find the length of the Longest Common Subsequence (LCS)
-    using the tabulation (bottom-up) dynamic programming approach.
-
-    Args:
-        s1 (str): First input string.
-        s2 (str): Second input string.
-
-    Returns:
-        str: LCS  the strings.
-    """
-    n: int = len(s1)
-    m: int = len(s2)
-    dp: list[list[int]] = [[0 for col in range(m + 1)] for row in range(n + 1)]
-
-    for i in range(1, n + 1):
-        for j in range(1, m + 1):
-            # If the current characters match, increment the LCS length.
-            if s1[i - 1] == s2[j - 1]:
-                dp[i][j] = 1 + dp[i - 1][j - 1]
-            else:
-                # If the current characters don't match, choose the maximum LCS
-                # from excluding one character from either of the strings.
-                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
-
-    ans: str = ""
-    i: int = n
-    j: int = m
-    while i > 0 and j > 0:
-        # take the string and go diagonal.
-        if s1[i - 1] == s2[j - 1]:
-            ans += s1[i - 1]
+        # If there are remaining characters in s1, add them to the result
+        while i > 0:
+            ans[scs] = s1[i - 1]
+            scs -= 1
             i -= 1
-            j -= 1
-        # go top so take left string
-        elif dp[i - 1][j] > dp[i][j - 1]:
-            i -= 1
-            ans += s1[i]
-        # go left take the top string
-        else:
-            j -= 1
-            ans += s2[j]
-    while i > 0:
-        ans += s1[i - 1]
-        i -= 1
-    while j > 0:
-        ans += s2[j - 1]
-        j -= 1
 
-    return ans[::-1]
+        # If there are remaining characters in s2, add them to the result
+        while j > 0:
+            ans[scs] = s2[j - 1]
+            scs -= 1
+            j -= 1
+
+        # Join the list into a single string and return
+        return "".join(ans)
+
+    def shortestCommonSupersequence(self, str1: str, str2: str) -> str:
+        # Call the helper function to get the SCS
+        return self.__f(str1, str2)
 
 
 if __name__ == "__main__":
-    s1: str = "brute"
-    s2: str = "groot"
-    # s1 = "bleed"
-    # s2 = "blue"
-    print(shortest_common_super_seq(s1, s2))
-    print(get_lcs(s1, s2))
+    s1: str = "brute"  # Example first string
+    s2: str = "groot"  # Example second string
+    solution: Solution = Solution()  # Create an instance of the Solution class
+    print(
+        solution.shortestCommonSupersequence(s1, s2)
+    )  # Print the SCS of the two strings
