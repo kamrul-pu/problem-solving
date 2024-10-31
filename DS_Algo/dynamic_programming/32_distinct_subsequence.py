@@ -1,71 +1,77 @@
-"""Distinct subsequences 1D Array Optimization."""
+"""
+Given two strings s and t, return the number of distinct subsequences of s which equals t.
+
+The test cases are generated so that the answer fits on a 32-bit signed integer.
+"""
+
+from typing import List
 
 
-def f(i: int, j: int, s1: str, s2: str, dp: list[list[int]]) -> int:
-    """Recursive function to compute the number of distinct subsequences."""
-    if j == 0:
-        return 1
-    if i == 0:
-        return 0
-    if dp[i][j] != -1:
+class Solution:
+    # This is a recursive approach with memoization
+    def __f(self, i: int, j: int, s: str, t: str, dp: List[List[int]]) -> int:
+        # Base case: if t is empty, there is one subsequence of s that equals t (the empty subsequence)
+        if j == 0:
+            return 1
+        # If s is empty but t is not, there are no subsequences that can match t
+        if i == 0:
+            return 0
+        # Return cached result if it exists
+        if dp[i][j] != -1:
+            return dp[i][j]
+        # If the current characters match, we can either include or exclude the character from s
+        if s[i - 1] == t[j - 1]:
+            dp[i][j] = self.__f(i - 1, j - 1, s, t, dp) + self.__f(i - 1, j, s, t, dp)
+        else:
+            # If they don't match, we can only exclude the character from s
+            dp[i][j] = self.__f(i - 1, j, s, t, dp)
         return dp[i][j]
-    if s1[i - 1] == s2[j - 1]:
-        dp[i][j] = f(i - 1, j - 1, s1, s2, dp) + f(i - 1, j, s1, s2, dp)
-        return dp[i][j]
 
-    dp[i][j] = f(i - 1, j, s1, s2, dp)
-    return dp[i][j]
+    # This function implements a bottom-up tabulation approach
+    def __tabulation(self, s: str, t: str, n: int, m: int) -> int:
+        # Create a 2D list to store the number of distinct subsequences
+        dp: List[List[int]] = [[0] * (m + 1) for _ in range(n + 1)]
+        # There's one way to form the empty string (t) from any prefix of s
+        for i in range(n + 1):
+            dp[i][0] = 1
+        # Fill the dp table
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                # If characters match, add the two possibilities
+                if s[i - 1] == t[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]
+                else:
+                    # If they don't match, just carry forward the previous value
+                    dp[i][j] = dp[i - 1][j]
+        return dp[n][m]  # Result is in the bottom-right corner of the table
 
+    # This is an optimized version using a 1D array
+    def __optimized(self, s: str, t: str, n: int, m: int) -> int:
+        # Use a single array to store the current counts
+        dp: List[int] = [0] * (m + 1)
+        dp[0] = 1  # One way to form the empty string
+        # Iterate through the characters of s
+        for i in range(1, n + 1):
+            # Iterate backwards through the characters of t
+            for j in range(m, 0, -1):
+                if s[i - 1] == t[j - 1]:
+                    # Update the current count based on previous counts
+                    dp[j] = dp[j - 1] + dp[j]
+        return dp[m]  # The result is in the last position
 
-def distinct_subsequence(s1: str, s2: str) -> int:
-    """Wrapper function for the recursive approach."""
-    n: int = len(s1)
-    m: int = len(s2)
-    dp: list[list[int]] = [[-1 for col in range(m + 1)] for row in range(n + 1)]
-    return f(i=n, j=m, s1=s1, s2=s2, dp=dp)
-
-
-def distinct_subsequence_tabulation(s: str, t: str) -> int:
-    """Tabulation approach to compute the number of distinct subsequences."""
-    n: int = len(s)
-    m: int = len(t)
-    dp: list[list[int]] = [[0 for col in range(m + 1)] for row in range(n + 1)]
-
-    # Base case: if the second string is empty, there is always one subsequence (empty string).
-    for i in range(n + 1):
-        dp[i][0] = 1
-
-    # Build the table using dynamic programming.
-    for i in range(1, n + 1):
-        for j in range(1, m + 1):
-            if s[i - 1] == t[j - 1]:
-                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]
-            else:
-                dp[i][j] = dp[i - 1][j]
-
-    return dp[n][m]
-
-
-def distinct_subsequence_optimal(s: str, t: str) -> int:
-    """Optimized space complexity approach to compute the number of distinct subsequences."""
-    n: int = len(s)
-    m: int = len(t)
-    prev: list[int] = [0 for col in range(m + 1)]
-    prev[0] = 1
-
-    # Build the array using dynamic programming with optimal space complexity.
-    for i in range(1, n + 1):
-        for j in range(m, 0, -1):
-            if s[i - 1] == t[j - 1]:
-                prev[j] = prev[j - 1] + prev[j]
-
-    return prev[m]
+    # Main function to determine the number of distinct subsequences
+    def numDistinct(self, s: str, t: str) -> int:
+        n: int = len(s)
+        m: int = len(t)
+        # Uncomment one of the following lines to use a specific approach:
+        # dp: List[List[int]] = [[-1] * (m + 1) for _ in range(n + 1)]
+        # return self.__f(n, m, s, t, dp)
+        # return self.__tabulation(s, t, n, m)
+        return self.__optimized(s, t, n, m)
 
 
 if __name__ == "__main__":
     s1: str = "babgbag"
     s2: str = "bag"
-    n = len(s1)
-    print(distinct_subsequence(s1=s1, s2=s2))
-    print(distinct_subsequence_tabulation(s1, s2))
-    print(distinct_subsequence_optimal(s1, s2))
+    solution: Solution = Solution()
+    print(solution.numDistinct(s1, s2))  # Output: 5
