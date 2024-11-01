@@ -1,108 +1,139 @@
-"""Wildcard matching. Recursion. 1. ?-> match single 2. * -> match 0 or more."""
+"""
+Given two strings pattern and str which may be of different size, You have to return 1 if the wildcard pattern i.e.
+pattern, matches with str else return 0. All characters of the string str and pattern always belong to the Alphanumeric characters.
+
+The wildcard pattern can include the characters ? and *
+‘?’ – matches any single character.
+‘*’ – Matches any sequence of characters (including the empty sequence).
+
+Note: The matching should cover the entire str (not partial str).
+"""
 
 
 class Solution:
-    def __f(self, i: int, j: int, s: str, p: str, dp) -> bool:
-        # Base case: both strings are empty, it's a match
+    def __f(self, i: int, j: int, p: str, s: str, dp: list[list[int]]) -> bool:
+        # If both indices are at the start, we have a match (empty pattern and string).
         if i == 0 and j == 0:
             return True
-        # If pattern is empty, but string is not, no match
+
+        # If pattern is empty and string is not, no match can occur.
         if i == 0 and j > 0:
             return False
-        # If string is empty, check if the remaining pattern is all '*'
+
+        # If string is empty but pattern is not, we need to check if the remaining pattern can match empty string.
         if j == 0 and i > 0:
-            for ri in range(1, i + 1):
-                if p[ri - 1] != "*":
+            for k in range(1, i + 1):
+                if p[k - 1] != "*":
                     return False
             return True
-        # If already computed, return the result from the memoization table
+
+        # Return memoized result if it exists.
         if dp[i][j] != -1:
             return dp[i][j]
-        # Matching characters or '?'
+
+        # Check for character match or '?' wildcard.
         if p[i - 1] == s[j - 1] or p[i - 1] == "?":
-            dp[i][j] = self.__f(i - 1, j - 1, s, p, dp)
+            dp[i][j] = self.__f(i - 1, j - 1, p, s, dp)
             return dp[i][j]
-        # Handling '*': match 0 characters or 1 character
+
+        # Handle '*' wildcard which can match zero or more characters.
         if p[i - 1] == "*":
-            dp[i][j] = self.__f(i - 1, j, s, p, dp) or self.__f(i, j - 1, s, p, dp)
+            dp[i][j] = self.__f(i - 1, j, p, s, dp) or self.__f(i, j - 1, p, s, dp)
             return dp[i][j]
-        # If characters don't match, no match
+
+        # If no conditions are met, return False.
         dp[i][j] = False
-        return dp[i][j]
+        return False
 
-    def isMatch(self, s: str, p: str) -> bool:
-        n: int = len(p)
-        m: int = len(s)
-        dp: list[list[int]] = [[-1 for col in range(m + 1)] for row in range(n + 1)]
-        return self.__f(n, m, s, p, dp)
+    def __tabulation(self, p: str, s: str, n: int, m: int) -> bool:
+        # Create a DP table initialized to False.
+        dp = [[False] * (m + 1) for _ in range(n + 1)]
 
-    def is_matched_tabulation(self, s: str, p: str) -> bool:
-        n: int = len(p)
-        m: int = len(s)
-        dp: list[list[bool]] = [[False for col in range(m + 1)] for row in range(n + 1)]
+        # Base case: empty pattern and empty string match.
         dp[0][0] = True
-        # If pattern is empty, set the remaining string to True if all '*' in pattern
-        for j in range(1, m + 1):
-            dp[0][j] = False
 
+        # Handle patterns that can match an empty string.
         for i in range(1, n + 1):
-            flag: bool = True
-            for ri in range(1, i + 1):
-                if p[ri - 1] != "*":
+            flag = True
+            for k in range(1, i + 1):
+                if p[k - 1] != "*":
                     flag = False
                     break
-            dp[i][0] = flag
+            dp[i][
+                0
+            ] = flag  # All characters in pattern must be '*' to match empty string.
 
+        # Fill the DP table.
         for i in range(1, n + 1):
             for j in range(1, m + 1):
-                # Matching characters or '?'
+                # Check for character match or '?' wildcard.
                 if p[i - 1] == s[j - 1] or p[i - 1] == "?":
                     dp[i][j] = dp[i - 1][j - 1]
-                # Handling '*': match 0 characters or 1 character
+                # Handle '*' wildcard.
                 elif p[i - 1] == "*":
                     dp[i][j] = dp[i - 1][j] or dp[i][j - 1]
-                # If characters don't match, no match
                 else:
                     dp[i][j] = False
 
+        # The answer will be in the bottom-right cell of the DP table.
         return dp[n][m]
 
-    def is_matched_optimal(self, s: str, p: str) -> bool:
-        n: int = len(p)
-        m: int = len(s)
-        dp: list[list[bool]] = [[False for col in range(m + 1)] for row in range(n + 1)]
-        dp[0][0] = True
-        prev: list[bool] = [False for col in range(m + 1)]
-        cur: list[bool] = [False for col in range(m + 1)]
-        prev[0] = True
+    def __optimized(self, p: str, s: str, n: int, m: int) -> bool:
+        # Initialize two arrays for dynamic programming
+        dp = [False] * (m + 1)
+        cur = [False] * (m + 1)
+
+        # Base case: empty pattern matches empty string
+        dp[0] = True
 
         for i in range(1, n + 1):
-            flag: bool = True
-            for ri in range(1, i + 1):
-                if p[ri - 1] != "*":
+            # Check if the current pattern can match an empty string
+            flag = True
+            for k in range(1, i + 1):
+                if p[k - 1] != "*":
                     flag = False
                     break
-            cur[0] = flag
+            cur[0] = (
+                flag  # Set cur[0] based on whether the pattern matches an empty string
+            )
 
+            # Fill the current row of the DP array
             for j in range(1, m + 1):
-                # Matching characters or '?'
+                # Check for character match or '?' wildcard
                 if p[i - 1] == s[j - 1] or p[i - 1] == "?":
-                    cur[j] = prev[j - 1]
-                # Handling '*': match 0 characters or 1 character
+                    cur[j] = dp[j - 1]
+                # Handle '*' wildcard, which can match zero or more characters
                 elif p[i - 1] == "*":
-                    cur[j] = prev[j] or cur[j - 1]
-                # If characters don't match, no match
+                    cur[j] = dp[j] or cur[j - 1]
                 else:
                     cur[j] = False
-            prev = cur.copy()
 
-        return prev[m]
+            # Copy the current results to dp for the next iteration
+            dp = cur[:]
+
+        # The final result will be in dp[m], indicating if the pattern matches the string
+        return dp[m]
+
+    def wildCard(self, pattern: str, string: str) -> bool:
+        """
+        Main function to match the string against the pattern using wildcard rules.
+
+        Parameters:
+        - pattern: The pattern string containing wildcards.
+        - string: The input string to match against the pattern.
+
+        Returns:
+        - True if the pattern matches the string, False otherwise.
+        """
+        n = len(pattern)
+        m = len(string)
+        # Using the tabulation approach for the solution.
+        # return self.__tabulation(pattern, string, n, m)
+        return self.__optimized(pattern, string, n, m)
 
 
 if __name__ == "__main__":
     s: str = "aa"
     p: str = "*b"
     solution: Solution = Solution()
-    print(solution.isMatch(s, p))
-    print(solution.is_matched_tabulation(s, p))
-    print(solution.is_matched_optimal(s, p))
+    print(solution.wildCard(p, s))
