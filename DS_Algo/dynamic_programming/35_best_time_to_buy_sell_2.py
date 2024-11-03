@@ -63,20 +63,15 @@ class Solution:
     # Optimized solution using constant space
     def __optimized(self, p, n) -> int:
         # Only need to keep track of two states
-        dp_0 = dp_1 = (
-            0  # dp_0: max profit if not holding stock, dp_1: max profit if holding stock
-        )
-        cur_0 = cur_1 = 0  # Current state
+        dp_0 = dp_1 = 0
 
         # Iterate from the last day back to the first day
         for i in range(n - 1, -1, -1):
             # Calculate current profit if we sell on day i
-            cur_0 = max(p[i] + dp_1, 0 + dp_0)
+            dp_0 = max(p[i] + dp_1, 0 + dp_0)
             # Calculate current profit if we buy on day i
-            cur_1 = max(-p[i] + dp_0, 0 + dp_1)
+            dp_1 = max(-p[i] + dp_0, 0 + dp_1)
             # Update dp to current state
-            dp_0 = cur_0
-            dp_1 = cur_1
 
         # The result is the maximum profit when we are not holding stock at the start
         return dp_1
