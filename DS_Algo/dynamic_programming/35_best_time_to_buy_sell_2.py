@@ -10,32 +10,32 @@ from typing import List
 
 
 class Solution:
-    # Helper function for recursion with memoization
+    # Recursive function with memoization
     def __f(self, i, buy, p, n, dp) -> int:
-        # Base case: If we have processed all days
+        # Base case: If we've processed all days, return 0 profit
         if i == n:
             return 0
 
-        # Return already computed value from memoization table
+        # If the result has already been computed, return it
         if dp[i][buy] != -1:
             return dp[i][buy]
 
         profit: int = 0
 
-        # If we are allowed to buy (buy == 1)
+        # If we can buy (buy == 1)
         if buy:
             # Max profit is either:
-            # 1. Buy the stock today (cost: -p[i]) and move to the next day (i + 1) with buy state set to 0 (selling)
-            # 2. Do nothing today and check profit for the next day (i + 1) while still in the buy state
+            # 1. Buy the stock today (-p[i]) and move to the next day (i + 1) to sell (buy == 0)
+            # 2. Do nothing today (stay in the same buy state for the next day)
             profit = max(
                 -p[i] + self.__f(i + 1, 0, p, n, dp),  # Buying today
                 0 + self.__f(i + 1, 1, p, n, dp),  # Not buying today
             )
         else:
-            # If we are allowed to sell (buy == 0)
+            # If we can sell (buy == 0)
             # Max profit is either:
-            # 1. Sell the stock today (gain: p[i]) and move to the next day (i + 1) with buy state set to 1 (buying again)
-            # 2. Do nothing today and check profit for the next day (i + 1) while still in the sell state
+            # 1. Sell the stock today (gain: p[i]) and move to the next day (i + 1) to buy again (buy == 1)
+            # 2. Do nothing today (stay in the same sell state for the next day)
             profit = max(
                 p[i] + self.__f(i + 1, 1, p, n, dp),  # Selling today
                 0 + self.__f(i + 1, 0, p, n, dp),  # Not selling today
@@ -45,10 +45,11 @@ class Solution:
         dp[i][buy] = profit
         return dp[i][buy]
 
-    # Helper function for tabulation (bottom-up dynamic programming)
+    # Tabulation (bottom-up dynamic programming)
     def __tabulation(self, p, n) -> int:
         # Create a DP table with n + 1 days and 2 states (buy and sell)
         dp = [[0] * 2 for _ in range(n + 1)]
+
         # Iterate from the last day back to the first day
         for i in range(n - 1, -1, -1):
             # If we can buy on day i
@@ -62,22 +63,23 @@ class Solution:
     # Optimized solution using constant space
     def __optimized(self, p, n) -> int:
         # Only need to keep track of two states
-        dp = [
-            0
-        ] * 2  # dp[0]: max profit if not holding stock, dp[1]: max profit if holding stock
-        cur = [0] * 2  # Current state
+        dp_0 = dp_1 = (
+            0  # dp_0: max profit if not holding stock, dp_1: max profit if holding stock
+        )
+        cur_0 = cur_1 = 0  # Current state
 
         # Iterate from the last day back to the first day
         for i in range(n - 1, -1, -1):
-            # Calculate current profit if we can buy
-            cur[1] = max(-p[i] + dp[0], 0 + dp[1])
-            # Calculate current profit if we can sell
-            cur[0] = max(p[i] + dp[1], 0 + dp[0])
+            # Calculate current profit if we sell on day i
+            cur_0 = max(p[i] + dp_1, 0 + dp_0)
+            # Calculate current profit if we buy on day i
+            cur_1 = max(-p[i] + dp_0, 0 + dp_1)
             # Update dp to current state
-            dp = cur[:]
+            dp_0 = cur_0
+            dp_1 = cur_1
 
         # The result is the maximum profit when we are not holding stock at the start
-        return dp[1]
+        return dp_1
 
     # Main function to calculate the maximum profit
     def maximumProfit(self, prices) -> int:
