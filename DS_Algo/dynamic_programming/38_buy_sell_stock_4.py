@@ -1,76 +1,97 @@
 """Best time to buy and sell stock 3. Limiting transactions, to k."""
+
 from typing import List
 
 
 class Solution:
-    def __f(
-        self,
-        i: int,
-        trans: int,
-        prices: List[int],
-        n: int,
-        k: int,
-        dp: List[List[int]],
-    ) -> int:
-        if i == n or trans == k * 2:
-            return 0
-        if dp[i][trans] != -1:
-            return dp[i][trans]
-        if trans % 2 == 0:
-            dp[i][trans] = max(
-                -prices[i] + self.__f(i + 1, trans + 1, prices, n, k, dp),
-                0 + self.__f(i + 1, trans, prices, n, k, dp),
-            )
-            return dp[i][trans]
-        dp[i][trans] = max(
-            prices[i] + self.__f(i + 1, trans + 1, prices, n, k, dp),
-            0 + self.__f(i + 1, trans, prices, n, k, dp),
-        )
-        return dp[i][trans]
+    # Recursive function with memoization
+    def __f(self, K: int, N: int, A: List[int]) -> int:
+        # Double K because we need to track both buy and sell actions
+        K *= 2
+        # Create a memoization table initialized to -1
+        dp = [[-1] * (K) for _ in range(N)]
 
-    def __max_profit_tabulation(self, prices: List[int], n: int, k: int) -> int:
-        # Tabulation approach to calculate the maximum profit
-        dp: List[List[int]] = [[0 for col in range(k * 2 + 1)] for row in range(n + 1)]
-        for i in range(n - 1, -1, -1):
-            for trans in range(k * 2 - 1, -1, -1):
-                if trans % 2 == 0:
-                    dp[i][trans] = max(
-                        -prices[i] + dp[i + 1][trans + 1], 0 + dp[i + 1][trans]
-                    )
+        # Recursive helper function
+        def f(i: int, t: int) -> int:
+            # Base case: If we are out of days or have reached the maximum transactions
+            if i == N or t == K:
+                return 0
+            # Return already computed value
+            if dp[i][t] != -1:
+                return dp[i][t]
+
+            profit: int = 0
+            # If it's time to buy (t is even)
+            if t % 2 == 0:
+                # Max profit is either:
+                # 1. Buy today (-A[i]) and move to the next day (i + 1) with one more transaction used (t + 1)
+                # 2. Do nothing today and check the profit for the next day (i + 1) without using a transaction
+                profit = max(-A[i] + f(i + 1, t + 1), 0 + f(i + 1, t))
+            else:
+                # If it's time to sell (t is odd)
+                # Max profit is either:
+                # 1. Sell today (A[i]) and move to the next day (i + 1) with one more transaction used (t + 1)
+                # 2. Do nothing today and check the profit for the next day (i + 1) without using a transaction
+                profit = max(A[i] + f(i + 1, t + 1), 0 + f(i + 1, t))
+
+            # Store the computed profit in the memoization table
+            dp[i][t] = profit
+            return profit
+
+        return f(0, 0)
+
+    # Tabulation (bottom-up dynamic programming)
+    def __tabulation(self, K: int, N: int, A: List[int]) -> int:
+        # Double K for the same reason as above
+        K *= 2
+        # Create a DP table with dimensions (N + 1) x (K + 1)
+        dp = [[0] * (K + 1) for _ in range(N + 1)]
+
+        # Fill the DP table in reverse order
+        for i in range(N - 1, -1, -1):
+            for t in range(K - 1, -1, -1):
+                profit: int = 0
+                # If it's time to buy
+                if t % 2 == 0:
+                    profit = max(-A[i] + dp[i + 1][t + 1], 0 + dp[i + 1][t])
                 else:
-                    dp[i][trans] = max(
-                        prices[i] + dp[i + 1][trans + 1], 0 + dp[i + 1][trans]
-                    )
+                    # If it's time to sell
+                    profit = max(A[i] + dp[i + 1][t + 1], 0 + dp[i + 1][t])
 
+                # Store the computed profit in the DP table
+                dp[i][t] = profit
+
+        # The result is found in the starting state (day 0, transaction count 0)
         return dp[0][0]
 
-    def __max_profit_optimal(self, prices: List[int], n: int, k: int) -> int:
-        # Optimized version using two arrays to represent current and ahead states
-        ahed: List[int] = [0 for col in range(k * 2 + 1)]
+    # Optimized solution using constant space
+    def __optimized(self, K: int, N: int, A: List[int]) -> int:
+        K *= 2  # Double K
+        # Create a 1D DP array to store current state
+        dp = [0] * (K + 1)
 
-        for i in range(n - 1, -1, -1):
-            cur: List[int] = [0 for col in range(k * 2 + 1)]
-            for trans in range(k * 2 - 1, -1, -1):
-                if trans % 2 == 0:
-                    cur[trans] = max(-prices[i] + ahed[trans + 1], 0 + ahed[trans])
+        # Fill the DP array in reverse order
+        for i in range(N - 1, -1, -1):
+            for t in range(K - 1, -1, -1):
+                if t % 2 == 0:
+                    dp[t] = max(-A[i] + dp[t + 1], 0 + dp[t])
                 else:
-                    cur[trans] = max(prices[i] + ahed[trans + 1], 0 + ahed[trans])
-            ahed = cur
+                    dp[t] = max(A[i] + dp[t + 1], 0 + dp[t])
 
-        return ahed[0]
+        # The result is found in the starting state (transaction count 0)
+        return dp[0]
 
-    def maxProfit(self, k: int, prices: List[int]) -> int:
-        n: int = len(prices)
-        # Uncomment one of the following lines based on the method you want to use
-        # dp: List[List[int]] = [[-1 for col in range(k * 2)] for row in range(n)]
-        # return self.__f(i=0, trans=0, prices=prices, n=n, k=k, dp=dp)
-        # return self.__max_profit_tabulation(prices=prices, n=n, k=k)
-        return self.__max_profit_optimal(prices=prices, n=n, k=k)
+    # Main function to calculate the maximum profit
+    def maxProfit(self, K: int, N: int, A: List[int]) -> int:
+        # Uncomment one of the following lines to choose the method
+        # return self.__f(K, N, A)  # Using recursion with memoization
+        # return self.__tabulation(K, N, A)  # Using tabulation (bottom-up DP)
+        return self.__optimized(K, N, A)  # Using optimized space approach
 
 
 if __name__ == "__main__":
     prices: List[int] = [3, 2, 6, 5, 0, 3]
-    # prices: List[int] = [2, 4, 1]
-    k: int = 2
+    k: int = 2  # Maximum number of transactions allowed
     solution: Solution = Solution()
-    print(solution.maxProfit(prices=prices, k=k))
+    # Output the maximum profit for the given prices and transactions
+    print(solution.maxProfit(k, len(prices), prices))
