@@ -82,25 +82,29 @@ class Solution:
 
     # Dynamic Programming (bottom-up) approach with a single array (classic O(n^2) DP)
     def __lis_single_arr(self, nums: List[int], n: int) -> int:
-        dp: List[int] = [
-            1 for col in range(n)
-        ]  # Initialize the dp array where dp[i] represents LIS ending at i
-        lis: int = (
-            1  # The minimum length of LIS is 1 (every element is a subsequence itself)
-        )
+        # dp[i] represents the length of LIS starting from index i
+        dp: List[int] = [0] * (n + 1)  # Initialize the DP array with zeroes
 
-        # Loop through each element and find the longest subsequence ending at each index
-        for i in range(n):
-            for prev in range(
-                0, i
-            ):  # Check previous elements to see if they can form an increasing subsequence
-                if nums[prev] < nums[i]:
-                    dp[i] = max(
-                        1 + dp[prev], dp[i]
-                    )  # If nums[i] is larger, extend the LIS ending at prev
-            lis = max(lis, dp[i])  # Keep track of the maximum LIS length found
+        # Start iterating backwards through the array (from the second-to-last index to 0)
+        for i in range(n - 1, -1, -1):
+            # Iterate backward through the previous indices (from i-1 to -1)
+            for prev in range(i - 1, -2, -1):
+                take: int = 0  # Option 1: Take the current element in the subsequence
+                # If prev is -1, we can take the first element (since there's no previous element),
+                # or if nums[i] is greater than the previous element nums[prev], we can extend the subsequence.
+                if prev == -1 or nums[i] > nums[prev]:
+                    take = (
+                        1 + dp[i + 1]
+                    )  # Include the current element (nums[i]) and add the subsequence length of the next element
 
-        return lis
+                # Option 2: Don't take the current element, just use the value for the previous index
+                not_take: int = 0 + dp[prev + 1]
+
+                # Store the maximum of taking or not taking the element at dp[prev + 1]
+                dp[prev + 1] = max(take, not_take)
+
+        # The final result will be stored in dp[0], which represents the LIS starting from index 0
+        return dp[0]
 
     # Using Binary Search and Greedy approach (O(n log n) time complexity)
     def __lis(self, nums: List[int]) -> int:
