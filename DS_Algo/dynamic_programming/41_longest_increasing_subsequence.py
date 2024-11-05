@@ -112,6 +112,7 @@ class Solution:
         temp: List[int] = (
             []
         )  # This will store the elements in a sorted order that forms the LIS
+        temp.append(nums[0])
 
         # Loop through each element in the array
         for i in range(1, n):
