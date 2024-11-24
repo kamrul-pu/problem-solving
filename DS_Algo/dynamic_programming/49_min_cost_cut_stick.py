@@ -30,19 +30,8 @@ class Solution:
         # Return the minimum cost for the current subproblem
         return dp[i][j]
 
-    # Public function to calculate minimum cost
-    def minCost(self, n: int, cuts: List[int]) -> int:
-        # c: int = len(cuts)
-        # dp: List[List[int]] = [[-1] * (c + 1) for _ in range(c + 1)]
-        # cuts.insert(0, 0)
-        # cuts.append(n)
-        # cuts.sort()
-        # return self.__f(1, c, cuts, dp)
-        # Delegate the task to tabulated version of the function
-        return self.__min_cost_tabulation(n=n, cuts=cuts)
-
     # Tabulated version of the function to calculate minimum cost
-    def __min_cost_tabulation(self, n: int, cuts: List[int]) -> int:
+    def __tabulation(self, n: int, cuts: List[int]) -> int:
         # Get the number of cuts
         c: int = len(cuts)
         # Initialize DP table to store minimum costs for subproblems
@@ -71,6 +60,17 @@ class Solution:
                 dp[i][j] = mini
         # Return the minimum cost for the entire stick
         return dp[1][c]
+
+    # Public function to calculate minimum cost
+    def minCost(self, n: int, cuts: List[int]) -> int:
+        # c: int = len(cuts)
+        # dp: List[List[int]] = [[-1] * (c + 1) for _ in range(c + 1)]
+        # cuts.insert(0, 0)
+        # cuts.append(n)
+        # cuts.sort()
+        # return self.__f(1, c, cuts, dp)
+        # Delegate the task to tabulated version of the function
+        return self.__tabulation(n=n, cuts=cuts)
 
 
 if __name__ == "__main__":
