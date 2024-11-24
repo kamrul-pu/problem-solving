@@ -29,7 +29,7 @@ class Solution:
         dp[i][j] = mini
         return dp[i][j]
 
-    def __matrix_multiplication_tabulation(self, arr: List[int], n: int) -> int:
+    def __tabulation(self, arr: List[int], n: int) -> int:
         dp: List[List[int]] = [[0 for col in range(n)] for row in range(n)]
 
         for i in range(n - 1, 0, -1):
@@ -55,7 +55,7 @@ class Solution:
         # dp: List[List[int]] = [[-1 for col in range(n)] for row in range(n)]
         # # Call the recursive function to find the minimum steps for matrix multiplication
         # return self.__f(i=1, j=n - 1, arr=arr, dp=dp)
-        return self.__matrix_multiplication_tabulation(arr=arr, n=n)
+        return self.__tabulation(arr=arr, n=n)
 
 
 if __name__ == "__main__":
