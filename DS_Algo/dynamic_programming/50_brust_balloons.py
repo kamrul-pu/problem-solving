@@ -20,17 +20,7 @@ class Solution:
         dp[i][j] = maxi  # Store the result in the dp table
         return maxi
 
-    def maxCoins(self, nums: List[int]) -> int:
-        n: int = len(nums)
-        nums.insert(0, 1)  # Insert 1 at the beginning
-        nums.append(1)  # Insert 1 at the end
-        # dp: List[List[int]] = [[-1] * (n + 2) for _ in range(n + 2)]  # Memoization table
-        # return self.__f(1, n, nums, dp)  # Call the recursive function
-        return self.__max_coins_tabulation(
-            nums=nums, n=n
-        )  # Call the tabulation function
-
-    def __max_coins_tabulation(self, nums: List[int], n: int) -> int:
+    def __tabulation(self, nums: List[int], n: int) -> int:
         # Tabulation function to calculate maximum coins
         dp: List[List[int]] = [
             [0] * (n + 2) for _ in range(n + 2)
@@ -50,6 +40,14 @@ class Solution:
                     maxi = max(maxi, cost)  # Update maximum coins gained
                 dp[i][j] = maxi  # Store the result in the dp table
         return dp[1][n]  # Return the maximum coins gained
+
+    def maxCoins(self, nums: List[int]) -> int:
+        n: int = len(nums)
+        nums.insert(0, 1)  # Insert 1 at the beginning
+        nums.append(1)  # Insert 1 at the end
+        # dp: List[List[int]] = [[-1] * (n + 2) for _ in range(n + 2)]  # Memoization table
+        # return self.__f(1, n, nums, dp)  # Call the recursive function
+        return self.__tabulation(nums=nums, n=n)  # Call the tabulation function
 
 
 if __name__ == "__main__":
